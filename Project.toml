@@ -3,6 +3,10 @@ uuid = "9dfc3e7a-5dd6-4aec-9244-c4a41014c270"
 authors = ["Tom Kimpson"]
 version = "0.1.0"
 
+[deps]
+Parameters = "d96e819e-fc66-5662-9728-84c9c7592b0a"
+ProtoStructs = "437b6fc4-8e8e-11e9-3fa1-ad391e66c018"
+
 [compat]
 julia = "1.1"
 

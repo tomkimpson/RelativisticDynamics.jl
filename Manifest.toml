@@ -1,2 +1,25 @@
 # This file is machine-generated - editing it directly is not advised
 
+julia_version = "1.7.3"
+manifest_format = "2.0"
+
+[[deps.OrderedCollections]]
+git-tree-sha1 = "85f8e6578bf1f9ee0d11e7bb1b1456435479d47c"
+uuid = "bac558e1-5e72-5ebc-8fee-abe8a469f55d"
+version = "1.4.1"
+
+[[deps.Parameters]]
+deps = ["OrderedCollections", "UnPack"]
+git-tree-sha1 = "34c0e9ad262e5f7fc75b10a9952ca7692cfc5fbe"
+uuid = "d96e819e-fc66-5662-9728-84c9c7592b0a"
+version = "0.12.3"
+
+[[deps.ProtoStructs]]
+git-tree-sha1 = "b9367403c1f621c8960c412de7e11f9d1035bbd4"
+uuid = "437b6fc4-8e8e-11e9-3fa1-ad391e66c018"
+version = "1.0.0"
+
+[[deps.UnPack]]
+git-tree-sha1 = "387c1f73762231e86e0c9c5443ce3b4a0a9a0c2b"
+uuid = "3a884ed6-31ef-47d7-9d2a-63182c4928ed"
+version = "1.0.2"
