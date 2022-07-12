@@ -1,0 +1,13 @@
+name = "RelativisticDynamics"
+uuid = "9dfc3e7a-5dd6-4aec-9244-c4a41014c270"
+authors = ["Tom Kimpson"]
+version = "0.1.0"
+
+[compat]
+julia = "1.1"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
