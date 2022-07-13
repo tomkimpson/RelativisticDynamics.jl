@@ -21,7 +21,10 @@ The default values of the keywords define the default model setup.
     Sϕ::Real   = 0.0   # \phi angle of pulsar spin axis
 
     #Orbital parameters
-    α::Real=30.0       # Keplerian semi major axis
+    α::Real=300.0       # Keplerian semi major axis
+    e::Real=0.1        # Keplerian eccentricity 
+    ι::Real=pi/12       # Inclination w.r.t equatorial plane in radians 
+    orbit_dir::Int=1   # Orbit direction prograde/retrograde
 
 end
 
