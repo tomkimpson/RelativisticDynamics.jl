@@ -6,6 +6,13 @@ function delta(r,a)
 return r^2 -2.0*r + a^2
 end 
 
+"""
+Σ = sigma(r,θ,a)
+The well-known function of the Kerr metric
+"""
+function sigma(r,θ,a)
+return r^2 + a^2 * cos(θ)^2
+end 
 
 """
 f = mapping_f(r,a,zminus)
@@ -43,3 +50,4 @@ function mapping_d(r,a,zminus)
 Δ = delta(r,a)
 return (r^2 +a^2 * zminus^2)*Δ
 end
+

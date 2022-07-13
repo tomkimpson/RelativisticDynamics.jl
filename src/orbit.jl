@@ -10,12 +10,10 @@ function orbit(::Type{NF}=Float64;         # number format, use Float64 as defau
 
     P = SystemParameters(NF=NF;kwargs...) # Parameters
     C = Constants(P)                      # Constants
-
-    M = Model(P,C)                        # Pack all of the above into a single *Model struct 
-    print(M)
+    #metric = initialize_metric(P)         # Initialize the array to hold the metric 
+    M = Model(P,C)                 # Pack all of the above into a single *Model struct 
 
 
     prognostic_vars = initial_conditions(M)         # initialize prognostic variables
-    print(prognostic_vars)
     return "All completed OK"
 end

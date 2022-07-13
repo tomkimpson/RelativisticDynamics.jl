@@ -12,7 +12,9 @@ A struct to hold all variables which are constant over the course of the integra
 
 
     # Constants derived from user defined parameters 
-    zminus   :: NF           
+    E   :: NF    
+    L   :: NF   
+    Q   :: NF          
 
 end
 
@@ -68,5 +70,6 @@ function Constants(P::SystemParameters)
 
     
     # This implies conversion to NF
-    return Constants{P.NF}(light_c,Newton_g,Msolar,zminus)
+    return Constants{P.NF}(light_c,Newton_g,Msolar,
+                           E,L,Q)
 end

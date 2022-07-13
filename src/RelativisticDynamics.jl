@@ -17,6 +17,7 @@ export  orbit, SystemParameters, Constants, PrognosticVariables
 #Includes
 include("system_parameters.jl")
 include("useful_functions.jl")
+include("metric.jl")
 include("universal_constants.jl")
 include("model.jl")
 include("initial_conditions.jl")
