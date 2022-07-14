@@ -16,6 +16,10 @@ A struct to hold all variables which are constant over the course of the integra
     L   :: NF   
     Q   :: NF          
 
+
+    # Pulsar constants
+    s0 :: NF # Magnitude of spatial component of spin vector in natural units 
+
 end
 
 
@@ -25,7 +29,7 @@ Generator function for a Constants struct.
 function Constants(P::SystemParameters)
 
     # Unpack system parameters
-    @unpack a,ι,α,e,orbit_dir = P
+    @unpack a,ι,α,e,orbit_dir,mPSR,rPSR,p0,mBH = P
 
     # Fundamental constants
     light_c  = 3e8
@@ -69,7 +73,21 @@ function Constants(P::SystemParameters)
     Q = zminus * (a^2 * (1.0 - E2 ) + L^2 /(1.0 - zminus))
 
     
+
+
+    #Pulsar 
+    inertia = 0.40*mPSR*Msolar*(rPSR*1e3)^2 # Moment of inertia in SI units. Assumes solid ball 
+    convert_spin= light_c/(Newton_g*(mBH*Msolar)^2) # Multiply by this to go TO Natural units
+    s0 = convert_spin*2.0*pi*inertia/p0
+
+
+
+
+
+
+
     # This implies conversion to NF
     return Constants{P.NF}(light_c,Newton_g,Msolar,
-                           E,L,Q)
+                           E,L,Q,
+                           s0)
 end

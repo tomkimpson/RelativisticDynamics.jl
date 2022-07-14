@@ -1,11 +1,8 @@
 """Struct holding the so-called 'prognostic' variables"""
 struct PrognosticVariables{NF<:AbstractFloat}
     xvector         ::AbstractVector{NF}       
-    pvector         ::AbstractVector{NF}       
-
-   # metric_covar    :: Array{NF,2}
-   #metric_contra   :: Array{NF,2}
-
+    pvector         ::AbstractVector{NF}      
+    svector         ::AbstractVector{NF}       
 end
 
 
@@ -15,8 +12,8 @@ hence zero vorticity and divergence, but temperature, pressure and humidity are
 initialised """
 function initial_conditions(M::Model)
 
-    @unpack NF,α,a,mPSR,mBH = M.parameters
-    @unpack E,L,Q = M.constants 
+    @unpack NF,α,a,mPSR,mBH,Sθ,Sϕ = M.parameters
+    @unpack E,L,Q,s0 = M.constants 
 
 
 
@@ -31,8 +28,9 @@ function initial_conditions(M::Model)
 
     # Metric 
     metric_covar  = covariant_metric(r,θ,a)
-    metric_contra = contravariant_metric(r,θ,a)
+    metric_contra = contravariant_metric(metric_covar,Δ*sin(θ)^2)
 
+    (metric_contra)
 
     # 4 - momentum 
     T = (r^2 + a^2)*(E*(r^2 + a^2) -a*L)/Δ -a*(a*E*sin(θ)^2 - L)
@@ -49,16 +47,19 @@ function initial_conditions(M::Model)
 
     pvector = m0*[tdot,rdot,θdot,ϕdot]
 
+    pvector_covar = convert_to_covariant(metric_covar,pvector)
 
 
     # 4 - spin
-    #update_metric!(M,r,θ)
-    # metric = initialize_metric(M)
-    # println(metric.metric_covar)
-    # println(metric.metric_contra)
+    svector = [0.0,0.0,0.0,0.0]
 
+    #Set the spatial components of the spin vector
+    svector[2] = s0 * sin(Sθ) * cos(Sϕ)
+    svector[3] = -s0 *cos(Sθ)/r 
+    svector[4] = s0*sin(Sθ)*sin(Sϕ)/(r*sin(θ)) 
+    svector[1] = -(svector[2]*pvector_covar[2] + svector[3]*pvector_covar[3]+svector[4]*pvector_covar[4])/pvector_covar[1]
 
 
     # conversion to NF happens here
-    return PrognosticVariables{NF}(xvector,pvector)
+    return PrognosticVariables{NF}(xvector,pvector,svector)
 end
