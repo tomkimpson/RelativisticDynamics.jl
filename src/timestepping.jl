@@ -18,7 +18,7 @@ function timestepping(X::PrognosticVariables, M::Model)
 
 println("dev: you are inside timestepping")
 u = vcat(X.xvector, X.pvector,X.svector)
-tspan = (0.0,1e5) # probably define this elsewhere
+tspan = (0.0,100) # probably define this elsewhere
 
 
 
@@ -28,7 +28,7 @@ ode_prob = DifferentialEquations.ODEProblem(MPD!,u,tspan)
 
 # Solve it 
 algorithm = DifferentialEquations.RK4() # probably define this elsewhere 
-ode_solution = DifferentialEquations.solve(ode_prob,algorithm)
+ode_solution = DifferentialEquations.solve(ode_prob,algorithm,saveat=1)
 
 return ode_solution
 

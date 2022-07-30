@@ -70,9 +70,25 @@ function convert_to_covariant(metric,vector)
 end 
 
 
-using Plots
-function BoyerLindquistPlot(solution)
+using Plots 
+function BoyerLindquistPlot(solution,a)
 
-    plot(solution,vars=[1])
+    r = solution[2,:]
+    θ = solution[3,:]
+    ϕ = solution[4,:]
+
+
+    w = sqrt.(r.^2 .+ a^2) 
+    x = w .* sin.(θ) .* cos.(ϕ)
+    y = w .* sin.(θ) .* sin.(ϕ)
+    z = r .* cos.(θ)
+
+    #Set the backend 
+    #gr()
+    
+    #plotly(lw=3)
+    #plot(x,y)
+    scatter(x,y)
+    #plot(solution,vars=[1])
 
 end 
