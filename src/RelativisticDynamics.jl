@@ -7,7 +7,7 @@ module RelativisticDynamics
 import Parameters: @with_kw, @unpack
 #import ProtoStructs: @proto
 
-
+import DifferentialEquations
 
 
 
@@ -21,6 +21,7 @@ include("metric.jl")
 include("universal_constants.jl")
 include("model.jl")
 include("initial_conditions.jl")
+include("timestepping.jl")
 include("orbit.jl")
 
 
