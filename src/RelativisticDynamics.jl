@@ -12,7 +12,7 @@ import DifferentialEquations
 
 
 # Exports
-export  orbit, SystemParameters, Constants, PrognosticVariables
+export  orbit, SystemParameters, Constants, PrognosticVariables,BoyerLindquistPlot
 
 #Includes
 include("system_parameters.jl")
@@ -28,5 +28,5 @@ include("orbit.jl")
 
 
 
-print("Welcome to the Relativistic Dynamics module")
+print("Welcome to the Relativistic Dynamics module!")
 end

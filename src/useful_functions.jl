@@ -1,6 +1,6 @@
 """
 Δ = delta(r,a)
-The well-known function of the Kerr metric
+The well-known delta function of the Kerr metric
 """
 function delta(r,a)
 return r^2 -2.0*r + a^2
@@ -8,7 +8,7 @@ end
 
 """
 Σ = sigma(r,θ,a)
-The well-known function of the Kerr metric
+The well-known sigma function of the Kerr metric
 """
 function sigma(r,θ,a)
 return r^2 + a^2 * cos(θ)^2
@@ -66,5 +66,13 @@ function convert_to_covariant(metric,vector)
     vector_covar[4] = metric[4,1]*vector[1] + metric[4,2]*vector[2] + metric[4,3]*vector[3] + metric[4,4]*vector[4]
 
     return vector_covar  
+
+end 
+
+
+using Plots
+function BoyerLindquistPlot(solution)
+
+    plot(solution,vars=[1])
 
 end 
