@@ -11,6 +11,7 @@ ProtoStructs = "437b6fc4-8e8e-11e9-3fa1-ad391e66c018"
 Revise = "295af30f-e4ad-537b-8983-00126c2a3abe"
 
 [compat]
+Revise = "3"
 julia = "1.1"
 
 [extras]
