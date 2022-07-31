@@ -88,7 +88,7 @@ function BoyerLindquistPlot(solution,a)
     
     #plotly(lw=3)
     #plot(x,y)
-    scatter(x,y)
+    scatter(x,y,z)
     #plot(solution,vars=[1])
 
 end 
