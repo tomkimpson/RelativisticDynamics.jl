@@ -98,6 +98,23 @@ function BoyerLindquistPlot(solution)
 end 
 
 
+
+
+
+@userplot CirclePlot
+@recipe function f(cp::CirclePlot)
+    x, y, i = cp.args
+    n = length(x)
+    inds = circshift(1:n, 1 - i)
+    linewidth --> range(0, 10, length = n)
+    seriesalpha --> range(0, 1, length = n)
+    aspect_ratio --> 1
+    label --> false
+    x[inds], y[inds]
+end
+
+
+
 function PlotSphericalPhotonOrbit(solution,model)
 
     @unpack a = model.parameters
@@ -107,9 +124,6 @@ function PlotSphericalPhotonOrbit(solution,model)
     T = range(first(solution.t),last(solution.t),length=1000)
 
     p = solution(T)
-
-
-
     r = p[2,:]
     χ = p[3,:] # reparameterised
     ϕ = p[4,:]
@@ -123,7 +137,33 @@ function PlotSphericalPhotonOrbit(solution,model)
     z = r .* cos.(θ)
 
 
-    plot(x,y,z)
+    #n = 150
+    #t = range(0, 2π, length = n)
+    #x = sin.(t)
+    #y = cos.(t)
+    
+    # anim = @animate for i ∈ 1:length(x)
+    #     circleplot(x, y, i,line_z = 1:length(x))
+    # end
+    # gif(anim, "anim_fps15.gif", fps = 15)
+
+
+    plt = plot3d(1,title = "TEST TITLE", marker=2,markercolor="black")
+
+
+     n = length(x)
+     anim = @animate for i in 1:n
+        push!(plt,x[i],y[i],z[i])
+     end 
+     gif(anim, "yt.gif", fps = 30)
+
+
+
+    # anim = @animate for i ∈ 1:length(x)
+    #     circleplot(x, y, i)
+    # end
+
+    #plot(x,y,z)
 #     df=1
 #     anim = @animate for i = 1:df:length(x)
 #        plot(x[1:i], y[1:i],z[1:i], legend=false)
