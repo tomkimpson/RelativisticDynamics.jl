@@ -26,13 +26,20 @@ println("dev: you are inside timestepping")
 tspan = (0.0,Tint) 
 
 #Params
-params = [Φ,Q,a,u0,u1]
+# params = [Φ,Q,a,u0,u1]
+# u = vcat(X.xvector,X.pvector, X.svector)
 
-u = vcat(X.xvector,X.pvector, X.svector)
+
+
+u = vcat(X.xvector,X.pvector)
+params = [Φ,a]
+
+println("dev: this is uvec", u)
+println("dev: this is params", params)
 
 
 # Define the ODE to be solved
-ode_prob = DifferentialEquations.ODEProblem(MPD!,u,tspan,params)
+ode_prob = DifferentialEquations.ODEProblem(spherical_photon_hamiltonian!,u,tspan,params)
 
 # Solve it 
 algorithm = DifferentialEquations.RK4() # probably define this elsewhere 
@@ -42,6 +49,49 @@ return ode_solution
 
     
 end 
+
+
+
+function spherical_photon_hamiltonian!(du,u,p,λ)
+
+    t,r,θ,ϕ,pᵗ,pʳ,pᶿ,pᵠ = u
+    Φ,a = p
+
+
+    # Define useful functions 
+    Σ = sigma(r,θ,a)
+    Δ = delta(r,a)
+
+    #Position 
+    du[1] = 0.0
+    du[2] = 0.0
+    du[3] = pᶿ/Σ
+    du[4] = (2.0*r*a + (Σ - 2.0*r)*Φ/sin(θ)^2) / (Σ*Δ)
+
+    #Momentum 
+    du[5] = 0.0
+    du[6] = 0.0
+    du[7] = sin(θ)*cos(θ)*(Φ^2/sin(θ)^4 -a^2)/Σ
+    du[8] = 0.0
+
+    nothing #function returns nothing
+
+
+end 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 function MPD!(du,u,p,λ)

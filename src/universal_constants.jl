@@ -54,7 +54,7 @@ function Constants(P::SystemParameters)
     u1 = ((a^2 - Q - Φ^2) - sqrt((a^2 - Q - Φ^2)^2 + 4.0*a^2 * Q))/(2.0*a^2)
 
 
-
+    println("ELQr = ", 1.0, " ", Φ, "  ", Q, " ", r )
 
 
     #Constants/Orbit mapping 

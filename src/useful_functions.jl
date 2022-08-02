@@ -71,15 +71,13 @@ end
 
 
 using Plots 
-function BoyerLindquistPlot(solution)
+function BoyerLindquistPlot(solution,M)
 
     @unpack a = M.parameters
-    @unpack u0 = M.constants
 
     r = solution[2,:]
     θ = solution[3,:]
     ϕ = solution[4,:]
-
 
 
     w = sqrt.(r.^2 .+ a^2) 
@@ -87,12 +85,27 @@ function BoyerLindquistPlot(solution)
     y = w .* sin.(θ) .* sin.(ϕ)
     z = r .* cos.(θ)
 
+
+
+
+    plt = plot3d(1,title = "TEST TITLE", marker=2,markercolor="black")
+
+     n = length(x)
+     anim = @animate for i in 1:n
+        push!(plt,x[i],y[i],z[i])
+     end 
+     gif(anim, "yt2.gif", fps = 30)
+
+
+
+
+
     #Set the backend 
     #gr()
     
     #plotly(lw=3)
     #plot(x,y)
-    scatter(x,y,z)
+    #scatter(x,y,z)
     #plot(solution,vars=[1])
 
 end 
