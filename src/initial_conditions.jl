@@ -6,6 +6,26 @@ struct PrognosticVariables{NF<:AbstractFloat}
 end
 
 
+"""Initialize a PrognosticVariables struct for an atmosphere at rest. No winds,
+hence zero vorticity and divergence, but temperature, pressure and humidity are
+initialised """
+function SphericalPhotonOrbit_initial_conditions(M::Model)
+
+    @unpack NF,r,θ, ϕ = M.parameters
+    @unpack u0 = M.constants
+
+
+    # 4- position
+    #Reparam of θ
+    χ = acos(cos(θ)/sqrt(u0))
+    xvector = [0.0,r,χ,ϕ]     # By default the starting coordinates
+    pvector = [0.0,0.0,0.0,0.0]
+    svector = [0.0,0.0,0.0,0.0] #dont track spin or momentum for these guys
+
+
+    # conversion to NF happens here
+    return PrognosticVariables{NF}(xvector,pvector,svector)
+end
 
 """Initialize a PrognosticVariables struct for an atmosphere at rest. No winds,
 hence zero vorticity and divergence, but temperature, pressure and humidity are
@@ -30,7 +50,6 @@ function initial_conditions(M::Model)
     metric_covar  = covariant_metric(r,θ,a)
     metric_contra = contravariant_metric(metric_covar,Δ*sin(θ)^2)
 
-    (metric_contra)
 
     # 4 - momentum 
     T = (r^2 + a^2)*(E*(r^2 + a^2) -a*L)/Δ -a*(a*E*sin(θ)^2 - L)

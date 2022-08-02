@@ -12,7 +12,7 @@ import DifferentialEquations
 
 
 # Exports
-export  orbit, SystemParameters, Constants, PrognosticVariables,BoyerLindquistPlot
+export  orbit, SystemParameters, Constants, PrognosticVariables,BoyerLindquistPlot,PlotSphericalPhotonOrbit
 
 #Includes
 include("system_parameters.jl")

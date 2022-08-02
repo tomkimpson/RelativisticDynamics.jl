@@ -14,7 +14,12 @@ A struct to hold all variables which are constant over the course of the integra
     # Constants derived from user defined parameters 
     E   :: NF    
     L   :: NF   
-    Q   :: NF          
+    Q   :: NF      
+    
+    
+    Φ :: NF 
+    u0:: NF
+    u1 ::NF 
 
 
     # Pulsar constants
@@ -29,12 +34,28 @@ Generator function for a Constants struct.
 function Constants(P::SystemParameters)
 
     # Unpack system parameters
-    @unpack a,ι,α,e,orbit_dir,mPSR,rPSR,p0,mBH = P
+    @unpack a,ι,α,e,orbit_dir,mPSR,rPSR,p0,mBH,r = P
 
     # Fundamental constants
     light_c  = 3e8
     Newton_g = 6.67408e-11
     Msolar   = 1.989e30
+
+
+    #SphericalPhoton orbit constants 
+    # Define constants of motion 
+    #Σ = sigma(r,θ,a)
+    Φ = - (r^3 - 3.0*r^2 + a^2*r + a^2) / (a*(r - 1.0))
+    Q = -(r^3 * (r^3 - 6.0*r^2 + 9.0 * r - 4.0*a^2))/(a^2 * (r - 1.0)^2)
+
+
+    # Define u0 function 
+    u0 = ((a^2 - Q - Φ^2) + sqrt((a^2 - Q - Φ^2)^2 + 4.0*a^2 * Q))/(2.0*a^2)
+    u1 = ((a^2 - Q - Φ^2) - sqrt((a^2 - Q - Φ^2)^2 + 4.0*a^2 * Q))/(2.0*a^2)
+
+
+
+
 
     #Constants/Orbit mapping 
     zminus = sin(ι)^2
@@ -70,7 +91,7 @@ function Constants(P::SystemParameters)
 
 
     #Carter Constant 
-    Q = zminus * (a^2 * (1.0 - E2 ) + L^2 /(1.0 - zminus))
+    #Q = zminus * (a^2 * (1.0 - E2 ) + L^2 /(1.0 - zminus))
 
     
 
@@ -89,5 +110,16 @@ function Constants(P::SystemParameters)
     # This implies conversion to NF
     return Constants{P.NF}(light_c,Newton_g,Msolar,
                            E,L,Q,
+                           Φ,u0,u1,
                            s0)
 end
+
+
+
+
+
+function EQL(P::SystemParameters)
+
+
+
+end 

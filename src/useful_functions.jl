@@ -71,11 +71,15 @@ end
 
 
 using Plots 
-function BoyerLindquistPlot(solution,a)
+function BoyerLindquistPlot(solution)
+
+    @unpack a = M.parameters
+    @unpack u0 = M.constants
 
     r = solution[2,:]
     θ = solution[3,:]
     ϕ = solution[4,:]
+
 
 
     w = sqrt.(r.^2 .+ a^2) 
@@ -90,5 +94,46 @@ function BoyerLindquistPlot(solution,a)
     #plot(x,y)
     scatter(x,y,z)
     #plot(solution,vars=[1])
+
+end 
+
+
+function PlotSphericalPhotonOrbit(solution,model)
+
+    @unpack a = model.parameters
+    @unpack u0 = model.constants
+
+
+    T = range(first(solution.t),last(solution.t),length=1000)
+
+    p = solution(T)
+
+
+
+    r = p[2,:]
+    χ = p[3,:] # reparameterised
+    ϕ = p[4,:]
+
+    #Convert back to θ
+    θ = acos.(sqrt(u0)*cos.(χ)) 
+
+    w = sqrt.(r.^2 .+ a^2) 
+    x = w .* sin.(θ) .* cos.(ϕ)
+    y = w .* sin.(θ) .* sin.(ϕ)
+    z = r .* cos.(θ)
+
+
+    plot(x,y,z)
+#     df=1
+#     anim = @animate for i = 1:df:length(x)
+#        plot(x[1:i], y[1:i],z[1:i], legend=false)
+#    end
+     
+#     gif(anim, "tutorial_anim_fps30.gif", fps = 30)
+
+
+    #plotlyjs()
+
+    #scatter(x,y,z)
 
 end 
