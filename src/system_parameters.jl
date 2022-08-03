@@ -34,7 +34,7 @@ The default values of the keywords define the default model setup.
     rmin = 2.0 * (1.0 + cos(2.0/3.0 * acos(-a)))
     rmax = 2.0 * (1.0 + cos(2.0/3.0 * acos(a)))
     r::Real=(rmin+rmax)/2.0 
-    θ::Real = π/6.0
+    θ::Real = π/2.0
     ϕ::Real = 0.0
     Tint::Real = 100.0 # How long to integrate for 
 

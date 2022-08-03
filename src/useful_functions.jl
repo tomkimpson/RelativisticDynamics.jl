@@ -87,14 +87,15 @@ function BoyerLindquistPlot(solution,M)
 
 
 
+    plot(x,y)
 
-    plt = plot3d(1,title = "TEST TITLE", marker=2,markercolor="black")
+    # plt = plot3d(1,xaxis=("x",(-3,3)),yaxis=("y",(-3,3)),zaxis=("z",(-3,3)),title = "TEST TITLE", marker=2,markercolor="black")
 
-     n = length(x)
-     anim = @animate for i in 1:n
-        push!(plt,x[i],y[i],z[i])
-     end 
-     gif(anim, "example_media/spherical_photon_orbit.gif", fps = 30)
+    #  n = length(x)
+    #  anim = @animate for i in 1:n
+    #     push!(plt,x[i],y[i],z[i])
+    #  end 
+    #  gif(anim, "example_media/spherical_photon_orbit.gif", fps = 30)
 
 
 

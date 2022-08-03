@@ -18,3 +18,8 @@ Please see the [documentation](https://tomkimpson.github.io/RelativisticDynamics
 
 
 
+## Spherical Photon Orbits
+
+The spherical photon orbits are included as a test case or toy model to ensure the code machinery works as expected.
+
+The general description of the equations of motion is described in [Teo 2003](https://ui.adsabs.harvard.edu/abs/2003GReGr..35.1909T/abstract) which have been reframed here via a Hamiltonian formalism c.f. [Pu et al. 2016](https://arxiv.org/abs/1601.02063)

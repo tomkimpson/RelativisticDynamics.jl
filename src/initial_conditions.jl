@@ -14,11 +14,12 @@ function SphericalPhotonOrbit_initial_conditions(M::Model)
     @unpack NF,r,θ, ϕ = M.parameters
     @unpack u0 = M.constants
 
+    println("dev: these are the initial conditons for spherical photon orbits")
 
     # 4- position
-    #Reparam of θ
-    χ = acos(cos(θ)/sqrt(u0))
-    xvector = [0.0,r,χ,ϕ]     # By default the starting coordinates
+    #
+    #χ = acos(cos(θ)/sqrt(u0))
+    xvector = [0.0,r,θ,ϕ]     # By default the starting coordinates
     pvector = [0.0,0.0,0.0,0.0]
     svector = [0.0,0.0,0.0,0.0] #dont track spin or momentum for these guys
 
