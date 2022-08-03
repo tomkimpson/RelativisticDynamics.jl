@@ -94,7 +94,7 @@ function BoyerLindquistPlot(solution,M)
      anim = @animate for i in 1:n
         push!(plt,x[i],y[i],z[i])
      end 
-     gif(anim, "yt2.gif", fps = 30)
+     gif(anim, "example_media/spherical_photon_orbit.gif", fps = 30)
 
 
 
