@@ -42,8 +42,9 @@ println("dev: this is params", params)
 ode_prob = DifferentialEquations.ODEProblem(spherical_photon_hamiltonian!,u,tspan,params)
 
 # Solve it 
-algorithm = DifferentialEquations.RK4() # probably define this elsewhere 
-ode_solution = DifferentialEquations.solve(ode_prob,algorithm,saveat=1)
+#algorithm = DifferentialEquations.RK4() # probably define this elsewhere 
+#ode_solution = DifferentialEquations.solve(ode_prob,algorithm,saveat=1)
+ode_solution = DifferentialEquations.solve(ode_prob,abstol=1e-8,reltol=1e-4)
 
 return ode_solution
 

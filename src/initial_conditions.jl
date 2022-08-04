@@ -11,16 +11,26 @@ hence zero vorticity and divergence, but temperature, pressure and humidity are
 initialised """
 function SphericalPhotonOrbit_initial_conditions(M::Model)
 
-    @unpack NF,r,θ, ϕ = M.parameters
-    @unpack u0 = M.constants
+    @unpack NF,r,θ,ϕ,a = M.parameters
+    @unpack  Q,Φ = M.constants
 
     println("dev: these are the initial conditons for spherical photon orbits")
+
+
+    # Initial conditions for r are set in system_parameters.jl 
+    # Initial conditions for θ, ϕ are arbitrary, also set in  system_parameters.jl 
+    # We now calculate the initial value of pθ
+    
+    Σ = sigma(r,θ,a)
+    θdot2 = (Q - (Φ^2 / sin(θ)^2 - a^2)*cos(θ)^2)/Σ^2
+    θdot = sqrt(θdot2) # plus or minus?
+    pθ = Σ*θdot
 
     # 4- position
     #
     #χ = acos(cos(θ)/sqrt(u0))
     xvector = [0.0,r,θ,ϕ]     # By default the starting coordinates
-    pvector = [0.0,0.0,0.0,0.0]
+    pvector = [0.0,0.0,pθ,0.0]
     svector = [0.0,0.0,0.0,0.0] #dont track spin or momentum for these guys
 
 

@@ -135,15 +135,15 @@ function PlotSphericalPhotonOrbit(solution,model)
     @unpack u0 = model.constants
 
 
+    nsteps = 1000
     T = range(first(solution.t),last(solution.t),length=1000)
+
+    println("Plotting over the time range ", first(solution.t)," ",last(solution.t), " with ", nsteps, " steps")
 
     p = solution(T)
     r = p[2,:]
-    χ = p[3,:] # reparameterised
+    θ = p[3,:] 
     ϕ = p[4,:]
-
-    #Convert back to θ
-    θ = acos.(sqrt(u0)*cos.(χ)) 
 
     w = sqrt.(r.^2 .+ a^2) 
     x = w .* sin.(θ) .* cos.(ϕ)
@@ -151,18 +151,12 @@ function PlotSphericalPhotonOrbit(solution,model)
     z = r .* cos.(θ)
 
 
-    #n = 150
-    #t = range(0, 2π, length = n)
-    #x = sin.(t)
-    #y = cos.(t)
-    
-    # anim = @animate for i ∈ 1:length(x)
-    #     circleplot(x, y, i,line_z = 1:length(x))
-    # end
-    # gif(anim, "anim_fps15.gif", fps = 15)
+    #plot(x,y)
+    #push!(T,θ)
 
-
-    plt = plot3d(1,title = "TEST TITLE", marker=2,markercolor="black")
+    plt = plot3d(1,
+                xaxis=("x",(-3,3)),yaxis=("y",(-3,3)),zaxis=("z",(-3,3)),
+                title = "TEST TITLE", marker=2,markercolor="black")
 
 
      n = length(x)
