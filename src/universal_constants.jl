@@ -25,6 +25,10 @@ A struct to hold all variables which are constant over the course of the integra
     # Pulsar constants
     s0 :: NF # Magnitude of spatial component of spin vector in natural units 
 
+
+    # BH constants
+    rH :: NF #Black hole outer horizon radius
+
 end
 
 
@@ -52,9 +56,6 @@ function Constants(P::SystemParameters)
     # Define u0 function 
     u0 = ((a^2 - Q - Φ^2) + sqrt((a^2 - Q - Φ^2)^2 + 4.0*a^2 * Q))/(2.0*a^2)
     u1 = ((a^2 - Q - Φ^2) - sqrt((a^2 - Q - Φ^2)^2 + 4.0*a^2 * Q))/(2.0*a^2)
-
-
-    println("ELQr = ", 1.0, " ", Φ, "  ", Q, " ", r )
 
 
     #Constants/Orbit mapping 
@@ -102,7 +103,8 @@ function Constants(P::SystemParameters)
     s0 = convert_spin*2.0*pi*inertia/p0
 
 
-
+    #Black hole 
+    rH = 1.0 + sqrt(1.0 - a^2)
 
 
 
@@ -111,7 +113,8 @@ function Constants(P::SystemParameters)
     return Constants{P.NF}(light_c,Newton_g,Msolar,
                            E,L,Q,
                            Φ,u0,u1,
-                           s0)
+                           s0,
+                           rH)
 end
 
 

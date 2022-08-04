@@ -14,9 +14,6 @@ function SphericalPhotonOrbit_initial_conditions(M::Model)
     @unpack NF,r,θ,ϕ,a = M.parameters
     @unpack  Q,Φ = M.constants
 
-    println("dev: these are the initial conditons for spherical photon orbits")
-
-
     # Initial conditions for r are set in system_parameters.jl 
     # Initial conditions for θ, ϕ are arbitrary, also set in  system_parameters.jl 
     # We now calculate the initial value of pθ

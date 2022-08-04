@@ -15,9 +15,6 @@
 
 function timestepping(X::PrognosticVariables, M::Model)
 
-
-
-println("dev: you are inside timestepping")
 @unpack a, Tint = M.parameters
 @unpack Φ,Q,u0,u1 = M.constants
 
@@ -34,12 +31,9 @@ tspan = (0.0,Tint)
 u = vcat(X.xvector,X.pvector)
 params = [Φ,a]
 
-println("dev: this is uvec", u)
-println("dev: this is params", params)
-
 
 # Define the ODE to be solved
-ode_prob = DifferentialEquations.ODEProblem(spherical_photon_hamiltonian!,u,tspan,params)
+ode_prob = DifferentialEquations.ODEProblem(spherical_photon_hamiltonian!,u,tspan,params,progress = true)
 
 # Solve it 
 #algorithm = DifferentialEquations.RK4() # probably define this elsewhere 

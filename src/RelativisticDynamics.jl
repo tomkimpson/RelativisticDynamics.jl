@@ -5,14 +5,13 @@ module RelativisticDynamics
 
 # Imports
 import Parameters: @with_kw, @unpack
-#import ProtoStructs: @proto
 
 import DifferentialEquations
 
 
 
 # Exports
-export  orbit, SystemParameters, Constants, PrognosticVariables,BoyerLindquistPlot,PlotSphericalPhotonOrbit
+export  orbit, SystemParameters, Constants, PrognosticVariables,PlotTrajectory,AnimateTrajectory
 
 #Includes
 include("system_parameters.jl")

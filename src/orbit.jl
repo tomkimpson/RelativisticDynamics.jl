@@ -29,6 +29,6 @@ function orbit(::Type{NF}=Float64;              # number format, use Float64 as 
 
 
 
-    println("All completed OK")
+    println("Relativistic Dynamics completed OK")
     return solution , M
 end
