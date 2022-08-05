@@ -18,17 +18,17 @@ end
 
 function contravariant_metric(metric_covar,demoninator)
 
-    
+    #see https://www.roma1.infn.it/teongrav/onde19_20/kerr.pdf
 
     metric_contra = zeros(Float64,4,4)
     
 
-    metric_contra[1,1] = -metric_covar[4,4] / demoninator
+    metric_contra[1,1] = metric_covar[4,4] / demoninator
     metric_contra[2,2] = 1.0 / metric_covar[2,2]
     metric_contra[3,3] = 1.0 / metric_covar[3,3]
-    metric_contra[4,4] = -metric_covar[1,1] / demoninator
+    metric_contra[4,4] = metric_covar[1,1] / demoninator
 
-    metric_contra[1,4] = metric_covar[4,1]/demoninator
+    metric_contra[1,4] = -metric_covar[4,1]/demoninator
     metric_contra[4,1] = metric_contra[1,4]
 
 

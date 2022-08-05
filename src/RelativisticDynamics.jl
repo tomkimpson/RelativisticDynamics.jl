@@ -7,6 +7,7 @@ module RelativisticDynamics
 import Parameters: @with_kw, @unpack
 
 import DifferentialEquations
+using TensorOperations, Einsum
 
 
 

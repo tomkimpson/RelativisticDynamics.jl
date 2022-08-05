@@ -38,18 +38,19 @@ end
 """Initialize a PrognosticVariables struct for an atmosphere at rest. No winds,
 hence zero vorticity and divergence, but temperature, pressure and humidity are
 initialised """
-function initial_conditions(M::Model)
+function MPD_initial_conditions(M::Model)
 
-    @unpack NF,α,a,mPSR,mBH,Sθ,Sϕ = M.parameters
+    @unpack NF,α,θ,ϕ,a,mPSR,mBH,Sθ,Sϕ = M.parameters
     @unpack E,L,Q,s0 = M.constants 
 
-
+    println("Welcome to MPD initial conditons")
 
     # 4- position
-    xvector = [0.0,α,pi/2.0,0.0] # By default the starting coordinates
+    xvector = [0.0,α,θ,ϕ] # By default the starting coordinates
 
 
     r,θ = xvector[2],xvector[3] #Get the initial r and theta 
+    r = 10.0
     Δ = delta(r,a)
     Σ = sigma(r,θ,a)
 
@@ -58,6 +59,27 @@ function initial_conditions(M::Model)
     metric_covar  = covariant_metric(r,θ,a)
     metric_contra = contravariant_metric(metric_covar,Δ*sin(θ)^2)
 
+
+    println("Covariant metric:")
+    display(metric_covar)
+
+    println("Contravariant metric:")
+    display(metric_contra)
+
+    @tensor begin
+        blob[a,c] := metric_covar[a,b] * metric_contra[b,c]  #:= allocates a new array
+    end
+    println("blob = ")
+    display(blob)
+
+
+    @einsum blob2[i, j] := metric_covar[i, k] * metric_contra[k,j]
+    println("blob2 = ")
+    display(blob2)
+
+
+    println("manual = ")
+    println(metric_covar[1,1]*metric_contra[1,1] + metric_covar[1,4]*metric_contra[1,4])
 
     # 4 - momentum 
     T = (r^2 + a^2)*(E*(r^2 + a^2) -a*L)/Δ -a*(a*E*sin(θ)^2 - L)

@@ -140,6 +140,7 @@ function AnimateTrajectory(solution,model)
     @unpack a = model.parameters
     @unpack rH = model.constants
 
+    println("This is animate trajectory")
 
     #Interpolate to higher resolution for smooth plotting   
     interpolation_factor = 10 
@@ -160,16 +161,21 @@ function AnimateTrajectory(solution,model)
 
 
     # Plot it 
+    title = "Spherical photon orbits with a = $(@sprintf("%.2f", a))"
+
     plt = plot3d(1,
-                xaxis=("x",(-3,3)),yaxis=("y",(-3,3)),zaxis=("z",(-3,3)),
-                title = "TEST TITLE", marker=2,markercolor="black")
+                xaxis=(L"x (r_h)",(-3,3)),yaxis=(L"y (r_h)",(-3,3)),zaxis=(L"z (r_h)",(-3,3)),
+                legend=false,
+                title = title,
+                size = (1200, 800))
 
 
      n = length(x)
      anim = @animate for i in 1:n
         push!(plt,x[i],y[i],z[i])
      end 
-     gif(anim, "yt.gif", fps = 30)
+    fout = "example_media/spherical_photon_orbits_a_$a" * ".gif"
+     gif(anim, fout, fps = 30)
 
 
 end 

@@ -11,7 +11,7 @@ The default values of the keywords define the default model setup.
 
 
     #Type of system to integrate 
-    model::Symbol=:SphericalPhoton           # :barotropic, :shallowwater, or :primitive
+    model::Symbol=:MPD           # :SphericalPhoton , :MPD
 
     #BH parameters
     a::Real   = 0.9     # BH spin parameter
