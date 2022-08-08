@@ -12,7 +12,6 @@
         g = RelativisticDynamics.covariant_metric(r,θ,a)
         Δ = RelativisticDynamics.delta(r,a)
         g_inverse = RelativisticDynamics.contravariant_metric(g,Δ*sin(θ)^2)
-
         #Check metric trace is OK 
         @tensor begin
         δ[a,c] := g[a,b] * g_inverse[b,c]  #:= allocates a new array
@@ -42,7 +41,7 @@ end
     for n in 1:1
 
         #Get some coordiantes at random 
-       #r = rand(Uniform(3.0,1e5))      # Radial coordinate. 3.0 as rough lower limit of an event horizon
+        #r = rand(Uniform(3.0,1e5))      # Radial coordinate. 3.0 as rough lower limit of an event horizon
         #θ = rand(Uniform(0.0, 2.0*π))   # Polar coord
         #a = rand(Uniform(-0.99, 0.99))  # Spin parameter
 
@@ -86,7 +85,9 @@ end
             Γ[μ,ν,λ] := 0.50*g_inverse[μ,ρ]*(g_∂[ρ,ν,λ] +g_∂[ρ,λ,ν]-g_∂[ν,λ,ρ])  #:= allocates a new array
         end
 
-
+        #Compare with the analytical solution
+        Γ_analytical = RelativisticDynamics.christoffel(r,θ,a)
+        @test isapprox(Γ,Γ_analytical)
    
     end
 
