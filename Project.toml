@@ -5,6 +5,7 @@ version = "0.1.0"
 
 [deps]
 DifferentialEquations = "0c46a032-eb83-5123-abaf-570d42b7fbaa"
+Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
 Einsum = "b7d42ee7-0b51-5a75-98ca-779d3107e4c0"
 LaTeXStrings = "b964fa9f-0449-5b57-a5c2-d3ea65f4040f"
 Parameters = "d96e819e-fc66-5662-9728-84c9c7592b0a"

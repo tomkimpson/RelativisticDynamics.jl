@@ -85,52 +85,37 @@ function christoffel(r,θ,a)
 
 
 
-    return christoffel
+    return Γ
 end 
 
 
 
-
-
-
-
-
-function riemann()
-
-
-end 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function covariant_metric_derivative(r,θ,a)
-
-    Δ = delta(r,a)
+# Pure function definitions
+# Function definitions which do not mutate inputs.
+# Allows for checks via AutoDif https://fluxml.ai/Zygote.jl/latest/limitations/
+function metric_gtt(r,θ,a)
     Σ = sigma(r,θ,a)
+    return -(1.0 - 2.0*r / Σ)
+end 
 
-    metric_covar_deriv = zeros(Float64,4,4,4)
+function metric_grr(r,θ,a)
+    Σ = sigma(r,θ,a)
+    Δ = delta(r,a)
+    return Σ / Δ
+end 
 
-    #t and ϕ derivatives = 0 since the spacetimes are always axisymmetric and stationary
+function metric_gθθ(r,θ,a)
+    Σ = sigma(r,θ,a)
+    return Σ 
+end 
 
-    #r-derivatives
+function metric_gϕϕ(r,θ,a)
+    Σ = sigma(r,θ,a)
+    Δ = delta(r,a)
+    return sin(θ)^2 * ((r^2 +a^2)^2 - Δ*a^2*sin(θ)^2) / Σ
+end 
 
-    metric_covar_deriv[1,1,2] = 1.0 - 2.0*r / Σ
-    metric_covar_deriv[2,2,2] = Σ / Δ
-    metric_covar_deriv[3,3,2] = Σ
-    metric_covar_deriv[4,4,2] = sin(θ)^2 * ((r^2 +a^2)^2 - Δ*a^2*sin(θ)^2) / Σ
-    metric_covar_deriv[1,4,2] = -2.0*a*r*sin(θ)^2/Σ
-    metric_covar_deriv[4,1,2] = metric_covar[1,4]
-    return metric_covar_deriv
+function metric_gtϕ(r,θ,a)
+    Σ = sigma(r,θ,a)
+    return -2.0*a*r*sin(θ)^2/Σ
 end 

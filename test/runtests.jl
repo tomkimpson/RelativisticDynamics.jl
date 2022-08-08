@@ -1,6 +1,10 @@
 using RelativisticDynamics
 using Test
+using Zygote
+using TensorOperations
+using LinearAlgebra
+using Distributions
 
-@testset "RelativisticDynamics.jl" begin
-    # Write your tests here.
-end
+# GENERAL
+include("metric.jl")
+
