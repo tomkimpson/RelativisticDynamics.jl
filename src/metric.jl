@@ -5,12 +5,12 @@ function covariant_metric(r,θ,a)
 
     metric_covar = zeros(Float64,4,4)
 
-    metric_covar[1,1] = -(1.0 - 2.0*r / Σ)
-    metric_covar[2,2] = Σ / Δ
-    metric_covar[3,3] = Σ
-    metric_covar[4,4] = sin(θ)^2 * ((r^2 +a^2)^2 - Δ*a^2*sin(θ)^2) / Σ
-    metric_covar[1,4] = -2.0*a*r*sin(θ)^2/Σ
-    metric_covar[4,1] = metric_covar[1,4]
+    metric_covar[1,1] =  metric_gtt(r,θ,a) #-(1.0 - 2.0*r / Σ)
+    metric_covar[2,2] =  metric_grr(r,θ,a) #Σ / Δ
+    metric_covar[3,3] =  metric_gθθ(r,θ,a)
+    metric_covar[4,4] =  metric_gϕϕ(r,θ,a) #sin(θ)^2 * ((r^2 +a^2)^2 - Δ*a^2*sin(θ)^2) / Σ
+    metric_covar[1,4] =  metric_gtϕ(r,θ,a) #-2.0*a*r*sin(θ)^2/Σ
+    metric_covar[4,1] =  metric_covar[1,4]
     return metric_covar
 end 
 

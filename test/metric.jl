@@ -34,6 +34,12 @@
 end
 
 
+function testing_func(x,a)
+    t,r,θ,ϕ =  x[1],x[2],x[3],x[4]
+    Σ = r^2 + a^2*cos(θ)
+    return -(1.0 - 2.0*r / Σ)
+end 
+
 
 @testset "Christoffel symbols" begin
     
@@ -78,7 +84,7 @@ end
         g_∂θ[1,4] = g_∂θ[4,1]
 
         # Use these gradients to get Christoffel symbols 
-        g_∂ = zeros(Float64,4,4,4)
+        g_∂ = zeros(Float64,4,4,4) # a derivative tensor 
         g_∂[:,:,2] = g_∂r
         g_∂[:,:,3] = g_∂θ
         @tensor begin
@@ -88,7 +94,23 @@ end
         #Compare with the analytical solution
         Γ_analytical = RelativisticDynamics.christoffel(r,θ,a)
         @test isapprox(Γ,Γ_analytical)
+
+        #blob = gradient(x -> RelativisticDynamics.metric_gtt(x,θ,a), r)[1]
+        #println(blob)
    
+        println(r)
+        println(θ)
+        println(a)
+        t = 100.0
+        ϕ = 5.0
+        newblob = hessian(x -> testing_func(x,a), [t r θ ϕ])
+        
+        display(newblob)
+        gbar = zeros(Float64,4,4,4,4) # a second derivative tensor
+        gbar[1,1,:,:] = newblob 
+
+        display(gbar)
+
     end
 
 end 
