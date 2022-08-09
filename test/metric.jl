@@ -34,11 +34,15 @@
 end
 
 
-function testing_func(x,a)
-    t,r,θ,ϕ =  x[1],x[2],x[3],x[4]
-    Σ = r^2 + a^2*cos(θ)
-    return -(1.0 - 2.0*r / Σ)
-end 
+
+
+
+
+
+
+
+
+
 
 
 @testset "Christoffel symbols" begin
@@ -52,8 +56,10 @@ end
         #a = rand(Uniform(-0.99, 0.99))  # Spin parameter
 
 
+        t = 0.0
         r = 20.0
-        θ = π/4.0 
+        θ = π/4.0
+        ϕ = π/6.0 
         a = 0.0
 
         println(r," ",θ," ", a)
@@ -63,30 +69,17 @@ end
         Δ = RelativisticDynamics.delta(r,a)
         g_inverse = RelativisticDynamics.contravariant_metric(g,Δ*sin(θ)^2)
 
-        #Use automatic diff to get the gradient of the metric 
+        #Use automatic diff to get the first derivatives of the metric  of the metric 
         #Only calculate r and θ derivatives
-        #`gradient()` returns a tuple so [1] extracts the float 
-        g_∂r = zeros(Float64,size(g))
-        g_∂r[1,1] = gradient(x -> RelativisticDynamics.metric_gtt(x,θ,a), r)[1]
-        g_∂r[2,2] = gradient(x -> RelativisticDynamics.metric_grr(x,θ,a), r)[1]
-        g_∂r[3,3] = gradient(x -> RelativisticDynamics.metric_gθθ(x,θ,a), r)[1]
-        g_∂r[4,4] = gradient(x -> RelativisticDynamics.metric_gϕϕ(x,θ,a), r)[1]
-        g_∂r[4,1] = gradient(x -> RelativisticDynamics.metric_gtϕ(x,θ,a), r)[1]
-        g_∂r[1,4] = g_∂r[4,1]
-
-
-        g_∂θ = zeros(Float64,size(g))
-        g_∂θ[1,1] = gradient(x -> RelativisticDynamics.metric_gtt(r,x,a), θ)[1]
-        g_∂θ[2,2] = gradient(x -> RelativisticDynamics.metric_grr(r,x,a), θ)[1]
-        g_∂θ[3,3] = gradient(x -> RelativisticDynamics.metric_gθθ(r,x,a), θ)[1]
-        g_∂θ[4,4] = gradient(x -> RelativisticDynamics.metric_gϕϕ(r,x,a), θ)[1]
-        g_∂θ[4,1] = gradient(x -> RelativisticDynamics.metric_gtϕ(r,x,a), θ)[1]
-        g_∂θ[1,4] = g_∂θ[4,1]
-
-        # Use these gradients to get Christoffel symbols 
+        #`jacobian()` returns a tuple so [1] extracts the vector of floats 
         g_∂ = zeros(Float64,4,4,4) # a derivative tensor 
-        g_∂[:,:,2] = g_∂r
-        g_∂[:,:,3] = g_∂θ
+
+        g_∂[1,1,:] = jacobian(x -> RelativisticDynamics.metric_g11(x,a), [t r θ ϕ])[1]
+        g_∂[2,2,:] = jacobian(x -> RelativisticDynamics.metric_g22(x,a), [t r θ ϕ])[1]
+        g_∂[3,3,:] = jacobian(x -> RelativisticDynamics.metric_g33(x,a), [t r θ ϕ])[1]
+        g_∂[4,4,:] = jacobian(x -> RelativisticDynamics.metric_g44(x,a), [t r θ ϕ])[1]
+        g_∂[1,4,:] = jacobian(x -> RelativisticDynamics.metric_g14(x,a), [t r θ ϕ])[1]
+
         @tensor begin
             Γ[μ,ν,λ] := 0.50*g_inverse[μ,ρ]*(g_∂[ρ,ν,λ] +g_∂[ρ,λ,ν]-g_∂[ν,λ,ρ])  #:= allocates a new array
         end
@@ -95,22 +88,95 @@ end
         Γ_analytical = RelativisticDynamics.christoffel(r,θ,a)
         @test isapprox(Γ,Γ_analytical)
 
-        #blob = gradient(x -> RelativisticDynamics.metric_gtt(x,θ,a), r)[1]
-        #println(blob)
-   
-        println(r)
-        println(θ)
-        println(a)
-        t = 100.0
-        ϕ = 5.0
-        newblob = hessian(x -> testing_func(x,a), [t r θ ϕ])
-        
-        display(newblob)
-        gbar = zeros(Float64,4,4,4,4) # a second derivative tensor
-        gbar[1,1,:,:] = newblob 
-
-        display(gbar)
 
     end
 
 end 
+
+
+
+
+
+
+@testset "Riemann symbols" begin
+    
+
+    for n in 1:1
+
+        t = 0.0
+        r = 20.0
+        θ = π/4.0
+        ϕ = π/6.0 
+        a = 0.0
+
+        #Calculate the metric 
+        g = RelativisticDynamics.covariant_metric(r,θ,a)
+        Δ = RelativisticDynamics.delta(r,a)
+        g_inverse = RelativisticDynamics.contravariant_metric(g,Δ*sin(θ)^2)
+
+
+        # First derivatives of the covariant metric 
+        g_∂ = zeros(Float64,4,4,4) # a derivative tensor 
+
+        g_∂[1,1,:] = jacobian(x -> RelativisticDynamics.metric_g11(x,a), [t r θ ϕ])[1]
+        g_∂[2,2,:] = jacobian(x -> RelativisticDynamics.metric_g22(x,a), [t r θ ϕ])[1]
+        g_∂[3,3,:] = jacobian(x -> RelativisticDynamics.metric_g33(x,a), [t r θ ϕ])[1]
+        g_∂[4,4,:] = jacobian(x -> RelativisticDynamics.metric_g44(x,a), [t r θ ϕ])[1]
+        g_∂[1,4,:] = jacobian(x -> RelativisticDynamics.metric_g14(x,a), [t r θ ϕ])[1]
+        g_∂[4,1,:,:] = g_∂[1,4,:,:]
+
+        # First derivatives of the contravariant metric 
+        g_inverse_∂ = zeros(Float64,4,4,4) # a derivative tensor 
+
+        g_inverse_∂[1,1,:] = jacobian(x -> RelativisticDynamics.metric_contra_g11(x,a), [t r θ ϕ])[1]
+        g_inverse_∂[2,2,:] = jacobian(x -> RelativisticDynamics.metric_contra_g22(x,a), [t r θ ϕ])[1]
+        g_inverse_∂[3,3,:] = jacobian(x -> RelativisticDynamics.metric_contra_g33(x,a), [t r θ ϕ])[1]
+        g_inverse_∂[4,4,:] = jacobian(x -> RelativisticDynamics.metric_contra_g44(x,a), [t r θ ϕ])[1]
+        g_inverse_∂[1,4,:] = jacobian(x -> RelativisticDynamics.metric_contra_g14(x,a), [t r θ ϕ])[1]
+        g_inverse_∂[4,1,:,:] = g_inverse_∂[1,4,:,:]
+
+        # Second derivative of the metric 
+        g_∂∂ = zeros(Float64,4,4,4,4) # a derivative tensor
+        g_∂∂[1,1,:,:] = hessian(x -> metric_g11(x,a), [t r θ ϕ])
+        g_∂∂[2,2,:,:] = hessian(x -> metric_g22(x,a), [t r θ ϕ])
+        g_∂∂[3,3,:,:] = hessian(x -> metric_g33(x,a), [t r θ ϕ])
+        g_∂∂[4,4,:,:] = hessian(x -> metric_g44(x,a), [t r θ ϕ])
+        g_∂∂[1,4,:,:] = hessian(x -> metric_g14(x,a), [t r θ ϕ])
+        g_∂∂[4,1,:,:] = g_∂∂[1,4,:,:]
+
+
+
+        @tensor begin
+            Riemann[μ,ν,ρ,σ] := 0.50*g_inverse[μ,ρ]*(g_∂[ρ,ν,λ] +g_∂[ρ,λ,ν]-g_∂[ν,λ,ρ])  
+        end
+
+
+
+    end
+
+end 
+
+
+
+
+
+
+
+
+#  #blob = gradient(x -> RelativisticDynamics.metric_gtt(x,θ,a), r)[1]
+#         #println(blob)
+   
+#         gbar = zeros(Float64,4,4,4,4) # a second derivative tensor
+
+#         t = 100.0 #arbitrary
+#         ϕ = 5.0 #arbitrary 
+        
+            
+
+
+
+
+
+#         @tensor begin
+#             R[μ,ν,ρ,σ] := 0.50*g_inverse[μ,ρ]*(g_∂[ρ,ν,λ] +g_∂[ρ,λ,ν]-g_∂[ν,λ,ρ])  #:= allocates a new array
+#         end

@@ -138,3 +138,103 @@ function metric_gtϕ(r,θ,a)
     Σ = sigma(r,θ,a)
     return -2.0*a*r*sin(θ)^2/Σ
 end 
+
+
+
+#Alternative pure function defs 
+
+function metric_g11(x,a)
+    t,r,θ,ϕ =  x[1],x[2],x[3],x[4]
+    Σ = RelativisticDynamics.sigma(r,θ,a)
+    return -(1.0 - 2.0*r / Σ)
+end 
+
+
+
+function metric_g22(x,a)
+    t,r,θ,ϕ =  x[1],x[2],x[3],x[4]
+    Σ = RelativisticDynamics.sigma(r,θ,a)
+    Δ = RelativisticDynamics.delta(r,a)
+    return Σ / Δ
+end 
+
+function metric_g33(x,a)
+    t,r,θ,ϕ =  x[1],x[2],x[3],x[4]
+    Σ = RelativisticDynamics.sigma(r,θ,a)
+    return Σ 
+end 
+
+function metric_g44(x,a)
+    t,r,θ,ϕ =  x[1],x[2],x[3],x[4]
+    Σ = RelativisticDynamics.sigma(r,θ,a)
+    Δ = RelativisticDynamics.delta(r,a)
+    return sin(θ)^2 * ((r^2 +a^2)^2 - Δ*a^2*sin(θ)^2) / Σ
+end 
+
+function metric_g14(x,a)
+    t,r,θ,ϕ =  x[1],x[2],x[3],x[4]
+    Σ = RelativisticDynamics.sigma(r,θ,a)
+    return -2.0*a*r*sin(θ)^2/Σ
+end 
+
+
+
+
+
+#CONTRAVARIANT pure form 
+
+function metric_contra_g11(x,a)
+    t,r,θ,ϕ =  x[1],x[2],x[3],x[4]
+    Σ = RelativisticDynamics.sigma(r,θ,a)
+    Δ = RelativisticDynamics.delta(r,a)
+    covar = sin(θ)^2 * ((r^2 +a^2)^2 - Δ*a^2*sin(θ)^2) / Σ
+    denom = Δ*sin(θ)^2
+    return -covar/denom 
+end 
+
+
+
+function metric_contra_g22(x,a)
+    t,r,θ,ϕ =  x[1],x[2],x[3],x[4]
+    Σ = RelativisticDynamics.sigma(r,θ,a)
+    Δ = RelativisticDynamics.delta(r,a)
+    return  Δ/Σ 
+end 
+
+function metric_contra_g33(x,a)
+    t,r,θ,ϕ =  x[1],x[2],x[3],x[4]
+    Σ = RelativisticDynamics.sigma(r,θ,a)
+    return 1.0/Σ 
+end 
+
+function metric_contra_g44(x,a)
+    t,r,θ,ϕ =  x[1],x[2],x[3],x[4]
+    Σ = RelativisticDynamics.sigma(r,θ,a)
+    Δ = RelativisticDynamics.delta(r,a)
+    covar = -(1.0 - 2.0*r / Σ)
+    denom = Δ*sin(θ)^2
+
+    return -covar/denom
+end 
+
+function metric_contra_g14(x,a)
+    t,r,θ,ϕ =  x[1],x[2],x[3],x[4]
+    Σ = RelativisticDynamics.sigma(r,θ,a)
+    Δ = RelativisticDynamics.delta(r,a)
+    covar = -2.0*a*r*sin(θ)^2/Σ
+    denom = Δ*sin(θ)^2
+    return covar/denom
+end 
+
+
+
+
+
+
+
+
+
+
+
+
+
