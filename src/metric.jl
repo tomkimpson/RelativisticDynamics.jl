@@ -124,7 +124,15 @@ function riemann(r,θ,a)
     Rtensor[1,2,2,4] = 3.0*sin(θ)^2*a*r*(r^2+a^2)*(r^2-3.0*a^2*cos(θ)^2)/(Σ^3*Δ)
     Rtensor[1,2,3,4] = -cos(θ)*sin(θ)*a*(3.0*r^2-a^2*cos(θ)^2)*(2.0*(r^2+a^2)^2+a^2*sin(θ)^2*Δ)/(Σ^3*Δ)
     
-    
+    #Antisymmetric under exchange of last two indices. More concise way to do this surely?!
+    Rtensor[1,1,4,1] = -Rtensor[1,1,1,4]
+    Rtensor[1,1,3,2] = -Rtensor[1,1,2,3]
+    Rtensor[1,2,2,1] = -Rtensor[1,2,1,2]
+    Rtensor[1,2,3,1] = -Rtensor[1,2,1,3] 
+    Rtensor[1,2,4,2] = -Rtensor[1,2,2,4]  
+    Rtensor[1,2,4,3] = -Rtensor[1,2,3,4]  
+
+
     #-----------------------------------------------------------------------#    
     
 
@@ -135,7 +143,13 @@ function riemann(r,θ,a)
     Rtensor[1,4,1,4] = -sin(θ)^2*r*(r^2+3*a^2*sin(θ)^2-3*a^2)*((a^2+r^2)^2-a^2*sin(θ)^2*Δ)/Σ^4
     Rtensor[1,4,2,3] = (3.0*r^2-a^2*cos(θ)^2)*((a^2+r^2)^2-a^2*sin(θ)^2*Δ)*a*sin(θ)*cos(θ)/(Σ^3*Δ)
     
-    
+    #Symmetries
+    Rtensor[1,3,2,1] = -Rtensor[1,3,1,2]
+    Rtensor[1,3,3,1] = -Rtensor[1,3,1,3]
+    Rtensor[1,3,4,2] = -Rtensor[1,3,2,4]
+    Rtensor[1,3,4,3] = -Rtensor[1,3,3,4] 
+    Rtensor[1,4,4,1] = -Rtensor[1,4,1,4]  
+    Rtensor[1,4,3,2] = -Rtensor[1,4,2,3]  
 
     
     #-----------------------------------------------------------------------# 
@@ -152,6 +166,17 @@ function riemann(r,θ,a)
     Rtensor[2,4,2,4] = -sin(θ)^2*r*(r^2-3.0*a^2*cos(θ)^2)*((r^2+a^2)^2+2.0*a^2*Δ*sin(θ)^2)/Σ^4
     Rtensor[2,4,3,4] = 3.0*a^2*(r^2+a^2)*(3.0*r^2-a^2*cos(θ)^2)*Δ*cos(θ)*sin(θ)^3/Σ^4 
     
+    #Symmetries
+    Rtensor[2,1,2,1] = -Rtensor[2,1,1,2]  
+    Rtensor[2,1,3,1] = -Rtensor[2,1,1,3]  
+    Rtensor[2,1,4,2] = -Rtensor[2,1,2,4] 
+    Rtensor[2,1,4,3] = -Rtensor[2,1,3,4] 
+    Rtensor[2,3,4,1] = -Rtensor[2,3,1,4]  
+    Rtensor[2,3,3,2] = -Rtensor[2,3,2,3]  
+    Rtensor[2,4,2,1] = -Rtensor[2,4,1,2]  
+    Rtensor[2,4,3,1] = -Rtensor[2,4,1,3]  
+    Rtensor[2,4,4,2] = -Rtensor[2,4,2,4]  
+    Rtensor[2,4,4,3] = -Rtensor[2,4,3,4]   
     
     #-----------------------------------------------------------------------#
     
@@ -167,6 +192,17 @@ function riemann(r,θ,a)
     Rtensor[3,4,2,4] = 3.0*a^2*(r^2+a^2)*(3.0*r^2-a^2*cos(θ)^2)*cos(θ)*sin(θ)^3/Σ^4
     Rtensor[3,4,3,4] = r*(r^2-3.0*a^2*cos(θ)^2)*(2.0*(r^2+a^2)^2+a^2*Δ*sin(θ)^2)*sin(θ)^2/Σ^4 
     
+    #Symmetries
+    Rtensor[3,1,2,1] = -Rtensor[3,1,1,2]  
+    Rtensor[3,1,3,1] = -Rtensor[3,1,1,3]  
+    Rtensor[3,1,4,2] = -Rtensor[3,1,2,4] 
+    Rtensor[3,1,4,3] = -Rtensor[3,1,3,4] 
+    Rtensor[3,2,4,1] = -Rtensor[3,2,1,4]  
+    Rtensor[3,2,3,2] = -Rtensor[3,2,2,3]  
+    Rtensor[3,4,2,1] = -Rtensor[3,4,1,2]  
+    Rtensor[3,4,3,1] = -Rtensor[3,4,1,3]  
+    Rtensor[3,4,4,2] = -Rtensor[3,4,2,4]  
+    Rtensor[3,4,4,3] = -Rtensor[3,4,3,4]   
     
     #-----------------------------------------------------------------------#
         
@@ -182,6 +218,29 @@ function riemann(r,θ,a)
     Rtensor[4,4,1,4] = -2.0*a*r^2*(r^2-3.0*a^2*cos(θ)^2)*sin(θ)^2/Σ^4
     Rtensor[4,4,2,3] = 2.0*r*a^2*(3.0*r^2-a^2*cos(θ)^2)*cos(θ)*sin(θ)/(Δ*Σ^3)
     
+    #Symmetries
+    Rtensor[4,1,3,2] = -Rtensor[4,1,2,3]  
+    Rtensor[4,2,2,1] = -Rtensor[4,2,1,2]  
+    Rtensor[4,2,3,1] = -Rtensor[4,2,1,3] 
+    Rtensor[4,2,4,2] = -Rtensor[4,2,2,4] 
+    Rtensor[4,2,4,3] = -Rtensor[4,2,3,4]  
+    Rtensor[4,3,2,1] = -Rtensor[4,3,1,2]  
+    Rtensor[4,3,3,1] = -Rtensor[4,3,1,3]  
+    Rtensor[4,3,4,2] = -Rtensor[4,3,2,4]  
+    Rtensor[4,3,4,3] = -Rtensor[4,3,3,4]  
+    Rtensor[4,4,4,1] = -Rtensor[4,4,1,4]   
+    Rtensor[4,4,3,2] = -Rtensor[4,4,2,3]   
+
+
+
+    #Missed terms
+    σ = r^2 - a^2 * cos(θ)^2
+    Rtensor[4,1,4,1] = (r*σ*(-a^2*r-r^3-r*Σ+Σ^2) + a^2*(σ^2*sin(θ)^2 + cos(θ)^2*(r*(4.0*a^2*r+4.0*r^3-2.0*Σ^4)+a^2*(σ-4*r^2*Σ^2)*sin(θ)))) / Σ^5
+    Rtensor[4,1,1,4] = -Rtensor[4,1,4,1]
+
+
+
+
 
     return Rtensor
 
@@ -212,6 +271,27 @@ function schwarzchild_covariant_riemann(r,θ,a)
     Rtensor[3,4,3,4] = r*2.0*sin(θ)^2
 
 
+    #Symmetries
+    Rtensor[1,2,2,1] = -Rtensor[1,2,1,2]
+    Rtensor[1,3,3,1] = -Rtensor[1,3,1,3]
+    Rtensor[1,4,4,1] = -Rtensor[1,4,1,4]
+    Rtensor[2,3,3,2]=  -Rtensor[2,3,2,3]
+    Rtensor[2,4,4,2] = -Rtensor[2,4,2,4]
+    Rtensor[3,4,4,3] = -Rtensor[3,4,3,4]
+
+    Rtensor[2,1,1,2] = -Rtensor[1,2,1,2]
+    Rtensor[3,1,1,3] = -Rtensor[1,3,1,3]
+    Rtensor[4,1,1,4] = -Rtensor[1,4,1,4]
+    Rtensor[3,2,2,3]=  -Rtensor[2,3,2,3]
+    Rtensor[4,2,2,4] = -Rtensor[2,4,2,4]
+    Rtensor[4,3,3,4] = -Rtensor[3,4,3,4]
+
+    Rtensor[2,1,2,1] = Rtensor[1,2,1,2]
+    Rtensor[3,1,3,1] = Rtensor[1,3,1,3] 
+    Rtensor[4,1,4,1] = Rtensor[1,4,1,4] 
+    Rtensor[3,2,3,2] = Rtensor[2,3,2,3] 
+    Rtensor[4,2,4,2] = Rtensor[2,4,2,4] 
+    Rtensor[4,3,4,3] = Rtensor[3,4,3,4] 
 
     return Rtensor
 

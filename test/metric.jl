@@ -1,70 +1,70 @@
-@testset "Trace of the metric" begin
+# @testset "Trace of the metric" begin
     
-    for n in 1:3
+#     for n in 1:3
 
-        #Get some coordiantes at random 
-        r = rand(Uniform(3.0,1e5))      # Radial coordinate. 3.0 as rough lower limit of an event horizon
-        θ = rand(Uniform(0.0, 2.0*π))   # Polar coord
-        a = rand(Uniform(-0.99, 0.99))  # Spin parameter
+#         #Get some coordiantes at random 
+#         r = rand(Uniform(3.0,1e5))      # Radial coordinate. 3.0 as rough lower limit of an event horizon
+#         θ = rand(Uniform(0.0, 2.0*π))   # Polar coord
+#         a = rand(Uniform(-0.99, 0.99))  # Spin parameter
         
-        #Calculate the metric 
-        coords = [0.0,r,θ,0.0]
-        g = RelativisticDynamics.covariant_metric(coords,a)
-        g_inverse = RelativisticDynamics.contravariant_metric(coords,a)
-        #Check metric trace is OK 
-        @tensor begin
-        δ[a,c] := g[a,b] * g_inverse[b,c]  #:= allocates a new array
-        end
-        @test tr(δ)==4.0 
-    end
+#         #Calculate the metric 
+#         coords = [0.0,r,θ,0.0]
+#         g = RelativisticDynamics.covariant_metric(coords,a)
+#         g_inverse = RelativisticDynamics.contravariant_metric(coords,a)
+#         #Check metric trace is OK 
+#         @tensor begin
+#         δ[a,c] := g[a,b] * g_inverse[b,c]  #:= allocates a new array
+#         end
+#         @test tr(δ)==4.0 
+#     end
 
-end
-
-
+# end
 
 
-@testset "Christoffel tensor components" begin
+
+
+# @testset "Christoffel tensor components" begin
     
 
-    for n in 1:3
+#     for n in 1:3
 
-        #Get some coordiantes at random 
-        t = rand(Uniform(3.0,1e5))       # Time coordinate - arbitratry since metric is time-independent
-        r = rand(Uniform(3.0,1e5))       # Radial coordinate. 3.0 as rough lower limit of an event horizon
-        θ = rand(Uniform(0.0, 2.0*π))    # Polar coordinate
-        ϕ = rand(Uniform(0.0, 2.0*π))    # Azimuth coordinate - arbitratry since metric is axisymmetric
-        a = rand(Uniform(-0.99, 0.99))   # Spin parameter
+#         #Get some coordiantes at random 
+#         t = rand(Uniform(3.0,1e5))       # Time coordinate - arbitratry since metric is time-independent
+#         r = rand(Uniform(3.0,1e5))       # Radial coordinate. 3.0 as rough lower limit of an event horizon
+#         θ = rand(Uniform(0.0, 2.0*π))    # Polar coordinate
+#         ϕ = rand(Uniform(0.0, 2.0*π))    # Azimuth coordinate - arbitratry since metric is axisymmetric
+#         a = rand(Uniform(-0.99, 0.99))   # Spin parameter
 
-        coords = [t,r,θ,ϕ]
+#         coords = [t,r,θ,ϕ]
         
-        #Calculate the metric 
-        g = RelativisticDynamics.covariant_metric(coords,a)
-        g_inverse = RelativisticDynamics.contravariant_metric(coords,a)
+#         #Calculate the metric 
+#         g = RelativisticDynamics.covariant_metric(coords,a)
+#         g_inverse = RelativisticDynamics.contravariant_metric(coords,a)
 
 
-        #Use automatic diff to get the first derivatives of the metric  of the metric 
-        #Only calculate r and θ derivatives
-        #`jacobian()` returns a tuple so [1] extracts the vector of floats 
-        g_∂ = zeros(Float64,4,4,4) # a derivative tensor 
+#         #Use automatic diff to get the first derivatives of the metric  of the metric 
+#         #Only calculate r and θ derivatives
+#         #`jacobian()` returns a tuple so [1] extracts the vector of floats 
+#         g_∂ = zeros(Float64,4,4,4) # a derivative tensor 
 
-        g_∂[1,1,:] = jacobian(x -> RelativisticDynamics.metric_g11(x,a), [t r θ ϕ])[1]
-        g_∂[2,2,:] = jacobian(x -> RelativisticDynamics.metric_g22(x,a), [t r θ ϕ])[1]
-        g_∂[3,3,:] = jacobian(x -> RelativisticDynamics.metric_g33(x,a), [t r θ ϕ])[1]
-        g_∂[4,4,:] = jacobian(x -> RelativisticDynamics.metric_g44(x,a), [t r θ ϕ])[1]
-        g_∂[1,4,:] = jacobian(x -> RelativisticDynamics.metric_g14(x,a), [t r θ ϕ])[1]
+#         g_∂[1,1,:] = jacobian(x -> RelativisticDynamics.metric_g11(x,a), [t r θ ϕ])[1]
+#         g_∂[2,2,:] = jacobian(x -> RelativisticDynamics.metric_g22(x,a), [t r θ ϕ])[1]
+#         g_∂[3,3,:] = jacobian(x -> RelativisticDynamics.metric_g33(x,a), [t r θ ϕ])[1]
+#         g_∂[4,4,:] = jacobian(x -> RelativisticDynamics.metric_g44(x,a), [t r θ ϕ])[1]
+#         g_∂[1,4,:] = jacobian(x -> RelativisticDynamics.metric_g14(x,a), [t r θ ϕ])[1]
 
-        @tensor begin
-            Γ[μ,ν,λ] := 0.50*g_inverse[μ,ρ]*(g_∂[ρ,ν,λ] +g_∂[ρ,λ,ν]-g_∂[ν,λ,ρ])  #:= allocates a new array
-        end
+#         @tensor begin
+#             Γ[μ,ν,λ] := 0.50*g_inverse[μ,ρ]*(g_∂[ρ,ν,λ] +g_∂[ρ,λ,ν]-g_∂[ν,λ,ρ])  #:= allocates a new array
+#         end
 
-        #Compare with the analytical solution
-        Γ_analytical = RelativisticDynamics.christoffel(r,θ,a)
-        @test isapprox(Γ,Γ_analytical)
+#         #Compare with the analytical solution
+#         Γ_analytical = RelativisticDynamics.christoffel(r,θ,a)
+#         @test isapprox(Γ,Γ_analytical)
 
 
-    end
+#     end
 
-end 
+# end 
 
 
 @testset "Riemann tensor components" begin
@@ -134,21 +134,41 @@ end
         Riemann_analytical = RelativisticDynamics.riemann(r,θ,a)
         @test isapprox(Riemann,Riemann_analytical)
 
-
+        #display(Riemann_analytical)
+        #println("---------------------------------------")
+        #display(Riemann)
 
 
         #The purely covariant version of the Riemann tensor 
         @tensor begin
             Riemann_covar[μ,ν,ρ,σ] := g[μ,λ]*Riemann[λ,ν,ρ,σ]
         end
+        #The purely covariant version of the Riemann tensor 
+        @tensor begin
+            Riemann_covar_analytical[μ,ν,ρ,σ] := g[μ,λ]*Riemann_analytical[λ,ν,ρ,σ]
+        end
 
 
     
-         #Compare with the schwarzchild solution
-         schwarzchild_riemann = RelativisticDynamics.schwarzchild_covariant_riemann(r,θ,a)
-         @test isapprox(Riemann_covar,schwarzchild_riemann)
+        #Compare with the schwarzchild solution
+        Riemann_covar_schwarzchild = RelativisticDynamics.schwarzchild_covariant_riemann(r,θ,a)
         
-        
+        #The contra/covar version of the Riemann tensor for schwarzchild
+        @tensor begin
+            Riemann_schwarzchild[μ,ν,ρ,σ] := g_inverse[μ,λ]*Riemann_covar_schwarzchild[λ,ν,ρ,σ]
+        end
+
+        # display(Riemann[:,:,4,1])
+        # display(Riemann_analytical[:,:,4,1])
+        # display(Riemann_schwarzchild[:,:,4,1])
+        # println("-------------------------")
+        # display(Riemann_covar[:,:,4,1])
+        # display(Riemann_covar_analytical[:,:,4,1])
+        # display(Riemann_covar_schwarzchild[:,:,4,1])
+
+
+        #@test isapprox(Riemann_covar_analytical,schwarzchild_riemann)
+   
 
     end
 
