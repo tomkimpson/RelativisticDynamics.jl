@@ -1,37 +1,35 @@
-function covariant_metric(r,θ,a)
-
-    Δ = delta(r,a)
-    Σ = sigma(r,θ,a)
+"""
+Construct the NxN matrix of the covariant metric.
+Metric components are defined via indvidual functions to allow for auto diff in unit tests
+"""
+function covariant_metric(coords,a)
 
     metric_covar = zeros(Float64,4,4)
-
-    metric_covar[1,1] =  metric_gtt(r,θ,a) #-(1.0 - 2.0*r / Σ)
-    metric_covar[2,2] =  metric_grr(r,θ,a) #Σ / Δ
-    metric_covar[3,3] =  metric_gθθ(r,θ,a)
-    metric_covar[4,4] =  metric_gϕϕ(r,θ,a) #sin(θ)^2 * ((r^2 +a^2)^2 - Δ*a^2*sin(θ)^2) / Σ
-    metric_covar[1,4] =  metric_gtϕ(r,θ,a) #-2.0*a*r*sin(θ)^2/Σ
+    
+    metric_covar[1,1] =  metric_g11(coords,a) 
+    metric_covar[2,2] =  metric_g22(coords,a) 
+    metric_covar[3,3] =  metric_g33(coords,a) 
+    metric_covar[4,4] =  metric_g44(coords,a) 
+    metric_covar[1,4] =  metric_g14(coords,a) 
     metric_covar[4,1] =  metric_covar[1,4]
     return metric_covar
 end 
 
 
-
-function contravariant_metric(metric_covar,demoninator)
-
-    #see https://www.roma1.infn.it/teongrav/onde19_20/kerr.pdf
+"""
+Construct the NxN matrix of the contravariant metric.
+Metric components are defined via indvidual functions to allow for auto diff in unit tests
+"""
+function contravariant_metric(coords,a)
 
     metric_contra = zeros(Float64,4,4)
-    
 
-    metric_contra[1,1] = -metric_covar[4,4] / demoninator
-    metric_contra[2,2] = 1.0 / metric_covar[2,2]
-    metric_contra[3,3] = 1.0 / metric_covar[3,3]
-    metric_contra[4,4] = -metric_covar[1,1] / demoninator
-
-    metric_contra[1,4] = metric_covar[4,1]/demoninator
+    metric_contra[1,1] = metric_contra_g11(coords,a)
+    metric_contra[2,2] = metric_contra_g22(coords,a)
+    metric_contra[3,3] = metric_contra_g33(coords,a)
+    metric_contra[4,4] = metric_contra_g44(coords,a)
+    metric_contra[1,4] = metric_contra_g14(coords,a)
     metric_contra[4,1] = metric_contra[1,4]
-
-
     return metric_contra
 end 
 
@@ -108,36 +106,154 @@ function christoffel(r,θ,a)
 end 
 
 
+"""
+Riemann tensor components. First index is the contravariant, others are covariant   
+"""
+function riemann(r,θ,a)
+
+    
+    Rtensor = zeros(Float64,4,4,4,4) 
+    Δ = delta(r,a)
+    Σ = sigma(r,θ,a)
+
+    #-----------------------------------------------------------------------#
+    Rtensor[1,1,1,4] = 2.0*sin(θ)^2*a*r^2*(r^2-3.0*a^2*cos(θ)^2)/Σ^4
+    Rtensor[1,1,2,3] = -2.0*(3.0*r^2-a^2*cos(θ)^2)*r*cos(θ)*a^2*sin(θ)/(Σ^3*Δ)
+    Rtensor[1,2,1,2] = r*(2.0*(r^2+a^2)+a^2*sin(θ)^2)*(r^2-3.0*a^2*cos(θ)^2)/(Σ^3*Δ)
+    Rtensor[1,2,1,3] = -(3.0*r^2-a^2*cos(θ)^2)*(3.0*(r^2+a^2)-2*r)*a^2*sin(θ)*cos(θ)/(Σ^3*Δ)
+    Rtensor[1,2,2,4] = 3.0*sin(θ)^2*a*r*(r^2+a^2)*(r^2-3.0*a^2*cos(θ)^2)/(Σ^3*Δ)
+    Rtensor[1,2,3,4] = -cos(θ)*sin(θ)*a*(3.0*r^2-a^2*cos(θ)^2)*(2.0*(r^2+a^2)^2+a^2*sin(θ)^2*Δ)/(Σ^3*Δ)
+    
+    
+    #-----------------------------------------------------------------------#    
+    
+
+    Rtensor[1,3,1,2] = -(3.0*r^2-a^2*cos(θ)^2)*(3.0*(r^2+a^2)-4*r)*a^2*sin(θ)*cos(θ)/(Σ^3*Δ)
+    Rtensor[1,3,1,3] = -r*(r^2-3.0*a^2*cos(θ)^2)*(r^2+a^2+2*a^2*sin(θ)^2)/Σ^3
+    Rtensor[1,3,2,4] = -(3.0*r^2-a^2*cos(θ)^2)*((a^2+r^2)^2+2.0*a^2*sin(θ)^2*Δ)*a*sin(θ)*cos(θ)/(Σ^3*Δ)
+    Rtensor[1,3,3,4] = -3.0*sin(θ)^2*r*a*(a^2+r^2)*(r^2-3.0*a^2*cos(θ)^2)/Σ^3
+    Rtensor[1,4,1,4] = -sin(θ)^2*r*(r^2+3*a^2*sin(θ)^2-3*a^2)*((a^2+r^2)^2-a^2*sin(θ)^2*Δ)/Σ^4
+    Rtensor[1,4,2,3] = (3.0*r^2-a^2*cos(θ)^2)*((a^2+r^2)^2-a^2*sin(θ)^2*Δ)*a*sin(θ)*cos(θ)/(Σ^3*Δ)
+    
+    
+
+    
+    #-----------------------------------------------------------------------# 
+    
+    
+    Rtensor[2,1,1,2] = r*(r^2-3.0*a^2*cos(θ)^2)*(a^2*sin(θ)^2+2.0*Δ)/Σ^4
+    Rtensor[2,1,1,3] = -3.0*Δ*a^2*(3.0*r^2-a^2*cos(θ)^2)*sin(θ)*cos(θ)/Σ^4
+    Rtensor[2,1,2,4] = r*a*(3.0*(r^2+a^2)-4.0*r)*(r^2-3.0*a^2*cos(θ)^2)*sin(θ)^2/Σ^4
+    Rtensor[2,1,3,4] = -a*(2.0*(r^2+a^2)+a^2*sin(θ)^2)*(3.0*r^2-a^2*cos(θ)^2)*Δ*cos(θ)*sin(θ)/Σ^4
+    Rtensor[2,3,1,4] = -cos(θ)*sin(θ)*a*(3.0*r^2-a^2*cos(θ)^2)*Δ/Σ^3
+    Rtensor[2,3,2,3] = -r*(r^2-3.0*a^2*cos(θ)^2)/Σ^2
+    Rtensor[2,4,1,2] = -sin(θ)^2*r*a*(r^2-3.0*a^2*cos(θ)^2)*(3.0*(r^2+a^2)-4.0*r)/Σ^4
+    Rtensor[2,4,1,3] = a*(3.0*r^2-a^2*cos(θ)^2)*(r^2+a^2+2.0*a^2*sin(θ)^2)*Δ*cos(θ)*sin(θ)/Σ^4
+    Rtensor[2,4,2,4] = -sin(θ)^2*r*(r^2-3.0*a^2*cos(θ)^2)*((r^2+a^2)^2+2.0*a^2*Δ*sin(θ)^2)/Σ^4
+    Rtensor[2,4,3,4] = 3.0*a^2*(r^2+a^2)*(3.0*r^2-a^2*cos(θ)^2)*Δ*cos(θ)*sin(θ)^3/Σ^4 
+    
+    
+    #-----------------------------------------------------------------------#
+    
+    
+    Rtensor[3,1,1,2] = -3.0*a^2*(3.0*r^2-a^2*cos(θ)^2)*sin(θ)*cos(θ)/Σ^4
+    Rtensor[3,1,1,3] = -r*(r^2-3.0*a^2*cos(θ)^2)*(2.0*a^2*sin(θ)^2+Δ)/Σ^4
+    Rtensor[3,1,2,4] = -a*(3.0*r^2-a^2*cos(θ)^2)*(r^2+a^2+2.0*a^2*sin(θ)^2)*cos(θ)*sin(θ)/Σ^4
+    Rtensor[3,1,3,4] = -r*a*(r^2-3.0*a^2*cos(θ)^2)*(3.0*(r^2+a^2)-2.0*r)*sin(θ)^2/Σ^4
+    Rtensor[3,2,1,4] = a*(3.0*r^2-a^2*cos(θ)^2)*cos(θ)*sin(θ)/Σ^3
+    Rtensor[3,2,2,3] = r*(r^2-3.0*a^2*cos(θ)^2)/(Δ*Σ^2)
+    Rtensor[3,4,1,2] = a*(2.0*(r^2+a^2)+a^2*sin(θ)^2)*(3.0*r^2-a^2*cos(θ)^2)*cos(θ)*sin(θ)/Σ^4
+    Rtensor[3,4,1,3] = r*a*(r^2-3.0*a^2*cos(θ)^2)*(3.0*(r^2+a^2)-2.0*r)*sin(θ)^2/Σ^4
+    Rtensor[3,4,2,4] = 3.0*a^2*(r^2+a^2)*(3.0*r^2-a^2*cos(θ)^2)*cos(θ)*sin(θ)^3/Σ^4
+    Rtensor[3,4,3,4] = r*(r^2-3.0*a^2*cos(θ)^2)*(2.0*(r^2+a^2)^2+a^2*Δ*sin(θ)^2)*sin(θ)^2/Σ^4 
+    
+    
+    #-----------------------------------------------------------------------#
+        
+    Rtensor[4,1,2,3] = -(3.0*r^2-a^2*cos(θ)^2)*(a^2*sin(θ)^2-Δ)*a*(cos(θ)/sin(θ))/(Δ*Σ^3)
+    Rtensor[4,2,1,2] = 3.0*r*a*(r^2-3.0*a^2*cos(θ)^2)/(Δ*Σ^3)
+    Rtensor[4,2,1,3] = -a*(3.0*r^2-a^2*cos(θ)^2)*(2.0*a^2*sin(θ)^2+Δ)*(cos(θ)/sin(θ))/(Δ*Σ^3)
+    Rtensor[4,2,2,4] = r*(r^2-3.0*a^2*cos(θ)^2)*(r^2+a^2+2.0*a^2*sin(θ)^2)/(Δ*Σ^3)
+    Rtensor[4,2,3,4] = -(3.0*r^2-a^2*cos(θ)^2)*(3.0*(r^2+a^2)-2.0*r)*a^2*sin(θ)*cos(θ)/(Δ*Σ^3)
+    Rtensor[4,3,1,2] = -(3.0*r^2-a^2*cos(θ)^2)*(a^2*sin(θ)^2+2.0*Δ)*a*(cos(θ)/sin(θ))/(Δ*Σ^3)
+    Rtensor[4,3,1,3] = -3.0*r*a*(r^2-3.0*a^2*cos(θ)^2)/Σ^3
+    Rtensor[4,3,2,4] = -a^2*(3*r^2-a^2*cos(θ)^2)*(3.0*(r^2+a^2)-4.0*r)*sin(θ)*cos(θ)/(Δ*Σ^3)
+    Rtensor[4,3,3,4] = -r*(2.0*(r^2+a^2)+a^2*sin(θ)^2)*(r^2-3.0*a^2*cos(θ)^2)/Σ^3
+    Rtensor[4,4,1,4] = -2.0*a*r^2*(r^2-3.0*a^2*cos(θ)^2)*sin(θ)^2/Σ^4
+    Rtensor[4,4,2,3] = 2.0*r*a^2*(3.0*r^2-a^2*cos(θ)^2)*cos(θ)*sin(θ)/(Δ*Σ^3)
+    
+
+    return Rtensor
+
+end 
+
+
+
+
+
+
+
+"""
+Special case - the fully covariant components of the Riemann tensor for schwarzchild.
+From https://arxiv.org/pdf/0904.4184.pdf
+"""
+function schwarzchild_covariant_riemann(r,θ,a)
+
+    
+    Rtensor = zeros(Float64,4,4,4,4) 
+    Δ = delta(r,a)
+    Σ = sigma(r,θ,a)
+
+    Rtensor[1,2,1,2] = -2.0/r^3
+    Rtensor[1,3,1,3] = (r-2.0)/r^2
+    Rtensor[1,4,1,4] = (r-2.0)*sin(θ)^2/r^2
+    Rtensor[2,3,2,3] = -1.0/(r-2.0)
+    Rtensor[2,4,2,4] = -sin(θ)^2/(r-2.0)
+    Rtensor[3,4,3,4] = r*2.0*sin(θ)^2
+
+
+
+    return Rtensor
+
+
+
+end 
+
+
+
+
+
+
 
 # Pure function definitions
 # Function definitions which do not mutate inputs.
 # Allows for checks via AutoDif https://fluxml.ai/Zygote.jl/latest/limitations/
-function metric_gtt(r,θ,a)
-    Σ = sigma(r,θ,a)
-    return -(1.0 - 2.0*r / Σ)
-end 
+# function metric_gtt(r,θ,a)
+#     Σ = sigma(r,θ,a)
+#     return -(1.0 - 2.0*r / Σ)
+# end 
 
-function metric_grr(r,θ,a)
-    Σ = sigma(r,θ,a)
-    Δ = delta(r,a)
-    return Σ / Δ
-end 
+# function metric_grr(r,θ,a)
+#     Σ = sigma(r,θ,a)
+#     Δ = delta(r,a)
+#     return Σ / Δ
+# end 
 
-function metric_gθθ(r,θ,a)
-    Σ = sigma(r,θ,a)
-    return Σ 
-end 
+# function metric_gθθ(r,θ,a)
+#     Σ = sigma(r,θ,a)
+#     return Σ 
+# end 
 
-function metric_gϕϕ(r,θ,a)
-    Σ = sigma(r,θ,a)
-    Δ = delta(r,a)
-    return sin(θ)^2 * ((r^2 +a^2)^2 - Δ*a^2*sin(θ)^2) / Σ
-end 
+# function metric_gϕϕ(r,θ,a)
+#     Σ = sigma(r,θ,a)
+#     Δ = delta(r,a)
+#     return sin(θ)^2 * ((r^2 +a^2)^2 - Δ*a^2*sin(θ)^2) / Σ
+# end 
 
-function metric_gtϕ(r,θ,a)
-    Σ = sigma(r,θ,a)
-    return -2.0*a*r*sin(θ)^2/Σ
-end 
+# function metric_gtϕ(r,θ,a)
+#     Σ = sigma(r,θ,a)
+#     return -2.0*a*r*sin(θ)^2/Σ
+# end 
 
 
 
