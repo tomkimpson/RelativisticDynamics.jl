@@ -233,10 +233,20 @@ function riemann(r,θ,a)
 
 
 
-    #Missed terms
-    σ = r^2 - a^2 * cos(θ)^2
-    Rtensor[4,1,4,1] = (r*σ*(-a^2*r-r^3-r*Σ+Σ^2) + a^2*(σ^2*sin(θ)^2 + cos(θ)^2*(r*(4.0*a^2*r+4.0*r^3-2.0*Σ^4)+a^2*(σ-4*r^2*Σ^2)*sin(θ)))) / Σ^5
-    Rtensor[4,1,1,4] = -Rtensor[4,1,4,1]
+    #Additional complicated terms - can these be algebrically simplified?
+    part1 = -4.0*a^2*r^2*(a^2+r^2)*cos(θ)^2
+    part2 = -4.0*a^2*(r^2-0.50*Σ)^2*sin(θ)^2 
+    part3 = +2.0*a^2*r*cos(θ)^2*(Σ^2+2.0*a^2*r*sin(θ)^2)
+    part4 = -(2.0*r^2-Σ)*(r*Σ^2-r^2*(a^2+r^2+Σ) +a^4*cos(θ)^2*sin(θ)^2)
+    #σ = r^2 - a^2 * cos(θ)^2
+    #Rtensor[4,1,4,1] = (r*σ*(-a^2*r-r^3-r*Σ+Σ^2) + a^2*(σ^2*sin(θ)^2 + cos(θ)^2*(r*(4.0*a^2*r+4.0*r^3-2.0*Σ^4)+a^2*(σ-4*r^2*Σ^2)*sin(θ)))) / Σ^5
+    Rtensor[4,1,1,4]  =(part1+part2+part3+part4)/Σ^5
+    Rtensor[4,1,4,1] = -Rtensor[4,1,1,4]
+    
+    
+    
+    
+    #Rtensor[4,1,1,4] = -Rtensor[4,1,4,1]
 
 
 
