@@ -70,6 +70,25 @@ function convert_to_covariant(metric,vector)
 end 
 
 
+function Kretschmann_scalar(r,θ,a)
+
+    Σ = sigma(r,θ,a)
+
+    return 48.0*(2.0*r^2-Σ)*(Σ^2-16.0*r^2*a^2*cos(θ)^2)/Σ^6
+
+end 
+
+
+
+
+
+
+
+
+
+
+
+
 using Plots 
 using LaTeXStrings
 using Printf

@@ -70,15 +70,19 @@ end
 @testset "Riemann tensor components" begin
     
 
-    for n in 1:5
+    #for n in 1:5
+    for n in 1:1
 
         #Get some coordiantes at random 
         t = rand(Uniform(3.0,1e5))       # Time coordinate - arbitratry since metric is time-independent
-        r = rand(Uniform(3.0,1e3))       # Radial coordinate. 3.0 as rough lower limit of an event horizon
-        θ = rand(Uniform(0.0, 2.0*π))    # Polar coordinate
+        #r = rand(Uniform(3.0,1e3))       # Radial coordinate. 3.0 as rough lower limit of an event horizon
+        #θ = rand(Uniform(0.0, 2.0*π))    # Polar coordinate
         ϕ = rand(Uniform(0.0, 2.0*π))    # Azimuth coordinate - arbitratry since metric is axisymmetric
-        a = rand(Uniform(-0.99, 0.99))   # Spin parameter
+        #a = rand(Uniform(-0.99, 0.99))   # Spin parameter
 
+        r = 10.0
+        θ = π/2.0
+        a = 0.0
  
         coords = [t,r,θ,ϕ]
 
@@ -146,6 +150,36 @@ end
             Riemann_covar_analytical[μ,ν,ρ,σ] := g[μ,λ]*Riemann_analytical[λ,ν,ρ,σ]
         end
         @test isapprox(Riemann_covar,Riemann_covar_analytical)
+
+
+
+        #And check the Kretschman scalar 
+        @tensor begin
+            Kretschman = Riemann[α,β,μ,ν] * Riemann_covar[α,β,μ,ν] 
+        end
+
+        @tensor begin
+            Kretschman_anal = Riemann_analytical[α,β,μ,ν] * Riemann_covar_analytical[α,β,μ,ν] 
+        end
+
+        Kscal = 0.0
+        for α in 1:4
+            for β in 1:4    
+                for μ in 1:4
+                    for ν in 1:4
+                        Kscal += Riemann[α,β,μ,ν] * Riemann_covar[α,β,μ,ν]
+                    end
+                end
+            end 
+        end 
+
+
+        println("KREtCH")
+        println(Kretschman)
+        println(Kretschman_anal)
+        println(Kscal)
+        KKK = RelativisticDynamics.Kretschmann_scalar(r,θ,a)
+        println(KKK)
 
     end
 
