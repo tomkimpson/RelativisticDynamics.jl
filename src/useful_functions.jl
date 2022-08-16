@@ -69,7 +69,9 @@ function convert_to_covariant(metric,vector)
 
 end 
 
-
+"""
+Kretschman scalar for the Kerr metric
+"""
 function Kretschmann_scalar(r,θ,a)
 
     Σ = sigma(r,θ,a)
