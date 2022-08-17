@@ -23,7 +23,7 @@ include("model.jl")
 include("initial_conditions.jl")
 include("timestepping.jl")
 include("orbit.jl")
-
+include("plotting.jl")
 
 
 
