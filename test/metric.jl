@@ -15,7 +15,7 @@
         @tensor begin
         δ[a,c] := g[a,b] * g_inverse[b,c]  #:= allocates a new array
         end
-        @test tr(δ)==4.0 
+        @test isapprox(tr(δ),4.0)
     end
 
 end

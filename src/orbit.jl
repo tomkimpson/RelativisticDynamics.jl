@@ -13,11 +13,16 @@ function orbit(::Type{NF}=Float64;              # number format, use Float64 as 
     C = Constants(P)                      # Constants
     M = Model(P,C)                        # Pack all of the above into a single *Model struct 
 
-    println(P.model)
+    
     if P.model == :SphericalPhoton                       # pack all of the above into a *Model struct
         prognostic_vars = SphericalPhotonOrbit_initial_conditions(M)
     elseif P.model == :MPD
         prognostic_vars = MPD_initial_conditions(M)
+    else
+        println(P.model)
+        println("That model selection is not defined")
+        println("Please choose one of: SphericalPhoton, MPD ")
+        return
     end 
     
     

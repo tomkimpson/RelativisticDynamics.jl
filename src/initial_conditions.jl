@@ -41,7 +41,7 @@ initialised """
 function MPD_initial_conditions(M::Model)
 
     @unpack NF,α,θ,ϕ,a,mPSR,mBH,Sθ,Sϕ = M.parameters
-    @unpack E,L,Q,s0 = M.constants 
+    @unpack E,L,Q,s0,m0 = M.constants 
 
     println("Welcome to MPD initial conditons")
 
@@ -56,30 +56,9 @@ function MPD_initial_conditions(M::Model)
 
 
     # Metric 
-    metric_covar  = covariant_metric(r,θ,a)
-    metric_contra = contravariant_metric(metric_covar,Δ*sin(θ)^2)
+    metric_covar  = covariant_metric(xvector,a)
+    metric_contra = contravariant_metric(xvector,a)
 
-
-    println("Covariant metric:")
-    display(metric_covar)
-
-    println("Contravariant metric:")
-    display(metric_contra)
-
-    @tensor begin
-        blob[a,c] := metric_covar[a,b] * metric_contra[b,c]  #:= allocates a new array
-    end
-    println("blob = ")
-    display(blob)
-
-
-    @einsum blob2[i, j] := metric_covar[i, k] * metric_contra[k,j]
-    println("blob2 = ")
-    display(blob2)
-
-
-    println("manual = ")
-    println(metric_covar[1,1]*metric_contra[1,1] + metric_covar[1,4]*metric_contra[1,4])
 
     # 4 - momentum 
     T = (r^2 + a^2)*(E*(r^2 + a^2) -a*L)/Δ -a*(a*E*sin(θ)^2 - L)
@@ -92,7 +71,6 @@ function MPD_initial_conditions(M::Model)
     rdot = sqrt(R)/Σ
     θdot = sqrt(Θ)/Σ
     ϕdot = Φ/Σ
-    m0 = mPSR/mBH # BH mass normalized to unity, so this is the pulsar mass in the new units
 
     pvector = m0*[tdot,rdot,θdot,ϕdot]
 

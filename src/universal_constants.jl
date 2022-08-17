@@ -24,7 +24,7 @@ A struct to hold all variables which are constant over the course of the integra
 
     # Pulsar constants
     s0 :: NF # Magnitude of spatial component of spin vector in natural units 
-
+    m0 :: NF 
 
     # BH constants
     rH :: NF #Black hole outer horizon radius
@@ -101,7 +101,7 @@ function Constants(P::SystemParameters)
     inertia = 0.40*mPSR*Msolar*(rPSR*1e3)^2 # Moment of inertia in SI units. Assumes solid ball 
     convert_spin= light_c/(Newton_g*(mBH*Msolar)^2) # Multiply by this to go TO Natural units
     s0 = convert_spin*2.0*pi*inertia/p0
-
+    m0 = mPSR/mBH
 
     #Black hole 
     rH = 1.0 + sqrt(1.0 - a^2)
@@ -113,7 +113,7 @@ function Constants(P::SystemParameters)
     return Constants{P.NF}(light_c,Newton_g,Msolar,
                            E,L,Q,
                            Φ,u0,u1,
-                           s0,
+                           s0,m0,
                            rH)
 end
 
