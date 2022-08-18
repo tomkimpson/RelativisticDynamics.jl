@@ -86,7 +86,27 @@ function Kretschmann_scalar(r,θ,a)
 end 
 
 
+"""
+Calculate the contravariant spin tensor
+"""
+function spintensor(xvector,pvector,svector,a,m0,ϵ)
 
+
+    t,r,θ,ϕ = xvector
+    Σ = sigma(r,θ,a)
+    
+    metric_trace =-sin(θ)^2*Σ^2
+
+    #https://mathworld.wolfram.com/PermutationTensor.html
+    permutation_tensor = ϵ/sqrt(abs(metric_trace))
+
+    @tensor begin
+         Stensor[μ,ν] := permutation_tensor[μ,ν,α,β]*pvector[α]*svector[β]/m0
+    end
+
+    return Stensor 
+
+end 
 
 
 

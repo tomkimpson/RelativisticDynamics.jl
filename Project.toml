@@ -4,6 +4,7 @@ authors = ["Tom Kimpson"]
 version = "0.1.0"
 
 [deps]
+Combinatorics = "861a8166-3701-5b0c-9a16-15d98fcdc6aa"
 DifferentialEquations = "0c46a032-eb83-5123-abaf-570d42b7fbaa"
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
 Einsum = "b7d42ee7-0b51-5a75-98ca-779d3107e4c0"

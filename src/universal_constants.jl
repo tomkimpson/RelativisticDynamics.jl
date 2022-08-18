@@ -29,6 +29,10 @@ A struct to hold all variables which are constant over the course of the integra
     # BH constants
     rH :: NF #Black hole outer horizon radius
 
+
+    #Mathematical/Tensor objects
+    ϵ ::AbstractArray{NF}   #levi cevit
+
 end
 
 
@@ -106,7 +110,19 @@ function Constants(P::SystemParameters)
     #Black hole 
     rH = 1.0 + sqrt(1.0 - a^2)
 
+    levi = zeros(Float64,4,4,4,4) 
+    for i in 1:4
+        for j in 1:4
+            for k in 1:4
+                for l in 1:4
+                    permutation_vector = [i,j,k,l]
+                    levi[i,j,k,l] = levicivita(permutation_vector)
+                end
+            end 
+        end
+    end 
 
+    
 
 
     # This implies conversion to NF
@@ -114,7 +130,7 @@ function Constants(P::SystemParameters)
                            E,L,Q,
                            Φ,u0,u1,
                            s0,m0,
-                           rH)
+                           rH,levi)
 end
 
 

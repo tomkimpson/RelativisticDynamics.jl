@@ -16,20 +16,28 @@
 function timestepping(X::PrognosticVariables, M::Model)
 
 @unpack a, Tint = M.parameters
-@unpack Φ,Q,u0,u1 = M.constants
+@unpack Φ,Q,u0,u1,m0,ϵ = M.constants
 
 # Integration time 
 tspan = (0.0,Tint) 
-u = vcat(X.xvector,X.pvector)
-params = [Φ,a]
+
 
 println("The model used is:")
 println(M.parameters.model)
+
 # Define the ODE to be solved
-if M.parameters.model == :SphericalPhoton                       # pack all of the above into a *Model struct
+if M.parameters.model == :SphericalPhoton      
+    params = [Φ,a]    
+    u = vcat(X.xvector,X.pvector)             
     ode_prob = DifferentialEquations.ODEProblem(spherical_photon_hamiltonian!,u,tspan,params,progress = true)
+    ode_solution = DifferentialEquations.solve(ode_prob,abstol=1e-8,reltol=1e-4)
+
 elseif M.parameters.model == :MPD
+    params = [Φ,a,m0,ϵ]
+    u = vcat(X.xvector,X.pvector,X.svector)
     ode_prob = DifferentialEquations.ODEProblem(MPD!,u,tspan,params,progress = true)
+    ode_solution = DifferentialEquations.solve(ode_prob,abstol=1e-8,reltol=1e-4)
+
 end 
 
 
@@ -81,18 +89,35 @@ end
 
 
 
-function MPD!(du,u,p,λ)
+function MPD!(du,u,p,τ)
 
-    t,r,θ,ϕ,pᵗ,pʳ,pᶿ,pᵠ = u
-    Φ,a = p
+    t,r,θ,ϕ,pᵗ,pʳ,pᶿ,pᵠ,sᵗ,sʳ,sᶿ,sᵠ = u
+    Φ,a,m0,ϵ = p
 
 
     # Define useful functions 
     Σ = sigma(r,θ,a)
     Δ = delta(r,a)
     Γ = christoffel(r,θ,a)
+    Riemann = riemann(r,θ,a)
 
-    dx = 1.0
+    xvector = [t,r,θ,ϕ]
+    pvector = [pᵗ,pʳ,pᶿ,pᵠ]
+    svector = [sᵗ,sʳ,sᶿ,sᵠ]
+
+    Stensor = spintensor(xvector,pvector,svector,a,m0,ϵ)
+    #display(size(Stensor))
+
+    println("4 vel calcs")
+    println(Stensor[1,1])
+    #4 velocity
+    # @tensor begin
+    #     dx[α] := -(pvector[α]+0.50*(Stensor[α,β]*Riemann[β,γ,μ,ν]*p[γ]*Stensor[μ,ν])/(m0^2+Riemann[μ,ν,ρ,σ]*Stensor[μ,ν]*Stensor[β,σ]/4.0))/m0^2 
+    # end
+
+    # @tensor begin
+    #     dp[α] := Γ[α,μ,ν] * pvector[μ]
+    # end
 
     #Position 
     du[1] = 0.0

@@ -1,4 +1,4 @@
-@testset "Kerr functions" begin
+@testset "Kerr functions for a=0" begin
     
 
     r = rand(Uniform(3.0,1e5))      # Radial coordinate. 3.0 as rough lower limit of an event horizon
@@ -26,6 +26,9 @@
     @test gr == 0.0
     @test hr == r*(r-2.0) + (cos(θ)^2)/(1.0 - cos(θ)^2) *(r^2-2.0*r)
     @test dr == (r^2)*(r^2-2.0*r)
+
+
+    
 
 end
 
