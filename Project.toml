@@ -21,6 +21,7 @@ TensorOperations = "6aa20fa7-93e2-5fca-9bc0-fbd0db3c71a2"
 Zygote = "e88e6eb3-aa80-5325-afca-941959d7151f"
 
 [compat]
+Combinatorics = "1"
 DifferentialEquations = "7"
 LaTeXStrings = "1"
 Parameters = "0.12"
