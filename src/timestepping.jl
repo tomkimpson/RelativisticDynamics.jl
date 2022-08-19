@@ -104,20 +104,18 @@ function MPD!(du,u,p,τ)
     xvector = [t,r,θ,ϕ]
     pvector = [pᵗ,pʳ,pᶿ,pᵠ]
     svector = [sᵗ,sʳ,sᶿ,sᵠ]
-
     Stensor = spintensor(xvector,pvector,svector,a,m0,ϵ)
-    #display(size(Stensor))
 
-    println("4 vel calcs")
-    println(Stensor[1,1])
-    #4 velocity
-    # @tensor begin
-    #     dx[α] := -(pvector[α]+0.50*(Stensor[α,β]*Riemann[β,γ,μ,ν]*p[γ]*Stensor[μ,ν])/(m0^2+Riemann[μ,ν,ρ,σ]*Stensor[μ,ν]*Stensor[β,σ]/4.0))/m0^2 
-    # end
 
-    # @tensor begin
-    #     dp[α] := Γ[α,μ,ν] * pvector[μ]
-    # end
+    # 4 velocity 
+    @tensor begin
+    division_scalar = Riemann[μ,ν,ρ,σ]*Stensor[μ,ν]*Stensor[ρ,σ]
+    end 
+
+    @tensor begin
+        dx[α] := pvector[α]+0.50*Stensor[α,β]*Riemann[β,γ,μ,ν]*pvector[γ]*Stensor[μ,ν]/(m0^2 + division_scalar)
+    end
+
 
     #Position 
     du[1] = 0.0
