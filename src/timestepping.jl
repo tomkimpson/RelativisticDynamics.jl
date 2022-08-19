@@ -91,19 +91,22 @@ end
 
 function MPD!(du,u,p,τ)
 
+    #Extract - can we do this better?
     t,r,θ,ϕ,pᵗ,pʳ,pᶿ,pᵠ,sᵗ,sʳ,sᶿ,sᵠ = u
     Φ,a,m0,ϵ = p
+    xvector = [t,r,θ,ϕ]
+    pvector = [pᵗ,pʳ,pᶿ,pᵠ]
+    svector = [sᵗ,sʳ,sᶿ,sᵠ]
 
 
     # Define useful functions 
+    g = covariant_metric(xvector,a)
     Σ = sigma(r,θ,a)
     Δ = delta(r,a)
     Γ = christoffel(r,θ,a)
     Riemann = riemann(r,θ,a)
 
-    xvector = [t,r,θ,ϕ]
-    pvector = [pᵗ,pʳ,pᶿ,pᵠ]
-    svector = [sᵗ,sʳ,sᶿ,sᵠ]
+ 
     Stensor = spintensor(xvector,pvector,svector,a,m0,ϵ)
 
 
@@ -115,6 +118,25 @@ function MPD!(du,u,p,τ)
     @tensor begin
         dx[α] := pvector[α]+0.50*Stensor[α,β]*Riemann[β,γ,μ,ν]*pvector[γ]*Stensor[μ,ν]/(m0^2 + division_scalar)
     end
+
+
+    @tensor begin 
+        Vsq = g[μ,ν]*dx[μ]*dx[ν]
+    end 
+
+    PV = -sqrt(1.0/Vsq)
+
+
+    dx = dx * PV
+    println("CHECK")
+    @tensor begin
+        check_val = g[μ,ν]*dx[μ]*dx[ν]
+    end 
+    println(check_val)    
+
+
+
+
 
 
     #Position 
