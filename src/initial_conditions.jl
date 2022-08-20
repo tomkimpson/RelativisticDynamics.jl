@@ -73,9 +73,13 @@ function MPD_initial_conditions(M::Model)
     ϕdot = Φ/Σ
 
     pvector = m0*[tdot,rdot,θdot,ϕdot]
+    println("Initial conditions pvector")
+    println(pvector)
 
     pvector_covar = convert_to_covariant(metric_covar,pvector)
 
+    println("dot prod") 
+    println(sum(pvector.*pvector_covar))
 
     # 4 - spin
     svector = [0.0,0.0,0.0,0.0]

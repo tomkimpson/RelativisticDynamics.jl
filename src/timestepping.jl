@@ -35,8 +35,12 @@ if M.parameters.model == :SphericalPhoton
 elseif M.parameters.model == :MPD
     params = [Φ,a,m0,ϵ]
     u = vcat(X.xvector,X.pvector,X.svector)
-    ode_prob = DifferentialEquations.ODEProblem(MPD!,u,tspan,params,progress = true)
-    ode_solution = DifferentialEquations.solve(ode_prob,abstol=1e-8,reltol=1e-4)
+    #ode_prob = DifferentialEquations.ODEProblem(MPD!,u,tspan,params,progress = true)
+    #ode_solution = DifferentialEquations.solve(ode_prob,abstol=1e-8,reltol=1e-4)
+
+    #MPD!(du,u,params,τ)
+    println("MPD TEST")
+    MPD_test(u,params)
 
 end 
 
@@ -50,8 +54,8 @@ end
 # Solve it 
 #algorithm = DifferentialEquations.RK4() # probably define this elsewhere 
 #ode_solution = DifferentialEquations.solve(ode_prob,algorithm,saveat=1)
-ode_solution = DifferentialEquations.solve(ode_prob,abstol=1e-8,reltol=1e-4)
-
+#ode_solution = DifferentialEquations.solve(ode_prob,abstol=1e-8,reltol=1e-4)
+ode_solution=1.0
 return ode_solution
 
     
@@ -115,9 +119,15 @@ function MPD!(du,u,p,τ)
     division_scalar = Riemann[μ,ν,ρ,σ]*Stensor[μ,ν]*Stensor[ρ,σ]
     end 
 
+
+    
+
+
+
     @tensor begin
-        dx[α] := pvector[α]+0.50*Stensor[α,β]*Riemann[β,γ,μ,ν]*pvector[γ]*Stensor[μ,ν]/(m0^2 + division_scalar)
+        dx[α] := -(pvector[α]+0.50*Stensor[α,β]*Riemann[β,γ,μ,ν]*pvector[γ]*Stensor[μ,ν]/(m0^2 + division_scalar))/m0^2
     end
+
 
 
     @tensor begin 
@@ -126,8 +136,14 @@ function MPD!(du,u,p,τ)
 
     PV = -sqrt(1.0/Vsq)
 
+    println("Vsq:")
+    println(Vsq)
+    println("PV:")
+    println(PV)
 
-    dx = dx * PV
+
+    #dx = dx * PV
+    display(dx)
     println("CHECK")
     @tensor begin
         check_val = g[μ,ν]*dx[μ]*dx[ν]
@@ -135,7 +151,7 @@ function MPD!(du,u,p,τ)
     println(check_val)    
 
 
-
+    return
 
 
 
@@ -157,6 +173,70 @@ function MPD!(du,u,p,τ)
 end 
 
 
+function MPD_test(u,p)
 
+    #Extract - can we do this better?
+    t,r,θ,ϕ,pᵗ,pʳ,pᶿ,pᵠ,sᵗ,sʳ,sᶿ,sᵠ = u
+    Φ,a,m0,ϵ = p
+    xvector = [t,r,θ,ϕ]
+    pvector = [pᵗ,pʳ,pᶿ,pᵠ]
+    svector = [sᵗ,sʳ,sᶿ,sᵠ]
+
+
+    # Define useful functions 
+    g = covariant_metric(xvector,a)
+    Σ = sigma(r,θ,a)
+    Δ = delta(r,a)
+    Γ = christoffel(r,θ,a)
+    Riemann = riemann(r,θ,a)
+
+ 
+    Stensor = spintensor(xvector,pvector,svector,a,m0,ϵ)
+
+
+    # 4 velocity 
+    @tensor begin
+    division_scalar = Riemann[μ,ν,ρ,σ]*Stensor[μ,ν]*Stensor[ρ,σ]
+    end 
+
+
+    
+
+
+
+    @tensor begin
+        dx[α] := -(pvector[α]+0.50*Stensor[α,β]*Riemann[β,γ,μ,ν]*pvector[γ]*Stensor[μ,ν]/(m0^2 + division_scalar))/m0^2
+    end
+
+
+
+    @tensor begin 
+        Vsq = g[μ,ν]*dx[μ]*dx[ν]
+    end 
+
+    PV = -sqrt(1.0/Vsq)
+
+    println("pvector")
+    println(pvector)
+
+    println("Vsq:")
+    println(Vsq)
+    println("PV:")
+    println(PV)
+
+
+    #dx = dx * PV
+    display(dx)
+    println("CHECK")
+    @tensor begin
+        check_val = g[μ,ν]*dx[μ]*dx[ν]
+    end 
+    println(check_val)    
+
+
+    nothing #function returns nothing
+
+
+end 
 
 
