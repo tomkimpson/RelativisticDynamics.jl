@@ -41,7 +41,7 @@ initialised """
 function MPD_initial_conditions(M::Model)
 
     @unpack NF,α,θ,ϕ,a,mPSR,mBH,Sθ,Sϕ = M.parameters
-    @unpack E,L,Q,s0,m0 = M.constants 
+    @unpack L,Q,s0,m0 = M.constants 
 
 
     # 1. Four- position
@@ -56,11 +56,11 @@ function MPD_initial_conditions(M::Model)
 
 
     # 2. Four - momentum 
-    Pbar = E*(r^2+a^2) - a*L 
-    Tbar = (r^2+a^2)*Pbar/Δ -a*(a*E*sin(θ)^2-L)
-    Rbar = ((r^2+a^2)*E  -a*L)^2 -Δ*(r^2 + (L-a*E)^2+Q)
-    θbar = Q - ((1.0-E^2)*a^2 + L^2/sin(θ)^2)*cos(θ)^2
-    ϕbar = a*Pbar/Δ -a*E + L/sin(θ)^2
+    Pbar = (r^2+a^2) - a*L 
+    Tbar = (r^2+a^2)*Pbar/Δ -a*(a*sin(θ)^2-L)
+    Rbar = ((r^2+a^2)  -a*L)^2 -Δ*(r^2 + (L-a)^2+Q)
+    θbar = Q - (L^2/sin(θ)^2)*cos(θ)^2
+    ϕbar = a*Pbar/Δ -a + L/sin(θ)^2
 
     #These are 4 velocities from Schmidt 2002
     tdot = -Tbar/Σ

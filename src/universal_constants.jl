@@ -13,7 +13,6 @@ A struct to hold all variables which are constant over the course of the integra
 
     # 2. Constants derived from user defined parameters 
     # 2.1 Spacetime properties
-    E   :: NF                # Energy
     L   :: NF                # Angular Momentum 
     Q   :: NF                # Carter Constant 
     
@@ -43,7 +42,7 @@ function Constants(P::SystemParameters)
 
 
     # Model specific constants
-    E,L,Q = ELQ(P)
+    L,Q = LQ(P)
     
     
 
@@ -71,7 +70,7 @@ function Constants(P::SystemParameters)
     
     # This implies conversion to NF
     return Constants{P.NF}(light_c,Newton_g,Msolar,
-                           E,L,Q,
+                           L,Q,
                            s0,m0,
                            levi)
 end
@@ -82,7 +81,7 @@ end
 """
 Calculate the energy, angular momentum and Carter constant for the different types of system
 """
-function ELQ(P::SystemParameters)
+function LQ(P::SystemParameters)
 
 
     #@unpack a,ι,α,e,orbit_dir,mPSR,rPSR,p0,mBH,r = P
@@ -91,57 +90,25 @@ function ELQ(P::SystemParameters)
 
 
     if P.model == :SphericalPhoton 
-
-        E = 1.0
         L = - (r^3 - 3.0*r^2 + a^2*r + a^2) / (a*(r - 1.0))
         Q = -(r^3 * (r^3 - 6.0*r^2 + 9.0 * r - 4.0*a^2))/(a^2 * (r - 1.0)^2)
 
     elseif P.model == :MPD
 
+        #Some needed quantities
         r_periapsis= α*(1-e)
-        r_apoapsis = α*(1+e)
         zminus = cos(ι)
-    
         f1 = mapping_f(r_periapsis,a,zminus)
         g1 = mapping_g(r_periapsis,a)
         h1 = mapping_h(r_periapsis,a,zminus)
         d1 = mapping_d(r_periapsis,a,zminus)
     
-        f2 = mapping_f(r_apoapsis,a,zminus)
-        g2 = mapping_g(r_apoapsis,a)
-        h2 = mapping_h(r_apoapsis,a,zminus)
-        d2 = mapping_d(r_apoapsis,a,zminus)
-    
-    
-        κ = d1*h2 - d2*h1
-        ϵ = d1*g2 - d2*g1
-        ρ = f1*h2 - f2*h1
-        η = f1*g2 - f2*g1
-        σ = g1*h2 - g2*h1
-    
-    
-        #Energy
-        E2 = κ*ρ + 2.0*ϵ*σ + orbit_dir*2.0*sqrt(σ*(σ*ϵ^2 + ρ*ϵ*κ - η*κ^2)) / (ρ^2 + 4.0*η*σ)
-        E = sqrt(E2)
-     
-        #Angular Momentum 
-        L = -g1*E/h1 + orbit_dir*sqrt(g1^2*E2 + (f1*E2-d1)*h1)/h1
-        #L = (ρ*E2 - κ)/(2.0*E*σ)
-    
-        #Carter Constant 
-        Q = zminus^2 * (a^2 * (1.0 - E2 ) + L^2 /(1.0 - zminus^2))
-    
-        #Keplerian expressions for reference. See Schmidt 2002 appendix 
-        # SLR = α*(1-e^2)
-        # zm = cos(ι)
-        # E = sqrt(1.0 - (1-e^2)/SLR)
-        # L = sqrt((1-zm^2)*SLR)
-        # Q = zm^2*SLR
+   
+        #Angular momentum and Carter constant, taking E=1
+        L = -g1/h1 + orbit_dir*sqrt(g1^2 + (f1-d1)*h1)/h1
+        Q = zminus^2 * (L^2 /(1.0 - zminus^2))
 
-        # Useful numbers
-        # E = 0.999390486044721
-        # L = 14.515059110545808
-        # Q = 210.68716034079137
+    
 
     else
         println(P.model)
@@ -150,7 +117,52 @@ function ELQ(P::SystemParameters)
         return
     end 
 
-    return E,L,Q
+    return L,Q
 
 
 end 
+
+
+#r_apoapsis = α*(1+e)
+
+# f2 = mapping_f(r_apoapsis,a,zminus)
+# g2 = mapping_g(r_apoapsis,a)
+# h2 = mapping_h(r_apoapsis,a,zminus)
+# d2 = mapping_d(r_apoapsis,a,zminus)
+
+
+# Extra stuff 
+
+# κ = d1*h2 - d2*h1
+# ϵ = d1*g2 - d2*g1
+# ρ = f1*h2 - f2*h1
+# η = f1*g2 - f2*g1
+# σ = g1*h2 - g2*h1
+
+
+
+    #   #Angular Momentum 
+    #   L = -g1*E/h1 + orbit_dir*sqrt(g1^2*E2 + (f1*E2-d1)*h1)/h1
+    
+    
+    #   #Carter Constant 
+    #   Q = zminus^2 * (a^2 * (1.0 - E2 ) + L^2 /(1.0 - zminus^2))
+  
+
+
+        #Keplerian expressions for reference. See Schmidt 2002 appendix 
+        # SLR = α*(1-e^2)
+        # zm = cos(ι)
+        # E = sqrt(1.0 - (1-e^2)/SLR)
+        # L = sqrt((1-zm^2)*SLR)
+        # Q = zm^2*SLR
+
+        # Useful numbers
+        #E = 0.999390486044721
+        #L = 14.515059110545808
+        #Q = 210.68716034079137
+
+
+ #Energy
+ #E2 = κ*ρ + 2.0*ϵ*σ + orbit_dir*2.0*sqrt(σ*(σ*ϵ^2 + ρ*ϵ*κ - η*κ^2)) / (ρ^2 + 4.0*η*σ)
+ #E = sqrt(E2)
