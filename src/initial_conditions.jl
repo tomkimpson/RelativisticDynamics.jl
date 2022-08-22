@@ -12,14 +12,14 @@ initialised """
 function SphericalPhotonOrbit_initial_conditions(M::Model)
 
     @unpack NF,r,θ,ϕ,a = M.parameters
-    @unpack  Q,Φ = M.constants
+    @unpack  Q,L = M.constants
 
     # Initial conditions for r are set in system_parameters.jl 
     # Initial conditions for θ, ϕ are arbitrary, also set in  system_parameters.jl 
     # We now calculate the initial value of pθ
     
     Σ = sigma(r,θ,a)
-    θdot2 = (Q - (Φ^2 / sin(θ)^2 - a^2)*cos(θ)^2)/Σ^2
+    θdot2 = (Q - (L^2 / sin(θ)^2 - a^2)*cos(θ)^2)/Σ^2
     θdot = sqrt(θdot2) # plus or minus?
     pθ = Σ*θdot
 
@@ -50,36 +50,81 @@ function MPD_initial_conditions(M::Model)
 
 
     r,θ = xvector[2],xvector[3] #Get the initial r and theta 
-    r = 10.0
+
     Δ = delta(r,a)
     Σ = sigma(r,θ,a)
 
 
     # Metric 
-    metric_covar  = covariant_metric(xvector,a)
+    g  = covariant_metric(xvector,a)
     metric_contra = contravariant_metric(xvector,a)
 
 
+    println([E,L,Q])
+
     # 4 - momentum 
-    T = (r^2 + a^2)*(E*(r^2 + a^2) -a*L)/Δ -a*(a*E*sin(θ)^2 - L)
-    R = ((r^2 + a^2)*E -a*L)^2 - Δ*(r^2 + (L -a*E) + Q)
-    Θ = Q - ((1.0 - E^2)*a^2 + L^2/sin(θ)^2)*cos(θ)^2                                                 # Note that this is a capital \Theta, not a lower case \theta
-    Φ = a*(E*(r^2 + a^2) -a*L)/Δ -a*E + L/sin(θ)^2 
+    PP = E*(r^2+a^2) - a*L 
 
 
-    tdot = T/Σ
-    rdot = sqrt(R)/Σ
-    θdot = sqrt(Θ)/Σ
-    ϕdot = Φ/Σ
+    TT = (r^2+a^2)*PP/Δ -a*(a*E*sin(θ)^2-L)
+    RR = ((r^2+a^2)*E  -a*L)^2 -Δ*(r^2 + (L-a*E)^2+Q)
+    ThTh = Q - ((1.0-E^2)*a^2 + L^2/sin(θ)^2)*cos(θ)^2
+    PhPh = a*PP/Δ -a*E + L/sin(θ)^2
 
-    pvector = m0*[tdot,rdot,θdot,ϕdot]
-    println("Initial conditions pvector")
-    println(pvector)
 
-    pvector_covar = convert_to_covariant(metric_covar,pvector)
 
-    println("dot prod") 
-    println(sum(pvector.*pvector_covar))
+    # T = (r^2 + a^2)*(E*(r^2 + a^2) -a*L)/Δ -a*(a*E*sin(θ)^2 - L)
+    # R = ((r^2 + a^2)*E -a*L)^2 - Δ*(r^2 + (L -a*E) + Q)
+    # Θ = Q - ((1.0 - E^2)*a^2 + L^2/sin(θ)^2)*cos(θ)^2                                                 # Note that this is a capital \Theta, not a lower case \theta
+    # Φ = a*(E*(r^2 + a^2) -a*L)/Δ -a*E + L/sin(θ)^2 
+
+
+
+    # tdot = T/Σ
+    # rdot = -sqrt(R)/Σ
+    # θdot = -sqrt(Θ)/Σ
+    # ϕdot = Φ/Σ
+
+
+
+
+    #pvector = m0*[tdot,rdot,θdot,ϕdot]
+
+
+
+
+
+    tdot = -TT/Σ
+    rdot = -sqrt(RR)/Σ
+    θdot = -sqrt(ThTh)/Σ
+    ϕdot = -PhPh/Σ
+
+
+
+    uvector = [tdot,rdot,θdot,ϕdot]
+
+
+
+    # @tensor begin
+    #     dx[α] := -pvector[α]#(pvector[α]+0.50*Stensor[α,β]*Riemann[β,γ,μ,ν]*pvector[γ]*Stensor[μ,ν]/(m0^2 + division_scalar))/m0^2
+    # end
+
+    @tensor begin 
+        Vsq = g[μ,ν]*uvector[μ]*uvector[ν]
+    end 
+
+
+    println("VSQ")
+    println(Vsq)
+    PV = -sqrt(-1.0/Vsq)
+
+
+
+
+
+
+    pvector_covar = convert_to_covariant(g,pvector)
+
 
     # 4 - spin
     svector = [0.0,0.0,0.0,0.0]

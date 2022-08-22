@@ -16,7 +16,7 @@
 function timestepping(X::PrognosticVariables, M::Model)
 
 @unpack a, Tint = M.parameters
-@unpack Φ,Q,u0,u1,m0,ϵ = M.constants
+@unpack L,Q,m0,ϵ = M.constants
 
 # Integration time 
 tspan = (0.0,Tint) 
@@ -33,7 +33,7 @@ if M.parameters.model == :SphericalPhoton
     ode_solution = DifferentialEquations.solve(ode_prob,abstol=1e-8,reltol=1e-4)
 
 elseif M.parameters.model == :MPD
-    params = [Φ,a,m0,ϵ]
+    params = [a,m0,ϵ]
     u = vcat(X.xvector,X.pvector,X.svector)
     #ode_prob = DifferentialEquations.ODEProblem(MPD!,u,tspan,params,progress = true)
     #ode_solution = DifferentialEquations.solve(ode_prob,abstol=1e-8,reltol=1e-4)
@@ -97,7 +97,7 @@ function MPD!(du,u,p,τ)
 
     #Extract - can we do this better?
     t,r,θ,ϕ,pᵗ,pʳ,pᶿ,pᵠ,sᵗ,sʳ,sᶿ,sᵠ = u
-    Φ,a,m0,ϵ = p
+    a,m0,ϵ = p
     xvector = [t,r,θ,ϕ]
     pvector = [pᵗ,pʳ,pᶿ,pᵠ]
     svector = [sᵗ,sʳ,sᶿ,sᵠ]
@@ -177,27 +177,31 @@ function MPD_test(u,p)
 
     #Extract - can we do this better?
     t,r,θ,ϕ,pᵗ,pʳ,pᶿ,pᵠ,sᵗ,sʳ,sᶿ,sᵠ = u
-    Φ,a,m0,ϵ = p
+    a,m0,ϵ = p
     xvector = [t,r,θ,ϕ]
     pvector = [pᵗ,pʳ,pᶿ,pᵠ]
     svector = [sᵗ,sʳ,sᶿ,sᵠ]
 
 
-    # Define useful functions 
-    g = covariant_metric(xvector,a)
-    Σ = sigma(r,θ,a)
-    Δ = delta(r,a)
-    Γ = christoffel(r,θ,a)
-    Riemann = riemann(r,θ,a)
+
+    println("Contravariant pvector is")
+    display(pvector)
+
+    # # Define useful functions 
+     g = covariant_metric(xvector,a)
+    # Σ = sigma(r,θ,a)
+    # Δ = delta(r,a)
+    # Γ = christoffel(r,θ,a)
+    # Riemann = riemann(r,θ,a)
 
  
-    Stensor = spintensor(xvector,pvector,svector,a,m0,ϵ)
+    # Stensor = spintensor(xvector,pvector,svector,a,m0,ϵ)
 
 
-    # 4 velocity 
-    @tensor begin
-    division_scalar = Riemann[μ,ν,ρ,σ]*Stensor[μ,ν]*Stensor[ρ,σ]
-    end 
+    # # 4 velocity 
+    # @tensor begin
+    # division_scalar = Riemann[μ,ν,ρ,σ]*Stensor[μ,ν]*Stensor[ρ,σ]
+    # end 
 
 
     
@@ -205,7 +209,7 @@ function MPD_test(u,p)
 
 
     @tensor begin
-        dx[α] := -(pvector[α]+0.50*Stensor[α,β]*Riemann[β,γ,μ,ν]*pvector[γ]*Stensor[μ,ν]/(m0^2 + division_scalar))/m0^2
+        dx[α] := -pvector[α]#(pvector[α]+0.50*Stensor[α,β]*Riemann[β,γ,μ,ν]*pvector[γ]*Stensor[μ,ν]/(m0^2 + division_scalar))/m0^2
     end
 
 
@@ -214,20 +218,12 @@ function MPD_test(u,p)
         Vsq = g[μ,ν]*dx[μ]*dx[ν]
     end 
 
-    PV = -sqrt(1.0/Vsq)
 
-    println("pvector")
-    println(pvector)
-
-    println("Vsq:")
+    println("VSQ")
     println(Vsq)
-    println("PV:")
-    println(PV)
+    PV = -sqrt(-1.0/Vsq)
 
 
-    #dx = dx * PV
-    display(dx)
-    println("CHECK")
     @tensor begin
         check_val = g[μ,ν]*dx[μ]*dx[ν]
     end 
