@@ -38,7 +38,7 @@ Mapping function `h` used when converting from Keplerian orbital parameters to c
 """
 function mapping_h(r,a,zminus)
 Δ = delta(r,a)
-return r*(r-2.0) + (zminus^2)/(1.0 - zminus^2) *Δ
+return r*(r-2.0) + (zminus^2 * Δ)/(1.0 - zminus^2)
 end
 
 

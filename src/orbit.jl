@@ -26,14 +26,11 @@ function orbit(::Type{NF}=Float64;              # number format, use Float64 as 
     end 
     
     
-        # The initial conditons. Borrowing the terminology "prognostic variables" from climate simulations
-    # i.e. the xvector, pvector and svector
-    #prognostic_vars = initial_conditions(M)         # initialize prognostic variables
 
 
     #Timestepping
     # Uses the solver suite DifferentialEquaitons.jl
-    #solution = timestepping(prognostic_vars, M)
+    solution = timestepping(prognostic_vars, M)
 
     solution = 1.0
 

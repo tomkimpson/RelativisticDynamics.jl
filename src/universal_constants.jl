@@ -100,7 +100,7 @@ function ELQ(P::SystemParameters)
 
         r_periapsis= α*(1-e)
         r_apoapsis = α*(1+e)
-        zminus = sin(ι)^2
+        zminus = cos(ι)
     
         f1 = mapping_f(r_periapsis,a,zminus)
         g1 = mapping_g(r_periapsis,a)
@@ -121,44 +121,27 @@ function ELQ(P::SystemParameters)
     
     
         #Energy
-        E2 = κ*ρ + 2.0*ϵ*σ + orbit_dir*2.0*sqrt(σ*(σ*ϵ^2 + ρ*ϵ*κ - η*κ^2)) / (ρ^2 + 4.0*η*ρ)
+        E2 = κ*ρ + 2.0*ϵ*σ + orbit_dir*2.0*sqrt(σ*(σ*ϵ^2 + ρ*ϵ*κ - η*κ^2)) / (ρ^2 + 4.0*η*σ)
         E = sqrt(E2)
      
         #Angular Momentum 
         L = -g1*E/h1 + orbit_dir*sqrt(g1^2*E2 + (f1*E2-d1)*h1)/h1
-    
+        #L = (ρ*E2 - κ)/(2.0*E*σ)
     
         #Carter Constant 
-        Q = zminus * (a^2 * (1.0 - E2 ) + L^2 /(1.0 - zminus))
+        Q = zminus^2 * (a^2 * (1.0 - E2 ) + L^2 /(1.0 - zminus^2))
     
-        #E = 
-        #L = 10.0
-        #Q = 25.0
+        #Keplerian expressions for reference. See Schmidt 2002 appendix 
+        # SLR = α*(1-e^2)
+        # zm = cos(ι)
+        # E = sqrt(1.0 - (1-e^2)/SLR)
+        # L = sqrt((1-zm^2)*SLR)
+        # Q = zm^2*SLR
 
-        println("Orbital params")
-        println(α)
-        println(e)
-        println(ι)
-
-        SLR = α*(1-e^2)
-        zm = cos(ι)
-
-
-        E = sqrt(1.0 - (1-e^2)/SLR)
-        #E = 1.0
-        L = sqrt((1-zm^2)*SLR)
-        Q = zm^2*SLR
-
-
+        # Useful numbers
         # E = 0.999390486044721
         # L = 14.515059110545808
         # Q = 210.68716034079137
-
-
-        #E = 0.999390486044721
-        #L = 76.5
-        #Q = 277.0
-
 
     else
         println(P.model)
@@ -166,12 +149,6 @@ function ELQ(P::SystemParameters)
         println("Please choose one of: SphericalPhoton, MPD ")
         return
     end 
-
-    println("The ELQ values are:")
-    println(E)
-    println(L)
-    println(Q)
-    println("--------------------------------")
 
     return E,L,Q
 

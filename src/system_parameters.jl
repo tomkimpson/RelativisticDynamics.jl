@@ -27,7 +27,7 @@ The default values of the keywords define the default model setup.
     #Orbital parameters for the Keplerian orbit
     α::Real=300.0       # Keplerian semi major axis
     e::Real=0.1         # Keplerian eccentricity 
-    ι::Real=pi/12       # Inclination w.r.t equatorial plane in radians 
+    ι::Real=pi/12       # Inclination w.r.t equatorial plane in radians. The extrema of θ. 
     orbit_dir::Int=1    # Orbit direction prograde/retrograde
 
     #Orbital parameters for the Spherical Photon orbit 
