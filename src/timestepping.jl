@@ -93,7 +93,6 @@ end
 function MPD!(du,u,p,τ)
 
 
-    println("Welcome to the MPD! function")
 
     #Extract - can we do this better?
     t,r,θ,ϕ,pᵗ,pʳ,pᶿ,pᵠ,sᵗ,sʳ,sᶿ,sᵠ = u
@@ -118,7 +117,7 @@ function MPD!(du,u,p,τ)
     end 
 
     @tensor begin
-        dx[α] := pvector[α]#-(pvector[α]+0.50*Stensor[α,β]*Riemann[β,γ,μ,ν]*pvector[γ]*Stensor[μ,ν]/(m0^2 + division_scalar))/m0^2
+        dx[α] := -(pvector[α]+0.50*Stensor[α,β]*Riemann[β,γ,μ,ν]*pvector[γ]*Stensor[μ,ν]/(m0^2 + division_scalar))/m0^2
     end
 
     @tensor begin 
@@ -131,11 +130,11 @@ function MPD!(du,u,p,τ)
 
 
     #Check the value if needed
-    # @tensor begin 
-    #     check_val = g[μ,ν]*dx[μ]*dx[ν]
-    # end 
-    # println("Check value")
-    # println(check_val)
+    @tensor begin 
+        check_val = g[μ,ν]*dx[μ]*dx[ν]
+    end 
+    println("Check value")
+    println(check_val)
 
 
 
