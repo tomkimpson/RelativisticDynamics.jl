@@ -214,7 +214,7 @@ end
         g_inverse = RelativisticDynamics.contravariant_metric(coords,a)
 
        
-        #Rieman tesnor, mixed indices
+        #Rieman tensor, mixed indices
         Riemann = RelativisticDynamics.riemann(r,θ,a)
       
 

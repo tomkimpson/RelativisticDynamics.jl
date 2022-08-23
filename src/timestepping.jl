@@ -107,34 +107,31 @@ function MPD!(du,u,p,τ)
     Σ = sigma(r,θ,a)
     Δ = delta(r,a)
     Γ = christoffel(r,θ,a)
-    Riemann = riemann(r,θ,a)
+    Riemann = riemann(r,θ,a) # This is the mixed contra/covar term
+    metric_trace =-sin(θ)^2*Σ^2
+    permutation_tensor = ϵ/sqrt(abs(metric_trace)) #This is also defined in the spintensor function 
+
+
+
+
+
+    @tensor begin
+        Riemann_covar[μ,ν,ρ,σ] := g[μ,λ]*Riemann[λ,ν,ρ,σ] #This is the fully covariant form
+    end
+
+ 
     Stensor = spintensor(xvector,pvector,svector,a,m0,ϵ)
 
 
     # 4 velocity 
-    @tensor begin
-    division_scalar = Riemann[μ,ν,ρ,σ]*Stensor[μ,ν]*Stensor[ρ,σ]
-    end 
+    dx = calculate_four_velocity(pvector,Stensor,Riemann_covar,g,m0)
 
+
+    # 4 momentum 
+    # Turn the contravariant permutation_tensor to eps^{ab}_{cd}
     @tensor begin
-        dx[α] := -(pvector[α]+0.50*Stensor[α,β]*Riemann[β,γ,μ,ν]*pvector[γ]*Stensor[μ,ν]/(m0^2 + division_scalar))/m0^2
+        eps[μ,ν,α,β] := g[μ,λ]*g[ν,ρ]*permutation_tensor[μ,ν,λ,ρ] #This is the fully covariant form
     end
-
-    @tensor begin 
-        Vsq = g[μ,ν]*dx[μ]*dx[ν]
-    end 
-
-
-    PV = -sqrt(-1.0/Vsq)
-    dx = dx * PV
-
-
-    #Check the value if needed
-    @tensor begin 
-        check_val = g[μ,ν]*dx[μ]*dx[ν]
-    end 
-    println("Check value")
-    println(check_val)
 
 
 
@@ -164,3 +161,60 @@ function MPD!(du,u,p,τ)
 
 end 
 
+
+
+
+function calculate_four_velocity(pvector,Stensor,Riemann,g,m0)
+
+    @tensor begin
+        division_scalar = Riemann[μ,ν,ρ,σ]*Stensor[μ,ν]*Stensor[ρ,σ]
+    end 
+    
+    @tensor begin
+        dx[α] := -(pvector[α]+0.50*Stensor[α,β]*Riemann[β,γ,μ,ν]*pvector[γ]*Stensor[μ,ν]/(m0^2 + division_scalar))/m0^2
+    end
+    
+    @tensor begin 
+        Vsq = g[μ,ν]*dx[μ]*dx[ν]
+    end 
+    
+    
+    PV = -sqrt(-1.0/Vsq)
+    dx = dx * PV
+    
+    
+    #Check the value if needed
+    @tensor begin 
+        check_val = g[μ,ν]*dx[μ]*dx[ν]
+    end 
+    println("Check value")
+    println(check_val)
+
+
+    return dx
+end 
+
+
+function calculate_four_momentum(pvector,uvector,svector,Riemann,permutation_tensor,m0)
+
+
+    #Turn the contravariant permutation_tensor to eps^{ab}_{cd}
+    eps 
+    contravariant spin tensor
+
+
+
+
+
+
+
+
+
+
+     @tensor begin
+        dp[α] := -Γ[α,μ,ν] + Riemann[α,β,ρ,σ]*/(2.0*m0)
+    end
+
+
+
+end 
