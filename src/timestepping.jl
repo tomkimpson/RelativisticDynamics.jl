@@ -110,10 +110,11 @@ function MPD!(du,u,p,τ)
     Riemann = riemann(r,θ,a) # This is the mixed contra/covar term
     metric_trace =-sin(θ)^2*Σ^2
     permutation_tensor = ϵ/sqrt(abs(metric_trace)) #This is also defined in the spintensor function 
-
-
-
-
+    
+    # Turn the contravariant permutation_tensor to eps^{ab}_{cd}
+    @tensor begin
+        eps[ρ,σ,μ,ν] := g[μ,λ]*g[ν,γ]*permutation_tensor[ρ,σ,λ,γ] 
+    end
 
     @tensor begin
         Riemann_covar[μ,ν,ρ,σ] := g[μ,λ]*Riemann[λ,ν,ρ,σ] #This is the fully covariant form
@@ -128,32 +129,36 @@ function MPD!(du,u,p,τ)
 
 
     # 4 momentum 
-    # Turn the contravariant permutation_tensor to eps^{ab}_{cd}
-    @tensor begin
-        eps[μ,ν,α,β] := g[μ,λ]*g[ν,ρ]*permutation_tensor[μ,ν,λ,ρ] #This is the fully covariant form
-    end
+    dp = calculate_four_momentum(pvector,dx,svector,Γ,Riemann,eps,m0)
+#
+
+    #4- spin
+    ds = calculate_four_spin(pvector,dx,svector,Γ,Riemann_covar,eps,m0)
 
 
+    println("updating dx ds dp ")
+    du[1:4] = dx
+    du[5:8] = dp
+    du[9:12]= ds
+
+    # #Position 
+    # du[1] = 0.0
+    # du[2] = 0.0
+    # du[3] = 0.0
+    # du[4] = 0.0
+
+    # #Momentum 
+    # du[5] = 0.0
+    # du[6] = 0.0
+    # du[7] = 0.0
+    # du[8] = 0.0
 
 
-    #Position 
-    du[1] = 0.0
-    du[2] = 0.0
-    du[3] = 0.0
-    du[4] = 0.0
-
-    #Momentum 
-    du[5] = 0.0
-    du[6] = 0.0
-    du[7] = 0.0
-    du[8] = 0.0
-
-
-    #Spin 
-    du[9]  = 0.0
-    du[10] = 0.0
-    du[11] = 0.0
-    du[12] = 0.0
+    # #Spin 
+    # du[9]  = 0.0
+    # du[10] = 0.0
+    # du[11] = 0.0
+    # du[12] = 0.0
 
 
     nothing #function returns nothing
@@ -195,26 +200,19 @@ function calculate_four_velocity(pvector,Stensor,Riemann,g,m0)
 end 
 
 
-function calculate_four_momentum(pvector,uvector,svector,Riemann,permutation_tensor,m0)
-
-
-    #Turn the contravariant permutation_tensor to eps^{ab}_{cd}
-    eps 
-    contravariant spin tensor
-
-
-
-
-
-
-
-
-
-
+function calculate_four_momentum(pvector,uvector,svector,Γ,Riemann,eps,m0)
      @tensor begin
-        dp[α] := -Γ[α,μ,ν] + Riemann[α,β,ρ,σ]*/(2.0*m0)
+        dp[α] := -Γ[α,μ,ν]*pvector[μ]*uvector[ν] + (Riemann[α,β,ρ,σ]*eps[ρ,σ,μ,ν]*svector[μ]*pvector[ν]*uvector[β])/(2.0*m0)
     end
 
+    return dp
+end 
 
 
+function calculate_four_spin(pvector,uvector,svector,Γ,Riemann_covar,eps,m0)
+    @tensor begin
+       ds[α] := -Γ[α,μ,ν]*svector[μ]*uvector[ν] + (Riemann_covar[γ,β,ρ,σ]*eps[ρ,σ,μ,ν]*svector[μ]*pvector[ν]*svector[γ]*uvector[β])*pvector[α]/(2.0*m0^3)
+   end
+
+   return ds
 end 
