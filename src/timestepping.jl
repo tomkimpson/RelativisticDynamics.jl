@@ -1,17 +1,9 @@
 
-
-
-
-
-
-
 #specify jacobian 
 
 #https://www.youtube.com/watch?v=PxSALflWcE0
 #ForwardDiff.jacobian - automatic differentiaon 
 #solve with StaticArrays - whoch can work well for small system_parameters (< 20 ODEs)
-
-
 
 function timestepping(X::PrognosticVariables, M::Model)
 
@@ -27,7 +19,7 @@ println(M.parameters.model)
 
 # Define the ODE to be solved
 if M.parameters.model == :SphericalPhoton      
-    params = [Φ,a]    
+    params = [L,a]    
     u = vcat(X.xvector,X.pvector)             
     ode_prob = DifferentialEquations.ODEProblem(spherical_photon_hamiltonian!,u,tspan,params,progress = true)
     ode_solution = DifferentialEquations.solve(ode_prob,abstol=1e-8,reltol=1e-4)
@@ -37,12 +29,7 @@ elseif M.parameters.model == :MPD
     u = vcat(X.xvector,X.pvector,X.svector)
     ode_prob = DifferentialEquations.ODEProblem(MPD!,u,tspan,params,progress = true)
     ode_solution = DifferentialEquations.solve(ode_prob,abstol=1e-8,reltol=1e-4)
-    #MPD_test(u,params)
-
 end 
-
-
-
 
 
 
@@ -52,7 +39,7 @@ end
 #algorithm = DifferentialEquations.RK4() # probably define this elsewhere 
 #ode_solution = DifferentialEquations.solve(ode_prob,algorithm,saveat=1)
 #ode_solution = DifferentialEquations.solve(ode_prob,abstol=1e-8,reltol=1e-4)
-ode_solution=1.0
+#ode_solution=1.0
 return ode_solution
 
     
@@ -63,7 +50,7 @@ end
 function spherical_photon_hamiltonian!(du,u,p,λ)
 
     t,r,θ,ϕ,pᵗ,pʳ,pᶿ,pᵠ = u
-    Φ,a = p
+    L,a = p
 
 
     # Define useful functions 
@@ -74,12 +61,12 @@ function spherical_photon_hamiltonian!(du,u,p,λ)
     du[1] = 0.0
     du[2] = 0.0
     du[3] = pᶿ/Σ
-    du[4] = (2.0*r*a + (Σ - 2.0*r)*Φ/sin(θ)^2) / (Σ*Δ)
+    du[4] = (2.0*r*a + (Σ - 2.0*r)*L/sin(θ)^2) / (Σ*Δ)
 
     #Momentum 
     du[5] = 0.0
     du[6] = 0.0
-    du[7] = sin(θ)*cos(θ)*(Φ^2/sin(θ)^4 -a^2)/Σ
+    du[7] = sin(θ)*cos(θ)*(L^2/sin(θ)^4 -a^2)/Σ
     du[8] = 0.0
 
     nothing #function returns nothing

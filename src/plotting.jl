@@ -9,10 +9,10 @@ using Printf
 Plot the 3D trajectory of a body. Assumes coordinates are Boyer Lindquist. Saves a low resolution
 PNG figure to disk
 """
-function PlotTrajectory(solution,model)
+function PlotTrajectory(solution,model,saveit)
 
     @unpack a = model.parameters
-    @unpack rH = model.constants
+    #@unpack rH = model.constants
 
 
     #Interpolate to higher resolution for smooth plotting   
@@ -32,34 +32,46 @@ function PlotTrajectory(solution,model)
     z = r .* cos.(θ)
 
 
+    # Define the horizon surface 
+    
+    n = 100
+    u = range(-π, π; length = n)
+    v = range(0, π; length = n)
+    rH = 1.0 + sqrt(1.0 - a^2)
+    xH = rH*cos.(u) * sin.(v)'
+    yH = rH*sin.(u) * sin.(v)'
+    zH = rH*ones(n) * cos.(v)'
+
+
+
 
     # Plot it 
+    println("Hello there again")
     pyplot()  # Set the backend
 
     title = "Spherical photon orbits with a = $(@sprintf("%.2f", a))"
-    plot(x,y,z,
+    pobject = plot(x,y,z,
          xaxis=(L"x (r_h)",(-3,3)),yaxis=(L"y (r_h)",(-3,3)),zaxis=(L"z (r_h)",(-3,3)),
          legend=false,
          title = title,
          size = (1200, 800))
 
-    # Singularity 
-    plot!([0.0],[0.0],[0.0],marker=10)
+ 
+
+    # # Singularity 
+    pobject = plot!([0.0],[0.0],[0.0],marker=10)
 
 
-    # Horizon surface 
-    
-    n = 100
-    u = range(-π, π; length = n)
-    v = range(0, π; length = n)
-    xH = rH*cos.(u) * sin.(v)'
-    yH = rH*sin.(u) * sin.(v)'
-    zH = rH*ones(n) * cos.(v)'
 
-    wireframe!(xH, yH, zH) #or surface! 
+    pobject = wireframe!(xH, yH, zH) #or surface! 
 
-    fout = "example_media/spherical_photon_orbits_a_$a" * ".png"
-    savefig(fout)
+    if saveit
+        fout = "example_media/spherical_photon_orbits_a_$a" * ".png"
+        savefig(fout)
+    end
+
+
+    display(pobject)
 end 
 
 
