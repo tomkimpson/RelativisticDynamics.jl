@@ -32,10 +32,10 @@ jobs:
       - name: Set ENV Variables for 🐍 📞
         run: echo ENV["PYTHON"] = "${{ env.pythonLocation }}/bin/python" >> $GITHUB_ENV
 
-      - name: Install dependencies 🔧
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+      # - name: Install dependencies 🔧
+      #   run: |
+      #     python -m pip install --upgrade pip
+      #     pip install -r requirements.txt
 
       # Julia Tasks
       - uses: julia-actions/setup-julia@v1
