@@ -49,7 +49,7 @@ function PlotTrajectory(solution,model,saveit)
     println("Hello there again")
 
     #gr()
-    pyplot()  # Set the backend
+    #pyplot()  # Set the backend
 
     #plotlyjs()
     title = "Spherical photon orbits with a = $(@sprintf("%.2f", a))"
