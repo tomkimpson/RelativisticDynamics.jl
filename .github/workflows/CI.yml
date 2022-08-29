@@ -20,24 +20,12 @@ jobs:
         version:
           - '1.7'
           - 'nightly'
-        python: [3.7]
         os:
           - ubuntu-latest
         arch:
           - x64
     steps:
       - uses: actions/checkout@v2
-      - name: Set up 🐍 ${{ matrix.python }}
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python }}
-
-      - name: Display Python version
-        run: python -c "import sys; print(sys.version)"
-
-      - name: Set ENV Variables for 🐍 📞
-        run: echo ENV["PYTHON"] = "${{ env.pythonLocation }}/bin/python" >> $GITHUB_ENV
-        
       - uses: julia-actions/setup-julia@v1
         with:
           version: ${{ matrix.version }}
