@@ -47,8 +47,11 @@ function PlotTrajectory(solution,model,saveit)
 
     # Plot it 
     println("Hello there again")
+
+    #gr()
     pyplot()  # Set the backend
 
+    #plotlyjs()
     title = "Spherical photon orbits with a = $(@sprintf("%.2f", a))"
     pobject = plot(x,y,z,
          xaxis=(L"x (r_h)",(-3,3)),yaxis=(L"y (r_h)",(-3,3)),zaxis=(L"z (r_h)",(-3,3)),
@@ -58,20 +61,20 @@ function PlotTrajectory(solution,model,saveit)
 
  
 
-    # # Singularity 
-    pobject = plot!([0.0],[0.0],[0.0],marker=10)
+    # # # Singularity 
+    # pobject = plot!([0.0],[0.0],[0.0],marker=10)
 
 
 
-    pobject = wireframe!(xH, yH, zH) #or surface! 
+    # pobject = wireframe!(xH, yH, zH) #or surface! 
 
-    if saveit
-        fout = "example_media/spherical_photon_orbits_a_$a" * ".png"
-        savefig(fout)
-    end
+    # if saveit
+    #     fout = "example_media/spherical_photon_orbits_a_$a" * ".png"
+    #     savefig(fout)
+    # end
 
 
-    display(pobject)
+    # display(pobject)
 end 
 
 

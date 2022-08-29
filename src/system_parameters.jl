@@ -1,5 +1,5 @@
 """
-    P = Parameters(kwargs...)
+P = Parameters(kwargs...)
 A struct to hold all model parameters that may be changed by the user.
 The struct uses keywords such that default values can be changed at creation.
 The default values of the keywords define the default model setup.
@@ -40,11 +40,3 @@ The default values of the keywords define the default model setup.
 
 
 end
-
-
-#Could also use protostructs whilst in dev: https://github.com/BeastyBlacksmith/ProtoStructs.jl
-# @proto struct SystemParameters
-#     NF::DataType       # Number format. Default is defined in orbit.jl
-#     a::Int = 1
-#     b::Float64 = 2.0
-# end

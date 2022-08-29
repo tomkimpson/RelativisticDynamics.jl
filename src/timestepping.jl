@@ -20,26 +20,16 @@ println(M.parameters.model)
 # Define the ODE to be solved
 if M.parameters.model == :SphericalPhoton      
     params = [L,a]    
-    u = vcat(X.xvector,X.pvector)             
-    ode_prob = DifferentialEquations.ODEProblem(spherical_photon_hamiltonian!,u,tspan,params,progress = true)
-    ode_solution = DifferentialEquations.solve(ode_prob,abstol=1e-8,reltol=1e-4)
-
+    u = vcat(X.xvector,X.pvector)
+    f = spherical_photon_hamiltonian!    
 elseif M.parameters.model == :MPD
     params = [a,m0,ϵ]
     u = vcat(X.xvector,X.pvector,X.svector)
-    ode_prob = DifferentialEquations.ODEProblem(MPD!,u,tspan,params,progress = true)
-    ode_solution = DifferentialEquations.solve(ode_prob,abstol=1e-8,reltol=1e-4)
+    f = MPD!
 end 
 
-
-
-
-
-# Solve it 
-#algorithm = DifferentialEquations.RK4() # probably define this elsewhere 
-#ode_solution = DifferentialEquations.solve(ode_prob,algorithm,saveat=1)
-#ode_solution = DifferentialEquations.solve(ode_prob,abstol=1e-8,reltol=1e-4)
-#ode_solution=1.0
+ode_prob = DifferentialEquations.ODEProblem(f,u,tspan,params,progress = true)
+ode_solution = DifferentialEquations.solve(ode_prob,abstol=1e-8,reltol=1e-4)
 return ode_solution
 
     
