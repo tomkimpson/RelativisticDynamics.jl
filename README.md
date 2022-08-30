@@ -9,16 +9,13 @@ Welcome to RelativisticDynamics.jl!
 
 The focus of this package is to numerically solve orbital equations for the Kerr spacetime.
 
-
 Please see the [documentation](https://tomkimpson.github.io/RelativisticDynamics.jl/dev/).
 
 ## Relativistic spin orbital dynamics
 
 The primary focus of this package is the calculation of the orbital motion of an astrophysical body, such as a pulsar, on a background Kerr spacetime. Going beyond the point particle approximation, we instead model an extended spinning body via the Mathisson-Papertrou-Dixon equations.
 
-The code solves a set of ODEs numerically. These equations are based on the original works of [Mathisson 1937](https://link.springer.com/article/10.1007/s10714-010-0939-y), [Papapetrou 1951](https://royalsocietypublishing.org/doi/10.1098/rspa.1951.0200) and [Dixon 1964](https://ui.adsabs.harvard.edu/abs/1964NCim...34..317D). Consequently these equations are known as the [MPD equations](https://en.wikipedia.org/wiki/Mathisson%E2%80%93Papapetrou%E2%80%93Dixon_equations). More recent works can be found in Mashoon & Singh 2006, Singh 2005 and Singh, Wu & Sarty 2014.
-
-Additional interesting discussion on the motion of extended bodies in GR can be found in Consta and Natatio, 2015
+The code solves a set of ODEs numerically. These equations are based on the original works of [Mathisson 1937](https://link.springer.com/article/10.1007/s10714-010-0939-y), [Papapetrou 1951](https://royalsocietypublishing.org/doi/10.1098/rspa.1951.0200) and [Dixon 1964](https://ui.adsabs.harvard.edu/abs/1964NCim...34..317D). Consequently these equations are known as the [MPD equations](https://en.wikipedia.org/wiki/Mathisson%E2%80%93Papapetrou%E2%80%93Dixon_equations). More recent works can be found in [Mashoon & Singh 2006](https://arxiv.org/abs/astro-ph/0608278), [Singh 2005](https://journals.aps.org/prd/abstract/10.1103/PhysRevD.72.084033), [Singh, Wu & Sarty 2014](https://arxiv.org/abs/1403.7171) and [Li,Wu & Singh 2019](https://arxiv.org/abs/1902.03146)Additional interesting discussion on the motion of extended bodies in GR can be found in [Costa & Natário, 2015](https://arxiv.org/abs/1410.6443)
 
 
 ## Spherical Photon Orbits
