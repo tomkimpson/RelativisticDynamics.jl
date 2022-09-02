@@ -22,7 +22,7 @@ The default values of the keywords define the default model setup.
     rPSR::Real = 10.0  # Pulsar radius in km
     p0::Real   = 1e-3  # Pulsar spin period in seconds
     Sθ::Real   = pi/6  # θ angle of pulsar spin axis 
-    Sϕ::Real   = 0.0   # \phi angle of pulsar spin axis
+    Sϕ::Real   = 0.0   # ϕ angle of pulsar spin axis
 
     #Orbital parameters for the Keplerian orbit
     α::Real=300.0       # Keplerian semi major axis
@@ -33,6 +33,7 @@ The default values of the keywords define the default model setup.
     #Orbital parameters for the Spherical Photon orbit 
     rmin = 2.0 * (1.0 + cos(2.0/3.0 * acos(-a)))
     rmax = 2.0 * (1.0 + cos(2.0/3.0 * acos(a)))
+    
     r::Real=(rmin+rmax)/2.0 
     θ::Real = π/2.0
     ϕ::Real = 0.0

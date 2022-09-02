@@ -126,6 +126,44 @@ end
 end
 
 
+
+@testset "Check call of constants" begin
+    
+    NF = Float64
+
+    m = :MPD
+
+    for m in [:SphericalPhoton, :MPD]
+
+        for n in 1:5
+
+            α    = rand(Uniform(3.0,900)) 
+            θ    = rand(Uniform(0.0, 2.0*π))
+            mBH  = rand(Uniform(1e3, 1e9))
+            mPSR = rand(Uniform(1.1, 2.1))
+            p0   = rand(Uniform(1e-4, 1.0))
+            e    = rand(Uniform(0.01, 0.90))
+
+            P = SystemParameters(NF=NF,α=α,θ=θ,mBH=mBH,mPSR=mPSR,p0=p0,e=e,model=m)
+
+            try
+                C = Constants(P)
+                @test true 
+            catch e
+                @test false 
+            end
+
+
+        end 
+        
+
+    end 
+
+
+end
+
+
+
    # for m in [:SphericalPhoton,:MPD]
 
         
