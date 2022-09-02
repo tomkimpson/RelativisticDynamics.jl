@@ -82,9 +82,48 @@ end
 end
 
 
+@testset "MPD Carter constant for zero inclination" begin
+    
+    NF = Float64
+
+    m = :MPD
+    ι= π/2.0  
+    P = SystemParameters(NF=NF,ι=ι,model=m)
+    
+    L,Q = RelativisticDynamics.LQ(P)
+    @test isapprox(Q,0.0,atol=eps(NF))
+
+  
+
+end
+
+
+@testset "MPD Angular momentum changes with radius" begin
+    
+    NF = Float64
+
+    m = :MPD
+    α = 1000.0
+    P = SystemParameters(NF=NF,α=α,model=m)
+    
+    L0,Q0 = RelativisticDynamics.LQ(P)
 
 
 
+    for i in 1:5
+        α = rand(Uniform(3.0,900)) 
+        θ = rand(Uniform(0.0, 2.0*π))
+        P = SystemParameters(NF=NF,α=α,θ=θ,model=m) # Parameters
+   
+        L,Q = RelativisticDynamics.LQ(P)
+        @test L0 > L
+
+    end 
+
+
+  
+
+end
 
 
    # for m in [:SphericalPhoton,:MPD]
