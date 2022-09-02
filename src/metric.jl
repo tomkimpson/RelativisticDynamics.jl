@@ -1,3 +1,21 @@
+
+"""
+Construct the NxN matrix of the covariant Minkowski metric.
+"""
+function covariant_minkowski()
+
+    metric_covar = zeros(Float64,4,4)
+    
+    metric_covar[1,1] =  -1.0
+    metric_covar[2,2] =  1.0
+    metric_covar[3,3] =  1.0
+    metric_covar[4,4] =  1.0 
+    return metric_covar
+end
+
+
+
+
 """
 Construct the NxN matrix of the covariant metric.
 Metric components are defined via indvidual functions to allow for auto diff in unit tests
@@ -255,11 +273,6 @@ function riemann(r,θ,a)
     return Rtensor
 
 end 
-
-
-
-
-
 
 
 """

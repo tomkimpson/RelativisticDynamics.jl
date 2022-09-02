@@ -21,7 +21,7 @@ A struct to hold all variables which are constant over the course of the integra
     m0 :: NF                 # Pulsar mass in natural units
 
     # 3. Mathematical/Tensor objects
-    ϵ ::AbstractArray{NF}   #levi cevit
+    ϵ ::AbstractArray{NF}   #levi cevita
 
 end
 
@@ -84,15 +84,17 @@ Calculate the energy, angular momentum and Carter constant for the different typ
 function LQ(P::SystemParameters)
 
 
-    #@unpack a,ι,α,e,orbit_dir,mPSR,rPSR,p0,mBH,r = P
-
     @unpack r,a,α,e,ι,orbit_dir = P
 
-
     if P.model == :SphericalPhoton 
-        L = - (r^3 - 3.0*r^2 + a^2*r + a^2) / (a*(r - 1.0))
-        Q = -(r^3 * (r^3 - 6.0*r^2 + 9.0 * r - 4.0*a^2))/(a^2 * (r - 1.0)^2)
 
+        if a == 0.0
+            println("Spherical Photon orbits do not exist for a=0. Try a non-zero value")
+            return
+        else
+            L = - (r^3 - 3.0*r^2 + a^2*r + a^2) / (a*(r - 1.0))
+            Q = -(r^3 * (r^3 - 6.0*r^2 + 9.0 * r - 4.0*a^2))/(a^2 * (r - 1.0)^2)
+        end
     elseif P.model == :MPD
 
         #Some needed quantities
@@ -122,47 +124,39 @@ function LQ(P::SystemParameters)
 
 end 
 
-
-#r_apoapsis = α*(1+e)
-
-# f2 = mapping_f(r_apoapsis,a,zminus)
-# g2 = mapping_g(r_apoapsis,a)
-# h2 = mapping_h(r_apoapsis,a,zminus)
-# d2 = mapping_d(r_apoapsis,a,zminus)
-
-
-# Extra stuff 
-
-# κ = d1*h2 - d2*h1
-# ϵ = d1*g2 - d2*g1
-# ρ = f1*h2 - f2*h1
-# η = f1*g2 - f2*g1
-# σ = g1*h2 - g2*h1
+"""
+f = mapping_f(r,a,zminus)
+Mapping function `f` used when converting from Keplerian orbital parameters to constants of motion
+"""
+function mapping_f(r,a,zminus)
+Δ = delta(r,a)
+return r^4 +a^2 * (r*(r+2.0) + zminus^2 * Δ)
+end
 
 
+"""
+g = mapping_g(r,a)
+Mapping function `g` used when converting from Keplerian orbital parameters to constants of motion
+"""
+function mapping_g(r,a)
+return 2*a*r
+end
 
-    #   #Angular Momentum 
-    #   L = -g1*E/h1 + orbit_dir*sqrt(g1^2*E2 + (f1*E2-d1)*h1)/h1
-    
-    
-    #   #Carter Constant 
-    #   Q = zminus^2 * (a^2 * (1.0 - E2 ) + L^2 /(1.0 - zminus^2))
-  
-
-
-        #Keplerian expressions for reference. See Schmidt 2002 appendix 
-        # SLR = α*(1-e^2)
-        # zm = cos(ι)
-        # E = sqrt(1.0 - (1-e^2)/SLR)
-        # L = sqrt((1-zm^2)*SLR)
-        # Q = zm^2*SLR
-
-        # Useful numbers
-        #E = 0.999390486044721
-        #L = 14.515059110545808
-        #Q = 210.68716034079137
+"""
+h = mapping_h(r,a,zminus)
+Mapping function `h` used when converting from Keplerian orbital parameters to constants of motion
+"""
+function mapping_h(r,a,zminus)
+Δ = delta(r,a)
+return r*(r-2.0) + (zminus^2 * Δ)/(1.0 - zminus^2)
+end
 
 
- #Energy
- #E2 = κ*ρ + 2.0*ϵ*σ + orbit_dir*2.0*sqrt(σ*(σ*ϵ^2 + ρ*ϵ*κ - η*κ^2)) / (ρ^2 + 4.0*η*σ)
- #E = sqrt(E2)
+"""
+d = mapping_d(r,a,zminus)
+Mapping function `d` used when converting from Keplerian orbital parameters to constants of motion
+"""
+function mapping_d(r,a,zminus)
+Δ = delta(r,a)
+return (r^2 +a^2 * zminus^2)*Δ
+end
