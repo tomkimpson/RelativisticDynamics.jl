@@ -14,7 +14,7 @@
     @test Σ == r^2 
 
     K = RelativisticDynamics.Kretschmann_scalar(r,θ,a)
-    @test K == 48.0/r^6
+    @test isapprox(K,48.0/r^6,atol=eps(NF))
 
 
 
