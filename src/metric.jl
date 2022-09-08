@@ -256,20 +256,9 @@ function riemann(r,θ,a)
     part2 = -4.0*a^2*(r^2-0.50*Σ)^2*sin(θ)^2 
     part3 = +2.0*a^2*r*cos(θ)^2*(Σ^2+2.0*a^2*r*sin(θ)^2)
     part4 = -(2.0*r^2-Σ)*(r*Σ^2-r^2*(a^2+r^2+Σ) +a^4*cos(θ)^2*sin(θ)^2)
-    #σ = r^2 - a^2 * cos(θ)^2
-    #Rtensor[4,1,4,1] = (r*σ*(-a^2*r-r^3-r*Σ+Σ^2) + a^2*(σ^2*sin(θ)^2 + cos(θ)^2*(r*(4.0*a^2*r+4.0*r^3-2.0*Σ^4)+a^2*(σ-4*r^2*Σ^2)*sin(θ)))) / Σ^5
     Rtensor[4,1,1,4]  =(part1+part2+part3+part4)/Σ^5
     Rtensor[4,1,4,1] = -Rtensor[4,1,1,4]
     
-    
-    
-    
-    #Rtensor[4,1,1,4] = -Rtensor[4,1,4,1]
-
-
-
-
-
     return Rtensor
 
 end 
@@ -322,46 +311,7 @@ function schwarzchild_covariant_riemann(r,θ,a)
 
 end 
 
-
-
-
-
-
-
 # Pure function definitions
-# Function definitions which do not mutate inputs.
-# Allows for checks via AutoDif https://fluxml.ai/Zygote.jl/latest/limitations/
-# function metric_gtt(r,θ,a)
-#     Σ = sigma(r,θ,a)
-#     return -(1.0 - 2.0*r / Σ)
-# end 
-
-# function metric_grr(r,θ,a)
-#     Σ = sigma(r,θ,a)
-#     Δ = delta(r,a)
-#     return Σ / Δ
-# end 
-
-# function metric_gθθ(r,θ,a)
-#     Σ = sigma(r,θ,a)
-#     return Σ 
-# end 
-
-# function metric_gϕϕ(r,θ,a)
-#     Σ = sigma(r,θ,a)
-#     Δ = delta(r,a)
-#     return sin(θ)^2 * ((r^2 +a^2)^2 - Δ*a^2*sin(θ)^2) / Σ
-# end 
-
-# function metric_gtϕ(r,θ,a)
-#     Σ = sigma(r,θ,a)
-#     return -2.0*a*r*sin(θ)^2/Σ
-# end 
-
-
-
-#Alternative pure function defs 
-
 function metric_g11(x,a)
     t,r,θ,ϕ =  x[1],x[2],x[3],x[4]
     Σ = RelativisticDynamics.sigma(r,θ,a)
