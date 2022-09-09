@@ -6,9 +6,30 @@ struct PrognosticVariables{NF<:AbstractFloat}
 end
 
 
-"""Initialize a PrognosticVariables struct for an atmosphere at rest. No winds,
-hence zero vorticity and divergence, but temperature, pressure and humidity are
-initialised """
+
+
+function initial_conditions(M::Model)
+
+    if M.parameters.model == :SphericalPhoton                       # pack all of the above into a *Model struct
+        prognostic_vars = SphericalPhotonOrbit_initial_conditions(M)
+    elseif M.parameters.model == :MPD
+        prognostic_vars = MPD_initial_conditions(M)
+    end 
+    
+
+    return prognostic_vars
+
+end 
+
+
+
+
+
+
+"""Initialize a PrognosticVariables struct for Spherical Photon orbits. 
+   Initial t,r,θ,ϕ are all set in system_parameters.jl 
+   Need to calculate pθ. see e.g. https://arxiv.org/pdf/1601.02063.pdf
+   """
 function SphericalPhotonOrbit_initial_conditions(M::Model)
 
     @unpack NF,r,θ,ϕ,a = M.parameters
@@ -24,11 +45,10 @@ function SphericalPhotonOrbit_initial_conditions(M::Model)
     pθ = Σ*θdot
 
     # 4- position
-    #
-    #χ = acos(cos(θ)/sqrt(u0))
+
     xvector = [0.0,r,θ,ϕ]     # By default the starting coordinates
     pvector = [0.0,0.0,pθ,0.0]
-    svector = [0.0,0.0,0.0,0.0] #dont track spin or momentum for these guys
+    svector = [0.0,0.0,0.0,0.0] # dont track spin for these guys
 
 
     # conversion to NF happens here
@@ -52,8 +72,6 @@ function MPD_initial_conditions(M::Model)
     Δ = delta(r,a)
     Σ = sigma(r,θ,a)
     g  = covariant_metric(xvector,a)
-    #metric_contra = contravariant_metric(xvector,a)
-
 
     # 2. Four - momentum 
     Pbar = (r^2+a^2) - a*L 

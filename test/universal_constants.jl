@@ -1,3 +1,11 @@
+using RelativisticDynamics
+using Test
+using Zygote
+using TensorOperations
+using LinearAlgebra
+using Distributions
+
+
 using Combinatorics
 
 @testset "No spherical photon orbits in Schwarzchild" begin
@@ -11,12 +19,7 @@ using Combinatorics
     a = 0.0
 
     P = SystemParameters(NF=NF,r=r,θ=θ,a=a,model=m) # Parameters
-    #C = Constants(P)                                   # Constants
-
-    #Test some general constants 
-   # @test 1e-10 <  C.m0 < 1  # Check the pulsar mass is less than the BH mass and with some reasonable lower bound
-
-
+   
    #a=0 should throw error for spherical photon orbits
     try
         L,Q = RelativisticDynamics.LQ(P)
@@ -127,6 +130,23 @@ end
 
 
 
+@testset "Handles udefined models correctly" begin
+    
+    NF = Float64
+    m = :NotMPD #some undefined model 
+    P = SystemParameters(NF=NF,model=m)
+
+    try
+        C = Constants(P)
+        @test false 
+    catch e
+        @test  true #should throw an error
+    end
+
+end
+
+
+
 @testset "Check call of constants" begin
     
     NF = Float64
@@ -163,33 +183,6 @@ end
 end
 
 
-
-   # for m in [:SphericalPhoton,:MPD]
-
-        
-
-
-
-
-
-        #Create some random, Schwarzchild coordiantes
-        
-
-            #C = Constants(P)                                   # Constants
-
-   # @test 1e-10 <  C.m0 < 1  # Check the pulsar mass is less than the BH mass and with some reasonable lower bound
-
-        #inertia = 0.40*mPSR*Msolar*(rPSR*1e3)^2         # Moment of inertia in SI units. Assumes solid ball 
-        #convert_spin= light_c/(Newton_g*(mBH*Msolar)^2) # Multiply by this to go TO Natural units
-        #s0 = convert_spin*2.0*pi*inertia/p0
-        #m0 = mPSR/mBH
-
-
-
-        #println(C.m0)
-
-
-    #end 
 
 
 

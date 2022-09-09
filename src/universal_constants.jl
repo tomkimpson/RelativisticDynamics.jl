@@ -61,7 +61,7 @@ function Constants(P::SystemParameters)
             for k in 1:4
                 for l in 1:4
                     permutation_vector = [i,j,k,l]
-                    levi[i,j,k,l] = levicivita(permutation_vector)
+                    levi[i,j,k,l] = levicivita(permutation_vector) #This is [i,j,k,l] from e.g. https://mathworld.wolfram.com/PermutationTensor.html
                 end
             end 
         end
