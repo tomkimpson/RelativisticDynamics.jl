@@ -6,8 +6,6 @@ using TensorOperations
 using LinearAlgebra
 using Distributions
 
-
-
 @testset "Each model maps to correct initialization function" begin
     
     NF = Float64
@@ -43,10 +41,12 @@ using Distributions
 
 
     @tensor begin
-        blob[μ] := Stensor[μ,ν]*prognostic_vars.pvector[ν]
+        TD[μ] := Stensor[μ,ν]*prognostic_vars.pvector[ν] #Tulczyjew Dixon condition 
     end
+    for i in 1:4
+        @test isapprox(TD[i],0.0,atol=eps(NF))
+    end 
 
-    display(blob)
 
 end
 
