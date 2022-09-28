@@ -32,7 +32,10 @@ function orbit(::Type{NF}=Float64;              # number format, use Float64 as 
 
     #Timestepping
     # Uses the solver suite DifferentialEquaitons.jl
+    println("Starting the timestepping")
     solution = timestepping(prognostic_vars, M)
     println("Relativistic Dynamics completed OK")
+
+    display(solution.u)
     return solution , M
 end

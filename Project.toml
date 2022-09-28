@@ -17,6 +17,7 @@ Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
 ProtoStructs = "437b6fc4-8e8e-11e9-3fa1-ad391e66c018"
 Revise = "295af30f-e4ad-537b-8983-00126c2a3abe"
 TensorOperations = "6aa20fa7-93e2-5fca-9bc0-fbd0db3c71a2"
+UnicodePlots = "b8865327-cd53-5732-bb35-84acbb429228"
 Zygote = "e88e6eb3-aa80-5325-afca-941959d7151f"
 
 [compat]

@@ -11,7 +11,7 @@ The default values of the keywords define the default model setup.
 
 
     #Type of system to integrate 
-    model::Symbol=:SphericalPhoton  # :SphericalPhoton , :MPD
+    model::Symbol=:MPD  # :SphericalPhoton , :MPD
 
     #BH parameters
     a::Real   = 0.9     # BH spin parameter
@@ -25,8 +25,8 @@ The default values of the keywords define the default model setup.
     Sϕ::Real   = 0.0   # ϕ angle of pulsar spin axis
 
     #Orbital parameters for the Keplerian orbit
-    α::Real=300.0       # Keplerian semi major axis
-    e::Real=0.1         # Keplerian eccentricity 
+    α::Real=50.0       # Keplerian semi major axis
+    e::Real=0.10         # Keplerian eccentricity 
     ι::Real=pi/12       # Inclination w.r.t equatorial plane in radians. The extrema of θ. 
     orbit_dir::Int=1    # Orbit direction prograde/retrograde
 
@@ -37,7 +37,8 @@ The default values of the keywords define the default model setup.
     r::Real=(rmin+rmax)/2.0 
     θ::Real = π/2.0
     ϕ::Real = 0.0
-    Tint::Real = 100.0 # How long to integrate for 
+    Norbits = 10.0 #Number of orbits to integrate for
+    #Tint::Real = 100.0 # How long to integrate for 
 
 
 end

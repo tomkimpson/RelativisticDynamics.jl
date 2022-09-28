@@ -16,7 +16,10 @@ A struct to hold all variables which are constant over the course of the integra
     L   :: NF                # Angular Momentum 
     Q   :: NF                # Carter Constant 
     
-    # 2.2 Pulsar properties
+
+    Tint :: NF               #How long to integrate for in natural units
+
+    # 2.3 Pulsar properties
     s0 :: NF                 # Magnitude of spatial component of spin vector in natural units 
     m0 :: NF                 # Pulsar mass in natural units
 
@@ -32,7 +35,7 @@ Generator function for a Constants struct.
 function Constants(P::SystemParameters)
 
     # Unpack system parameters
-    #@unpack a,ι,α,e,orbit_dir,mPSR,rPSR,p0,mBH,r = P
+    
 
     # Fundamental constants
     light_c  = 3e8
@@ -44,7 +47,15 @@ function Constants(P::SystemParameters)
     # Model specific constants
     L,Q = LQ(P)
     
-    
+    #How long to integrate for 
+    @unpack Norbits,r,α,model = P
+    if P.model == :SphericalPhoton #use radius r to esimate orbital period 
+        Tint = Norbits*2*π*r^(3/2)
+    elseif P.model == :MPD         #use sma 
+        Tint = Norbits*2*π*α^(3/2)
+    end 
+
+    println("Tint is = ", Tint)
 
     #Pulsar 
     @unpack rPSR,mPSR,mBH,p0 = P
@@ -71,6 +82,7 @@ function Constants(P::SystemParameters)
     # This implies conversion to NF
     return Constants{P.NF}(light_c,Newton_g,Msolar,
                            L,Q,
+                           Tint,
                            s0,m0,
                            levi)
 end

@@ -7,8 +7,8 @@
 
 function timestepping(X::PrognosticVariables, M::Model)
 
-@unpack a, Tint = M.parameters
-@unpack L,Q,m0,ϵ = M.constants
+@unpack a = M.parameters
+@unpack L,Q,m0,ϵ,Tint = M.constants
 
 # Integration time 
 tspan = (0.0,Tint) 
@@ -17,19 +17,27 @@ tspan = (0.0,Tint)
 println("The model used is:")
 println(M.parameters.model)
 
+println("Initial conditions are")
+println(X.xvector)
+println(X.pvector)
+println(X.svector)
+
 # Define the ODE to be solved
 if M.parameters.model == :SphericalPhoton      
     params = [L,a]    
     u = vcat(X.xvector,X.pvector)
-    f = spherical_photon_hamiltonian!    
+    f = spherical_photon_hamiltonian!   
 elseif M.parameters.model == :MPD
     params = [a,m0,ϵ]
     u = vcat(X.xvector,X.pvector,X.svector)
     f = MPD!
 end 
 
-ode_prob = DifferentialEquations.ODEProblem(f,u,tspan,params,progress = true)
-ode_solution = DifferentialEquations.solve(ode_prob,abstol=1e-8,reltol=1e-4)
+println("INTEGRATING!")
+println("ODE PROB")
+ode_prob = DifferentialEquations.ODEProblem(f,u,tspan,params,progress = true,progress_steps = 1)
+println("ODE SOLN")
+ode_solution = DifferentialEquations.solve(ode_prob,abstol=1e-9,reltol=1e-9)
 return ode_solution
 
     
@@ -64,6 +72,34 @@ function spherical_photon_hamiltonian!(du,u,p,λ)
 
 end 
 
+
+function geodesic!(du,u,p,λ)
+
+    t,r,θ,ϕ,pᵗ,pʳ,pᶿ,pᵠ = u
+    L,a = p
+
+
+    # Define useful functions 
+    Σ = sigma(r,θ,a)
+    Δ = delta(r,a)
+    κ = pᶿ^2 +L^2/sin(θ)^2 + a^2*sin(θ)^2
+
+    #Position 
+    du[1] = 1.0+(2.0*r*(r^2 +a^2)-2*a*r*L)/(Σ*Δ)
+    du[2] = Δ*pʳ/Σ
+    du[3] = pᶿ/Σ
+    du[4] = (2.0*r*a + (Σ - 2.0*r)*L/sin(θ)^2) / (Σ*Δ)
+
+    #Momentum 
+    du[5] = 0.0
+    du[6] = (-κ*(r-1) + 2*r*(r^2+a^2) - 2*a*L)/(Σ*Δ) - 2*pʳ^2*(r-1)/Σ
+    du[7] = sin(θ)*cos(θ)*(L^2/sin(θ)^4 -a^2)/Σ
+    du[8] = 0.0
+
+    nothing #function returns nothing
+
+
+end 
 
 
 
@@ -113,10 +149,13 @@ function MPD!(du,u,p,τ)
     ds = calculate_four_spin(pvector,dx,svector,Γ,Riemann_covar,eps,m0)
 
 
-    println("updating dx ds dp ")
+    #println("updating dx ds dp ")
     du[1:4] = dx
     du[5:8] = dp
     du[9:12]= ds
+
+
+    #println(du)
 
     # #Position 
     # du[1] = 0.0
@@ -153,7 +192,7 @@ function calculate_four_velocity(pvector,Stensor,Riemann,g,m0)
     end 
     
     @tensor begin
-        dx[α] := -(pvector[α]+0.50*Stensor[α,β]*Riemann[β,γ,μ,ν]*pvector[γ]*Stensor[μ,ν]/(m0^2 + division_scalar))/m0^2
+        dx[α] := -(pvector[α]) #+0.50*Stensor[α,β]*Riemann[β,γ,μ,ν]*pvector[γ]*Stensor[μ,ν]/(m0^2 + division_scalar))/m0^2
     end
     
     @tensor begin 
@@ -166,11 +205,11 @@ function calculate_four_velocity(pvector,Stensor,Riemann,g,m0)
     
     
     #Check the value if needed
-    @tensor begin 
-        check_val = g[μ,ν]*dx[μ]*dx[ν]
-    end 
-    println("Check value")
-    println(check_val)
+    # @tensor begin 
+    #     check_val = g[μ,ν]*dx[μ]*dx[ν]
+    # end 
+    # println("Check value")
+    # println(check_val)
 
 
     return dx
@@ -179,7 +218,7 @@ end
 
 function calculate_four_momentum(pvector,uvector,svector,Γ,Riemann,eps,m0)
      @tensor begin
-        dp[α] := -Γ[α,μ,ν]*pvector[μ]*uvector[ν] + (Riemann[α,β,ρ,σ]*eps[ρ,σ,μ,ν]*svector[μ]*pvector[ν]*uvector[β])/(2.0*m0)
+        dp[α] := -Γ[α,μ,ν]*pvector[μ]*uvector[ν] #+ (Riemann[α,β,ρ,σ]*eps[ρ,σ,μ,ν]*svector[μ]*pvector[ν]*uvector[β])/(2.0*m0)
     end
 
     return dp
@@ -188,7 +227,7 @@ end
 
 function calculate_four_spin(pvector,uvector,svector,Γ,Riemann_covar,eps,m0)
     @tensor begin
-       ds[α] := -Γ[α,μ,ν]*svector[μ]*uvector[ν] + (Riemann_covar[γ,β,ρ,σ]*eps[ρ,σ,μ,ν]*svector[μ]*pvector[ν]*svector[γ]*uvector[β])*pvector[α]/(2.0*m0^3)
+       ds[α] := -Γ[α,μ,ν]*svector[μ]*uvector[ν]# + (Riemann_covar[γ,β,ρ,σ]*eps[ρ,σ,μ,ν]*svector[μ]*pvector[ν]*svector[γ]*uvector[β])*pvector[α]/(2.0*m0^3)
    end
 
    return ds

@@ -13,7 +13,7 @@ using TensorOperations, Einsum,Combinatorics #, Symbolics
 
 
 # Exports
-export  orbit, SystemParameters, Constants, PrognosticVariables #,PlotTrajectory,AnimateTrajectory
+export  orbit, SystemParameters, Constants, PrognosticVariables,PlotTrajectory #,PlotTrajectory,AnimateTrajectory
 
 #Includes
 include("system_parameters.jl")

@@ -20,7 +20,7 @@ The code solves a set of ODEs numerically. These equations are based on the orig
 
 ## Spherical Photon Orbits
 
-The spherical photon orbits are included as a test case or toy model to ensure the code machinery works as expected.
+Spherical photon orbits are also included, mainly as a test case/toy model to ensure the code machinery works as expected.
 
 The general description of the equations of motion is described in [Teo 2003](https://ui.adsabs.harvard.edu/abs/2003GReGr..35.1909T/abstract) which have been reframed here via a Hamiltonian formalism c.f. [Pu et al. 2016](https://arxiv.org/abs/1601.02063)
 
@@ -31,6 +31,13 @@ The general description of the equations of motion is described in [Teo 2003](ht
 # Getting started 
 
 ```
+using RelativisticDynamics
 solution,model = orbit();
 ```
+`solution` is the time evolution of the variables $x^{\mu}, p^{\mu}, s^{\mu}$. `model` is a struct containing a copy of all the settings that were used to generate that solution.
 
+All user-defined parameters are set in `system_parameters.jl`. Default values can be overridden by passing to `orbit()` e.g.
+
+```
+solution,model = orbit(NF=Float32,model=:MPD)
+```
