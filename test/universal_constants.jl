@@ -21,7 +21,6 @@ using Combinatorics
     for i in 1:5
         r = rand(Uniform(3.0,1e5)) 
         θ = rand(Uniform(0.0, 2.0*π))
-       # P = SystemParameters(NF=NF,r=r,θ=θ,a=a,model=m) # Parameters
         
         #Mapping functions
         fr = RelativisticDynamics.mapping_f(r,a,cos(θ))

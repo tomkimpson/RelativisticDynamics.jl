@@ -39,8 +39,6 @@ Generator function for a Constants struct.
 """
 function Constants(P::SystemParameters)
 
-    println("1. Setting up universal constants")
-
     # Fundamental constants
     light_c  = 3e8
     Newton_g = 6.67408e-11
@@ -58,9 +56,7 @@ function Constants(P::SystemParameters)
 
     E,L,Q = ELQ(P.model,P.a,P.α,P.e,P.ι,P.orbit_dir)
 
-    println(E)
-    println(L)
-    println(Q)
+
 
     #Pulsar 
     @unpack rPSR,mPSR,mBH,p0 = P
@@ -111,25 +107,44 @@ Calculate the energy, angular momentum and Carter constant for the different typ
 """
 function ELQ(model,a,α,e,ι,D)
     
-    if model == :MPD #& e>0 
+    if model == :MPD 
 
-       
-
-        r_periapsis= α*(1-e)
-        r_apoapsis = α*(1+e)
         zm = cos(ι)
 
-    
-        #Define some orbital coefficients
-        f1 = mapping_f(r_periapsis,a,zm)
-        g1 = mapping_g(r_periapsis,a)
-        h1 = mapping_h(r_periapsis,a,zm)
-        d1 = mapping_d(r_periapsis,a,zm)
+        if e > 0.0
 
-        f2 = mapping_f(r_apoapsis,a,zm)
-        g2 = mapping_g(r_apoapsis,a)
-        h2 = mapping_h(r_apoapsis,a,zm)
-        d2 = mapping_d(r_apoapsis,a,zm)
+            r_periapsis= α*(1-e)
+            r_apoapsis = α*(1+e)
+            
+            #Define some orbital coefficients
+            f1 = mapping_f(r_periapsis,a,zm)
+            g1 = mapping_g(r_periapsis,a)
+            h1 = mapping_h(r_periapsis,a,zm)
+            d1 = mapping_d(r_periapsis,a,zm)
+    
+            f2 = mapping_f(r_apoapsis,a,zm)
+            g2 = mapping_g(r_apoapsis,a)
+            h2 = mapping_h(r_apoapsis,a,zm)
+            d2 = mapping_d(r_apoapsis,a,zm)
+
+        # elseif e == 0.0
+
+        #     #Define some orbital coefficients
+        #     f1 = mapping_f(α,a,zm)
+        #     g1 = mapping_g(α,a)
+        #     h1 = mapping_h(α,a,zm)
+        #     d1 = mapping_d(α,a,zm)
+    
+        #     f2 = mapping_fprime(α,a,zm)
+        #     g2 = mapping_gprime(a)
+        #     h2 = mapping_hprime(α,zm)
+        #     d2 = mapping_dprime(α,a,zm)
+
+
+        end 
+        
+
+
 
 
         #Determinants 
@@ -205,3 +220,39 @@ function mapping_d(r,a,zminus)
 Δ = delta(r,a)
 return (r^2 +a^2 * zminus^2)*Δ
 end
+
+
+# """
+# fprime = mapping_fprime(r,a,zminus)
+# Mapping function `fprime` used when converting from Keplerian orbital parameters to constants of motion
+# """
+# function mapping_fprime(r,a,zminus)
+# return 4*r^3 + 2*a^2*((1+zminus^2)*r + (1-zminus^2))
+# end
+
+# """
+# gprime = mapping_gprime(a)
+# Mapping function `gprime` used when converting from Keplerian orbital parameters to constants of motion
+# """
+# function mapping_gprime(a)
+# return 2*a
+# end
+
+# """
+# hprime = mapping_hprime(r,zminus)
+# Mapping function `hprime` used when converting from Keplerian orbital parameters to constants of motion
+# """
+# function mapping_hprime(r,zminus)
+# return 2*(r-1.0)/(1.0-zminus^2)
+# end
+
+# """
+# dprime = mapping_dprime(r,a,zminus)
+# Mapping function `dprime` used when converting from Keplerian orbital parameters to constants of motion
+# """
+# function mapping_dprime(r,a,zminus)
+# return 2*(2*r-3)*r^2 + 2*a^2*((1+zminus^2)*r - zminus^2)
+# end
+
+
+

@@ -24,15 +24,11 @@ end
 
 
 
-
-
-
 """Setup the initial conditions for the MPD orbital dynamics"""
 function MPD_initial_conditions(M::Model)
 
-    println("Setting up initial conditions")
 
-   @unpack NF = M.parameters
+    @unpack NF = M.parameters
    
     # 1. Four- position
     @unpack r_initial,θ_initial, ϕ_initial = M.constants
@@ -43,13 +39,6 @@ function MPD_initial_conditions(M::Model)
     #1.1 Define some useful quantities
     @unpack a = M.parameters
     r,θ= xvector[2],xvector[3] 
-    println("Initial coordinates are:")
-    println(r)
-    println(θ)
-
-    println("spin")
-    println(a)
-
     Δ = delta(r,a)
     Σ = sigma(r,θ,a)
     g  = covariant_metric(xvector,a)
@@ -59,24 +48,15 @@ function MPD_initial_conditions(M::Model)
     @unpack E,L,Q,m0 = M.constants 
 
 
-    #NEED TO UPDATE THESE FOR E
+    #These are 4 velocities from Schmidt 2002.
+    #Initial Rdot is +ve as standard
     Pbar = E*(r^2+a^2) - a*L 
     Tbar = (r^2+a^2)*Pbar/Δ -a*(a*E*sin(θ)^2-L)
     Rbar = ((r^2+a^2)*E  -a*L)^2 -Δ*(r^2 + (L-a*E)^2+Q)
     θbar = Q - ((1-E^2)*a^2 + L^2/sin(θ)^2)*cos(θ)^2
     ϕbar = a*Pbar/Δ -a*E + L/sin(θ)^2
 
-    println("RBAR=")
-    println(Rbar)
-
-    println("thet bar")
-    println(θbar)
-
-    println(θ)
-    println(sin(θ))
-
-    #These are 4 velocities from Schmidt 2002.
-    #Initial Rdot is +ve as standard
+    
     tdot = Tbar/Σ
     rdot = sqrt(Rbar)/Σ
     θdot = sqrt(θbar)/Σ
@@ -96,9 +76,9 @@ function MPD_initial_conditions(M::Model)
     svector = [0.0,0.0,0.0,0.0]
 
     #Set the spatial components of the spin vector
-    svector[2] = s0 * sin(Sθ) * cos(Sϕ)
+    svector[2] =  s0 * sin(Sθ) * cos(Sϕ)
     svector[3] = -s0 *cos(Sθ)/r 
-    svector[4] = s0*sin(Sθ)*sin(Sϕ)/(r*sin(θ)) 
+    svector[4] =  s0*sin(Sθ)*sin(Sϕ)/(r*sin(θ)) 
     svector[1] = -(svector[2]*pvector_covar[2] + svector[3]*pvector_covar[3]+svector[4]*pvector_covar[4])/pvector_covar[1] # Enforces the spin condition
 
 

@@ -1,6 +1,5 @@
 @testset "Kerr functions for a=0" begin
     
-
     r = rand(Uniform(3.0,1e5))      # Radial coordinate. 3.0 as rough lower limit of an event horizon
     θ = rand(Uniform(0.0, 2.0*π))
     a = 0.0
@@ -15,7 +14,6 @@
 
     K = RelativisticDynamics.Kretschmann_scalar(r,θ,a)
     @test isapprox(K,48.0/r^6,atol=eps(Float64))
-
 
 end
 

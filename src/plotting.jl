@@ -10,7 +10,7 @@ Plot trajectory of a body. Assumes coordinates are Boyer Lindquist.
 Plots in either 2D or 3D depending on specification of dimensions.
 Saves a low resolution PNG figure to disk in example_media/
 """
-function PlotTrajectory(solution,model,dimensions=[1,2,3],saveit=false)
+function PlotTrajectory(solution,model,dimensions=[1,2,3],savepath="'")
 
     @unpack a = model.parameters    #Get the BH spin parameter 
     
@@ -54,8 +54,7 @@ function PlotTrajectory(solution,model,dimensions=[1,2,3],saveit=false)
 
     elseif length(dimensions) == 2
         idx1,idx2 = dimensions 
-        println("here")
-        plot(position[idx1],position[idx2],
+        plt = plot(position[idx1],position[idx2],
              xlabel=position_labels[idx1],
              ylabel=position_labels[idx2],
              legend=false,
@@ -63,7 +62,7 @@ function PlotTrajectory(solution,model,dimensions=[1,2,3],saveit=false)
              )
 
         xBH = 0:0; yBH = 0:0
-        scatter!(xBH, yBH,markercolor="red",markersize=5)
+        plt = scatter!(xBH, yBH,markercolor="red",markersize=5)
 
     else
         println("Those dimensions are not defined")
@@ -71,8 +70,10 @@ function PlotTrajectory(solution,model,dimensions=[1,2,3],saveit=false)
 
     end
 
-    if saveit != nothing 
-        savefig(saveit)
+    display(plt)
+    if ~isempty(savepath)
+        println("Saving figure to: ", savepath)
+        savefig(savepath)
     end
 
 
