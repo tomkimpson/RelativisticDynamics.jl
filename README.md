@@ -41,3 +41,10 @@ All user-defined parameters are set in `system_parameters.jl`. Default values ca
 ```
 solution,model = orbit(NF=Float32,model=:MPD)
 ```
+
+
+# Useful literature
+
+[Schmidt 2002](https://arxiv.org/abs/gr-qc/0202090)
+
+[Barausse et al. 2007](https://arxiv.org/abs/0704.0138v2)

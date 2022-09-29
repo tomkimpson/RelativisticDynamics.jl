@@ -24,6 +24,7 @@ function PlotTrajectory(solution,model,saveit)
     r = p[2,:]
     θ = p[3,:] 
     ϕ = p[4,:]
+    print(maximum(ϕ))
 
     # Boyer lindquist to Cartesian 
     w = sqrt.(r.^2 .+ a^2) 
@@ -55,14 +56,15 @@ function PlotTrajectory(solution,model,saveit)
     #plotlyjs()
     println(model)
     title = "Spherical photon orbits with a = $(@sprintf("%.2f", a))"
-    plot(x,y,z,
-              xaxis=(L"x (r_h)",(-m,m)),yaxis=(L"y (r_h)",(-m,m)),zaxis=(L"z (r_h)",(-m,m)),
-              legend=false,
-              title = title,
-              size = (1200, 800))
+    # plot(x,y,z,
+    #           xaxis=(L"x (r_h)",(-m,m)),yaxis=(L"y (r_h)",(-m,m)),zaxis=(L"z (r_h)",(-m,m)),
+    #           legend=false,
+    #           title = title,
+    #           size = (1200, 800))
 
- 
-
+    plot(r,r)
+    #display(x)
+    #display(y)
     # # # Singularity 
     # pobject = plot!([0.0],[0.0],[0.0],marker=10)
 
