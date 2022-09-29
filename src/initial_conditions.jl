@@ -10,15 +10,6 @@ end
 
 function initial_conditions(M::Model)
 
-    # if M.parameters.model == :SphericalPhoton                       # pack all of the above into a *Model struct
-    #     prognostic_vars = SphericalPhotonOrbit_initial_conditions(M)
-    # elseif M.parameters.model == :RayTracing                       # pack all of the above into a *Model struct
-    #         prognostic_vars = RayTracing_initial_conditions(M)
-    # elseif M.parameters.model == :MPD
-    #     prognostic_vars = MPD_initial_conditions(M)
-    # end 
-    
-
     if M.parameters.model == :MPD                     
         prognostic_vars = MPD_initial_conditions(M)
     else
@@ -30,99 +21,6 @@ function initial_conditions(M::Model)
 end 
 
 
-
-
-
-
-# """Initialize a PrognosticVariables struct for Spherical Photon orbits. 
-#    Initial t,r,θ,ϕ are all set in system_parameters.jl 
-#    Need to calculate pθ. see e.g. https://arxiv.org/pdf/1601.02063.pdf
-#    """
-# function SphericalPhotonOrbit_initial_conditions(M::Model)
-
-#     @unpack NF,r,θ,ϕ,a = M.parameters
-#     @unpack  Q,L = M.constants
-
-#     # Initial conditions for r are set in system_parameters.jl 
-#     # Initial conditions for θ, ϕ are arbitrary, also set in  system_parameters.jl 
-#     # We now calculate the initial value of pθ
-    
-#     Σ = sigma(r,θ,a)
-#     θdot2 = (Q - (L^2 / sin(θ)^2 - a^2)*cos(θ)^2)/Σ^2
-#     θdot = sqrt(θdot2) # plus or minus?
-#     pθ = Σ*θdot
-
-#     # 4- position
-
-#     xvector = [0.0,r,θ,ϕ]     # By default the starting coordinates
-#     pvector = [0.0,0.0,pθ,0.0]
-#     svector = [0.0,0.0,0.0,0.0] # dont track spin for these guys
-
-
-#     # conversion to NF happens here
-#     return PrognosticVariables{NF}(xvector,pvector,svector)
-# end
-
-
-# """Initialize a PrognosticVariables struct for Spherical Photon orbits. 
-#    Initial t,r,θ,ϕ are all set in system_parameters.jl 
-#    Need to calculate pθ. see e.g. https://arxiv.org/pdf/1601.02063.pdf
-#    """
-# function RayTracing_initial_conditions(M::Model)
-
-#     @unpack NF,r,θ,ϕ,a = M.parameters
-#     @unpack  Q,L = M.constants
-
-#     println("CALLED RAY TRACING INITIaL CONDITONS")
-
-
-
-#     α_c = 7
-#     β_c = 0
-
-#     θ_obs = π/2.0
-#     r_obs = 1000
-
-#     xp = sqrt(r_obs^2 + a^2)*sin(θ_obs) - β_c*cos(θ_obs)
-#     yp = α_c 
-#     zp = r_obs*cos(θ_obs) + β_c*sin(θ_obs)
-
-#     #Convert to BL coords 
-#     w = xp^2 + yp^2 + zp^2 -a^2
-#     rbar = sqrt((w+sqrt(w^2 + 4*a^2*zp))/2)
-#     θbar = acos(zp/rbar)
-#     ϕbar = atan2(yp,xp)
-
-#     Σ = sigma(rbar,θbar,a)
-#     Δ = delta(rbar,a)
-
-#     u = sqrt(rbar^2 +a^2)
-#     v = -sin(θ_obs)*cos(ϕbar)
-#     zdot = -1.0
-
-#     rdot = -zdot*(-u^2*cos(θ_obs)*cos(θbar)+rbar*u*v*sin(θbar))/Σ
-
-
-#     beta_coord = 0.0
-
-
-
-    
-#     Σ = sigma(r,θ,a)
-#     θdot2 = (Q - (L^2 / sin(θ)^2 - a^2)*cos(θ)^2)/Σ^2
-#     θdot = sqrt(θdot2) # plus or minus?
-#     pθ = Σ*θdot
-
-#     # 4- position
-
-#     xvector = [0.0,r,θ,ϕ]     # By default the starting coordinates
-#     pvector = [0.0,0.0,pθ,0.0]
-#     svector = [0.0,0.0,0.0,0.0] # dont track spin for these guys
-
-
-#     # conversion to NF happens here
-#     return PrognosticVariables{NF}(xvector,pvector,svector)
-# end
 
 
 

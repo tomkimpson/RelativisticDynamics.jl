@@ -9,9 +9,8 @@ The default values of the keywords define the default model setup.
     # NUMBER FORMATS
     NF::DataType       # Number format. Default is defined in orbit.jl
 
-
     #Type of system to integrate 
-    model::Symbol=:MPD  # :SphericalPhoton ,:RayTracing, :MPD
+    model::Symbol=:MPD  # Only :MPD is currently defined. 
 
     #BH parameters
     a::Real   = 0.1     # BH spin parameter
@@ -31,15 +30,7 @@ The default values of the keywords define the default model setup.
     orbit_dir::Int=1    # Orbit direction prograde/retrograde
     Norbits = 10.0      # Number of orbits to integrate for 
 
-    # #Orbital parameters for the Spherical Photon orbit 
-    # rmin = 2.0 * (1.0 + cos(2.0/3.0 * acos(-a)))
-    # rmax = 2.0 * (1.0 + cos(2.0/3.0 * acos(a)))
-    
-    # r::Real=(rmin+rmax)/2.0 
-    # θ::Real = π/2.0
-    # ϕ::Real = 0.0
-    # Norbits = 1.0 #Number of orbits to integrate for
-    # #Tint::Real = 100.0 # How long to integrate for 
+
 
 
 end

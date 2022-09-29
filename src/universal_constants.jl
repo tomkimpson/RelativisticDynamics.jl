@@ -56,7 +56,7 @@ function Constants(P::SystemParameters)
 
     # Model specific constants
 
-    E,L,Q = ELQ(P.model,P.a,P.α,P.e,P.ι)
+    E,L,Q = ELQ(P.model,P.a,P.α,P.e,P.ι,P.orbit_dir)
 
     println(E)
     println(L)
@@ -109,31 +109,17 @@ end
 """
 Calculate the energy, angular momentum and Carter constant for the different types of system
 """
-function ELQ(model,a,α,e,ι)
+function ELQ(model,a,α,e,ι,D)
     
     if model == :MPD #& e>0 
 
-        # #ELQ circular - from Raine & Thomas 2005
-        # N = sqrt(1-3/r + 2*a*r^(-3/2))
-        # E = (1 - 2/r + a*r^(-3/2))/N
-        # L = sqrt(r) * (1+(a/r)^2 - 2*a*r^(-3/2))/N
-        # #dL = 0.1
-        # #L += dL 
-        # Q = 0.0
+       
 
         r_periapsis= α*(1-e)
         r_apoapsis = α*(1+e)
         zm = cos(ι)
 
-        println("peri,apo,zm")
-        println(r_periapsis)
-        println(r_apoapsis)
-        println(zm)
-        println("------------")
-
-
-
-
+    
         #Define some orbital coefficients
         f1 = mapping_f(r_periapsis,a,zm)
         g1 = mapping_g(r_periapsis,a)
@@ -155,8 +141,7 @@ function ELQ(model,a,α,e,ι)
 
 
         #Energy
-        #Need to include an ornbit direction correction here?
-        D = +1
+        #Need to include an ornbit direction correction here?        
         E_numerator   = κ*ρ+2.0*η*σ-2.0*D*sqrt(σ*(σ*ϵ^2 + ρ*ϵ*κ-η*κ^2))
         E_denominator = ρ^2 + 4.0*η*σ
         E = sqrt(E_numerator/E_denominator)
@@ -173,7 +158,7 @@ function ELQ(model,a,α,e,ι)
     else
         println(model)
         println("ELQ for that model selection is not yet defined")
-        println("Please choose one of: SphericalPhoton, MPD ")
+        println("Please choose one of: MPD")
         return
     end 
 
@@ -182,76 +167,7 @@ function ELQ(model,a,α,e,ι)
 
 end 
 
-# function LQ(P::SystemParameters)
 
-
-#     @unpack r,a,α,e,ι,orbit_dir = P
-
-#     if P.model == :SphericalPhoton 
-
-#         if a == 0.0
-#             println("Spherical Photon orbits do not exist for a=0. Try a non-zero value")
-#             return
-#         else
-#             E = 1.0
-#             L = - (r^3 - 3.0*r^2 + a^2*r + a^2) / (a*(r - 1.0))
-#             Q = -(r^3 * (r^3 - 6.0*r^2 + 9.0 * r - 4.0*a^2))/(a^2 * (r - 1.0)^2)
-#         end
-
-#     elseif P.model == :RayTracing 
-
-
-#         E = 0.0
-#         L = 0.0
-#         Q = 0.0
-
-        
-
-#         E = 0.0
-#         L = 0.0
-#         Q = 0.0
-
-#     elseif P.model == :MPD
-
-
-#         #ELQ circular 
-
-#         N = 1-3/r
-
-
-
-
-
-
-#         # #Some needed quantities
-#         # r_periapsis= α*(1-e)
-#         # println("PERIAPSIS")
-#         # println(r_periapsis)
-
-#         # zminus = cos(ι)
-#         # f1 = mapping_f(r_periapsis,a,zminus)
-#         # g1 = mapping_g(r_periapsis,a)
-#         # h1 = mapping_h(r_periapsis,a,zminus)
-#         # d1 = mapping_d(r_periapsis,a,zminus)
-    
-   
-#         # #Angular momentum and Carter constant, taking E=1
-#         # L = -g1/h1 + orbit_dir*sqrt(g1^2 + (f1-d1)*h1)/h1
-#         # Q = zminus^2 * (L^2 /(1.0 - zminus^2))
-
-    
-
-#     else
-#         println(P.model)
-#         println("That model selection is not defined")
-#         println("Please choose one of: SphericalPhoton, MPD ")
-#         return
-#     end 
-
-#     return E,L,Q
-
-
-# end 
 
 """
 f = mapping_f(r,a,zminus)
