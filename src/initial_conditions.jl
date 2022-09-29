@@ -135,10 +135,7 @@ function MPD_initial_conditions(M::Model)
     println("Setting up initial conditions")
 
    @unpack NF = M.parameters
-   # @unpack L,Q,s0,m0 = M.constants 
-
-
-
+   
     # 1. Four- position
     @unpack r_initial,θ_initial, ϕ_initial = M.constants
     xvector = [0.0,r_initial,θ_initial, ϕ_initial] # Starting coordinates

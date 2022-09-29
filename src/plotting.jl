@@ -6,14 +6,17 @@ using LaTeXStrings
 using Printf
 
 """
-Plot the 3D trajectory of a body. Assumes coordinates are Boyer Lindquist. Saves a low resolution
-PNG figure to disk
+Plot trajectory of a body. Assumes coordinates are Boyer Lindquist. 
+Plots in either 2D or 3D depending on specification of dimensions.
+Saves a low resolution PNG figure to disk in example_media/
 """
-function PlotTrajectory(solution,model,saveit)
+function PlotTrajectory(solution,model,dimensions=[1,2,3],saveit=false)
 
-    @unpack a,model = model.parameters    #Get the BH spin parameter 
+    @unpack a = model.parameters    #Get the BH spin parameter 
     
-
+    println("Plotting the solution generated with the following user defined parameters")
+    display(model.parameters)
+    println("-------------------------------")
 
     #Interpolate to higher resolution for smooth plotting   
     interpolation_factor = 10 
@@ -24,114 +27,57 @@ function PlotTrajectory(solution,model,saveit)
     r = p[2,:]
     θ = p[3,:] 
     ϕ = p[4,:]
-    print(maximum(ϕ))
 
     # Boyer lindquist to Cartesian 
     w = sqrt.(r.^2 .+ a^2) 
     x = w .* sin.(θ) .* cos.(ϕ)
     y = w .* sin.(θ) .* sin.(ϕ)
     z = r .* cos.(θ)
+    position = [x,y,z]
+    position_labels = [L"x (r_h)",L"y (r_h)",L"z (r_h)"]
 
 
-    # Define the horizon surface 
-    n = 100
-    u = range(-π, π; length = n)
-    v = range(0, π; length = n)
-    rH = 1.0 + sqrt(1.0 - a^2)
-    xH = rH*cos.(u) * sin.(v)'
-    yH = rH*sin.(u) * sin.(v)'
-    zH = rH*ones(n) * cos.(v)'
-
-    #Define plot limits
-    #m = max()
-    m = max(maximum(abs.(x)),maximum(abs.(y)),maximum(abs.(z)))
-    #m=10
-
-    # Plot it 
-    
-
-    #gr()
-    #pyplot()  # Set the backend
-
-    #plotlyjs()
-    println(model)
-    title = "Spherical photon orbits with a = $(@sprintf("%.2f", a))"
-    # plot(x,y,z,
-    #           xaxis=(L"x (r_h)",(-m,m)),yaxis=(L"y (r_h)",(-m,m)),zaxis=(L"z (r_h)",(-m,m)),
-    #           legend=false,
-    #           title = title,
-    #           size = (1200, 800))
-
-    plot(r,r)
-    #display(x)
-    #display(y)
-    # # # Singularity 
-    # pobject = plot!([0.0],[0.0],[0.0],marker=10)
+    #Setup plotting env
+    if length(dimensions) == 3
+        
+        plot(x,y,z,
+            legend=false,
+            xlabel=position_labels[1],
+            ylabel=position_labels[2],
+            zlabel=position_labels[3],
+            camera = (25, 30),
+            size = (1000, 600))
 
 
+        xBH = 0:0; yBH = 0:0; zBH = 0:0
+        scatter!(xBH, yBH,zBH,markercolor="red",markersize=5) 
 
-    # pobject = wireframe!(xH, yH, zH) #or surface! 
+    elseif length(dimensions) == 2
+        idx1,idx2 = dimensions 
+        println("here")
+        plot(position[idx1],position[idx2],
+             xlabel=position_labels[idx1],
+             ylabel=position_labels[idx2],
+             legend=false,
+             size = (600, 600)
+             )
 
-    # if saveit
-    #     fout = "example_media/spherical_photon_orbits_a_$a" * ".png"
-    #     savefig(fout)
-    # end
+        xBH = 0:0; yBH = 0:0
+        scatter!(xBH, yBH,markercolor="red",markersize=5)
+
+    else
+        println("Those dimensions are not defined")
+        return
+
+    end
+
+    if saveit != nothing 
+        savefig(saveit)
+    end
+
 
 
 end 
-
-
-# """
-# Create a 3D gif of the trajectory of a body. Assumes coordinates are Boyer Lindquist.
-# """
-# function AnimateTrajectory(solution,model)
-
-#     @unpack a = model.parameters
-#     @unpack rH = model.constants
-
-#     println("This is animate trajectory")
-
-#     #Interpolate to higher resolution for smooth plotting   
-#     interpolation_factor = 10 
-#     T = range(first(solution.t),last(solution.t),length=length(solution.t)*interpolation_factor)
-#     p = solution(T)
-
-#     # Extract relevant data from the interpolated solution 
-#     r = p[2,:]
-#     θ = p[3,:] 
-#     ϕ = p[4,:]
-
-#     # Boyer lindquist to Cartesian 
-#     w = sqrt.(r.^2 .+ a^2) 
-#     x = w .* sin.(θ) .* cos.(ϕ)
-#     y = w .* sin.(θ) .* sin.(ϕ)
-#     z = r .* cos.(θ)
-
-
-
-#     # Plot it 
-#     title = "Spherical photon orbits with a = $(@sprintf("%.2f", a))"
-
-#     plt = plot3d(1,
-#                 xaxis=(L"x (r_h)",(-3,3)),yaxis=(L"y (r_h)",(-3,3)),zaxis=(L"z (r_h)",(-3,3)),
-#                 legend=false,
-#                 title = title,
-#                 size = (1200, 800))
-
-
-#      n = length(x)
-#      anim = @animate for i in 1:n
-#         push!(plt,x[i],y[i],z[i])
-#      end 
-#     fout = "example_media/spherical_photon_orbits_a_$a" * ".gif"
-#      gif(anim, fout, fps = 30)
-
-
-# end 
-
-
-
-
 
 
 
