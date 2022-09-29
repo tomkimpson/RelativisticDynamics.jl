@@ -14,11 +14,8 @@ function sigma(r,θ,a)
 return r^2 + a^2 * cos(θ)^2
 end 
 
-
-
-
 """
-Convert a vector from contravariant form to convariant form using the metric 
+Convert a vector from contravariant form to convariant form using the covariant metric 
 """
 function convert_to_covariant(metric,vector)
 
@@ -31,6 +28,8 @@ function convert_to_covariant(metric,vector)
     return vector_covar  
 
 end 
+
+
 
 """
 Kretschman scalar for the Kerr metric

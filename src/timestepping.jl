@@ -11,16 +11,6 @@ function timestepping(X::PrognosticVariables, M::Model)
 @unpack L,Q,m0,ϵ,Tint = M.constants
 
 
-
-
-println("The model used is:")
-println(M.parameters.model)
-
-println("Initial conditions are")
-println(X.xvector)
-println(X.pvector)
-println(X.svector)
-
 # Integration time 
 tspan = (0.0,M.constants.Tint) 
 
@@ -64,26 +54,6 @@ function geodesic!(du,u,p,τ)
 
 
 end 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 function MPD!(du,u,p,τ)
 

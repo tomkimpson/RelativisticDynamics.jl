@@ -31,7 +31,7 @@ end
 
 
     for n in 1:5
-        α    = rand(Uniform(3.0,900)) 
+        α    = rand(Uniform(10.0,500)) 
         e    = rand(Uniform(0.01, 0.90))
 
         P = SystemParameters(NF=NF,α=α,e=e)
