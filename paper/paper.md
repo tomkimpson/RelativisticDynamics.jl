@@ -29,40 +29,74 @@ bibliography: paper.bib
 ---
 
 # Summary
-
-
-
-Relativistic binaries composed of a millisecond pulsar (MSP) orbiting a much more massive BH ($\gtrsim 10^3 M_{\odot}$) are exceptional probes for investigating key questions of fundamental physics and astrophysics. 
-
-
-Such systems are natural sources of gravitational waves in the mHz regime, expected to be detectable by LISA. The associated radio emission from the companion pulsar raises the possibility of an EM counterpart enabling high precision multimessenger measurements to be made.  
-
-
-
-The description of the orbital dynamics of these systems, and the influence on the resultant EM and GW observed signal, is non-trivial. Whilst models commonly treat the motion via a PN or geodesic description, such an approach neglects the non-linear influence of the pulsar spin on the underlying spacetime metric.
-
-A proper treatment of the spin-orbital dynamics can be derived from the conservation of the energy-momentum tensor
+Relativistic binaries composed of a millisecond pulsar (MSP) orbiting a much more massive BH ($\gtrsim 10^3 M_{\odot}$) are exceptional probes for investigating key questions of fundamental physics and astrophysics. Such systems are natural sources of gravitational waves in the mHz regime, expected to be detectable by LISA. The associated radio emission from the companion pulsar raises the possibility of an EM counterpart enabling high precision multimessenger measurements to be made. The description of the orbital dynamics of these systems, and the influence on the resultant EM and GW observed signal, is non-trivial. Whilst models commonly treat the motion via a PN or geodesic description, such an approach neglects the non-linear influence of the pulsar spin on the underlying spacetime metric. A proper treatment of the spin-orbital dynamics can be derived from the conservation of the energy-momentum tensor
 \begin{equation}\label{eq:conservation}
-\hat T^{\mu \nu}_{;\nu} = 0
+T^{\mu \nu}_{;\nu} = 0
 \end{equation}
 which when expanded into a set of infinite multipole moments leads to a description of the momentum vector $p^{\mu}$ and the spin tensor $s^{\mu \nu}$ 
-
-
-
 \begin{equation}\label{eq:mpd1}
-\hat \frac{Dp^{\mu}}{d \lambda} = -\frac{1}{2}R^{\mu}_{\nu \alpha \beta} u^{\nu} s^{\alpha \beta}
+ \frac{Dp^{\mu}}{d \lambda} = -\frac{1}{2}R^{\mu}_{\nu \alpha \beta} u^{\nu} s^{\alpha \beta}
 \end{equation}
-
 \begin{equation}\label{eq:mpd2}
-\hat \frac{Ds^{\mu \nu}}{d \lambda} =p^{\mu}u^{\nu} - p^{\nu}u^{\mu}
+\frac{Ds^{\mu \nu}}{d \lambda} =p^{\mu}u^{\nu} - p^{\nu}u^{\mu}
 \end{equation}
+The system is closed by providing a spin supplementary condition
+\begin{equation}\label{eq:mp3}
+s^{\mu \nu} p_{\nu} = 0
+\end{equation}
+Together, equations \autoref{eq:md1} - \autoref{eq:md3} form the Mathisson-Papetrou-Dixon (MPD) equations, and describe the spin-orbital evolution in a fully consistent way that is applicable to strong field regimes. 
 
 
-Numerical
+
+# Statement of need
+
+`RelativisticDynamics.jl` is an open-source Julia package for relativistic spin orbital dynamics in the gravitational strong field. Existing codes for modelling the dynamics of spinning objects like pulsars in the strong-field regime are generally lacking, such systems occupy an intermediate regime that is generally overlooked. At the ""low"" end there are post-Newtonian or geodesic descriptions which neglect non-linear spin contributions, whilst at the ""high" end there is the full are full Numerical Relativity (NR) solutions which are primarily applicable to two BHs with a mass ratio $\mathcal{O}(1)$, and are computationally intractable for these MSP systems which are observed over a large number of orbital cycles. 
+
+`RelativisticDynamcis.jl` aims to bridge this gap by providing a modern, fast code for accurate numerical evolution of spinning relativistic systems. Julia is a modern language that solves the "two language problem", enabling fast dynamic typing and JIT compilation in conjunction with petaflop performance, comparable with better known numerical languages such as C or Fortran. As a modern language, it also provides a dedicated package manager and a large catalogue of _composable_ packages for scientific computing. This enables `RelativisticDynamcis.jl` to easily leverage and interface with other scientific computing packages. In addition to providing a fast, modern package for strong field spin dynamics, `RelativisticDynamcis.jl` has two additional important features from the perspective of modern relativistic astrophysics. Firstly, it makes use of Julia's type-flexibility and is written in such a way so as to be able to support hardware accelerated low precision arithmetic and alternative rounding methods such as stochastic rounding. It is fully type flexible, to support arbitrary number formats for performance and analysis simultaneously. This means the model development is precision-agnostic, which allows us to address the common problems of dynamic range and critical precision loss often incurred from using low-precision number formats. This enables rapid prototyping and exploration towards the exploration of reduced precision numerical techniques in astrophysics, a technique common in other numerical fields such as climate modelling. Secondly, `RelativisticDynamcis.jl` is also written to be fully differentiable via automatic differentiation. This enables the package to be used for differentiable physics applications in astrophysics, for example gravitational waveform modelling and parameter estimation. The code is also written in a generally covariant way, with the translation to coordinate systems done implicitly. This makes further extensions to enable e.g. alternative spacetime metrics straightforward. Other useful features of `RelativisticDynamcis.jl` include the ability to specify initial conditions either in terms of conserved quantities (E,L,Q), which is useful when examining systems with very short orbital separations, typically used in the GW community or in terms of the familiar Keplerian elements which is more commonly used within the pulsar timing community. There is also a diagnostics tool for exxtracting gravitational waveforrs in the time domain via a numerical kuldge mehtod
 
 
 
-These equations togetehr describe the spin-orbital evolution in a fullly conssiten way that is applicable to trong field regimes, and are knownas the MPD equations
+
+The author and collaborators are have used the general methods and mathematics described in this package via legacy Fortran code, encoutnered multiple problems, and are now already using this package for multiple active
+research projects
+
+
+
+The author and collaborators have used the general methods and mathematics described in this package for multiple research projects, and this package represents an attempt to createa self documented well tested open source resource for 
+
+
+Future extensios of this code would be to estend the dynamcis beyond second order in the multipole expansion, alternative spin conditions or alternative spacetime metrics. Since the code is written in a covariant way such extensions should be straightforward
+
+
+
+
+
+
+
+
+via Fortran code, 
+
+
+encoutnered multiple problems, and are now already using this package for multiple active
+research projects
+
+
+
+It solves the MPD equations numerically from a set of astrophysical initial conditions, allowing orbits to be specified in terms of the usual  In the cases where such codes exist, tehre is also a disconnect btween the orbital quantiteis such as XYZ and the conserved quanttie E,LQ
+
+
+
+
+
+
+
+ 
+
+
+is also written in a way 
+
+
+
 
 
 
@@ -72,44 +106,7 @@ whlst the research motivation in developing this package is in modeling relativi
 
 
 
-The author and collaborators are have used the general methods and mathematics described in this package via legacy Fortran code, encoutnered multiple problems, and are now already using this package for multiple active
-research projects
-
 Whilst the primary application is in modelling 
-
-RelativisticDynamics.jl is an open source code for numerical evolution of spinning relativistic systems 
-
-# Statement of need
-
-`RelativisticDynamics.jl` is Julia package for relativistic spin orbital dynamics in the gravitational strong field. Julia is a modern language that solves the "two language problem" CITE, enabling fast typing with petaflop performance, comparable with better known numerical lanuages such as C or Fortran.
-
-
-
-
-Existing codes for modelling spinning bodies in the gravitational strong field are generally lacking; at the low precisin end newtonian dynakics with PN corrections, o geodesic orbital dynamics whilst a full numerical relativity evolution is unnecesaryly computaitonlly and untractable for these systems which are observed over a large numberof orbital cycles intensive for these class of extreme mass ratio problems where the smaller body can be considered as a test mass
-
-
-In the cases where such codes exist, tehre is also a disconnect btween the orbital quantiteis such as XYZ and the conserved quanttie E,LQ
-
-
-modernness also enables easy extension, interfacing with other codes and import/levaaraging of other high performance libraries
-
-
-moden also means dynamic, JIT types, package manager, simpel hardwar suport e.g. GPU
-
-Enables interfacing with exixiting well tested packages much more readily than Fortran or C, enabling effective compatmentalisation of purpose and generality
-
-
-
-In addition to providing a fast, modern package for strong field spin dynamics, Relativistic dynamics has two additional importnat features from the perspective of modern relativistic astrophysics. Firstly it makes use of ulias type-flexibility and is written in such a way so as to be able ti support hardware accenerlated low preision artihmetic and alternaive rounding methids such as stchastic rounding (cite MILAN). It is fully type flexible, to support arbitrary number formats for performance and analysis simultaneously. This means the model development is precision-agnostic, which allows us to address the common problems of dynamic range and critical precision loss often incurred from using low-precision number formats. This enables rapid prototyping and exploration towards the exploration of reduced precision numerical techniques in astrophysics, where they are already commonly used in e.g. numerical climate simulations.
-
-
-
-Relativistic dynamcis is also written to be fully differentialble via autoamtic differentiation. This raises the possobility of using such a package for differentiable physics applicatins in astrophysics e.g. gravitational waveform modelling and parameter estimation. 
-
-
-is also written in a way 
-
 
 
 
@@ -123,59 +120,10 @@ RelativisticDynamics.jl
 
 
 
-Python
-enables wrapping low-level languages (e.g., C) for speed without losing
-flexibility or ease-of-use in the user-interface. The API for `Gala` was
-designed to provide a class-based and user-friendly interface to fast (C or
-Cython-optimized) implementations of common operations such as gravitational
-potential and force evaluation, orbit integration, dynamical transformations,
-and chaos indicators for nonlinear dynamics. `Gala` also relies heavily on and
-interfaces well with the implementations of physical units and astronomical
-coordinate systems in the `Astropy` package [@astropy] (`astropy.units` and
-`astropy.coordinates`).
-
-`Gala` was designed to be used by both astronomical researchers and by
-students in courses on gravitational dynamics or astronomy. It has already been
-used in a number of scientific publications [@Pearson:2017] and has also been
-used in graduate courses on Galactic dynamics to, e.g., provide interactive
-visualizations of textbook material [@Binney:2008]. The combination of speed,
-design, and support for Astropy functionality in `Gala` will enable exciting
-scientific explorations of forthcoming data releases from the *Gaia* mission
-[@gaia] by students and experts alike.
-
-# Mathematics
-
-Single dollars ($) are required for inline mathematics e.g. $f(x) = e^{\pi/x}$
-
-Double dollars make self-standing equations:
-
-$$\Theta(x) = \left\{\begin{array}{l}
-0\textrm{ if } x < 0\cr
-1\textrm{ else}
-\end{array}\right.$$
-
-You can also use plain \LaTeX for equations
-
-and refer to \autoref{eq:fourier} from text.
-
-# Key features?
 
 
 
 
-# Citations
-
-Citations to entries in paper.bib should be in
-[rMarkdown](http://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html)
-format.
-
-If you want to cite a software repository URL (e.g. something on GitHub without a preferred
-citation) then you can do it with the example BibTeX entry below for @fidgit.
-
-For a quick reference, the following citation commands can be used:
-- `@author:2001`  ->  "Author et al. (2001)"
-- `[@author:2001]` -> "(Author et al., 2001)"
-- `[@author1:2001; @author2:2001]` -> "(Author1 et al., 2001; Author2 et al., 2002)"
 
 # Figures
 
@@ -192,3 +140,28 @@ We acknowledge contributions from Brigitta Sipocz, Syrtis Major, and Semyeong
 Oh, and support from Kathryn Johnston during the genesis of this project.
 
 # References
+
+
+# Scratch space
+
+
+
+
+Its nature as a modern language also pr 
+
+
+ . This enables  to easily interface with  and levarage 
+
+
+
+modernness also enables easy extension, interfacing with other codes and import/levaaraging of other high performance libraries
+
+
+moden also means dynamic, JIT types, package manager, simpel hardwar suport e.g. GPU
+
+Enables interfacing with exixiting well tested packages much more readily than Fortran or C, enabling effective compatmentalisation of purpose and generality
+
+
+
+Whilst the primary focus and research motivation is in application fast spinning MSP-BH systems, it reduces to the geodesic description in the zero spin case 
+
