@@ -5,7 +5,7 @@ using Test
 @testset "Basic run through" begin
     try
         solution,model = RelativisticDynamics.orbit()
-        @test true # Completes without any errors 
+        @test true # The default completes without any errors 
     catch e
         @test  false
     end

@@ -14,8 +14,6 @@ function covariant_minkowski()
 end
 
 
-
-
 """
 Construct the NxN matrix of the covariant metric.
 Metric components are defined via indvidual functions to allow for auto diff in unit tests
@@ -125,7 +123,7 @@ end
 
 
 """
-Riemann tensor components. First index is the contravariant, others are covariant   
+Riemann tensor components of the Kerr metric. First index is the contravariant, others are covariant   
 """
 function riemann(r,θ,a)
 

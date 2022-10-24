@@ -10,7 +10,7 @@ Plot trajectory of a body. Assumes coordinates are Boyer Lindquist.
 Plots in either 2D or 3D depending on specification of dimensions.
 Saves a low resolution PNG figure to disk in example_media/
 """
-function PlotTrajectory(solution,model,dimensions=[1,2,3],savepath="'")
+function PlotTrajectory(solution,model,dimensions=[1,2,3],savepath="")
 
     @unpack a = model.parameters    #Get the BH spin parameter 
     

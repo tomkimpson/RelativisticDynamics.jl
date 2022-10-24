@@ -1,7 +1,7 @@
 
 
 """
-Some docstring for the run_program function
+The main output function from this package.
 """
 function orbit(::Type{NF}=Float64;              # number format, use Float64 as default
                     kwargs...                   # all additional non-default parameters

@@ -1,10 +1,8 @@
 
-#specify jacobian 
 
-#https://www.youtube.com/watch?v=PxSALflWcE0
-#ForwardDiff.jacobian - automatic differentiaon 
-#solve with StaticArrays - whoch can work well for small system_parameters (< 20 ODEs)
-
+"""
+The timesteppig Integration
+"""
 function timestepping(X::PrognosticVariables, M::Model)
 
 @unpack a = M.parameters
@@ -17,8 +15,10 @@ tspan = (0.0,M.constants.Tint)
 
 #Bring all vectors together
 u = vcat(X.xvector,X.pvector,X.svector)
-params = [a,m0]
-f = geodesic!
+println("Initial u")
+println(u)
+params = [a,m0,ϵ]
+f = geodesic2!
 
 ode_prob = DifferentialEquations.ODEProblem(f,u,tspan,params)
 ode_solution = DifferentialEquations.solve(ode_prob,DifferentialEquations.RK4()) # abstol=1e-9,reltol=1e-9 ,saveat = 1.0
@@ -55,8 +55,54 @@ function geodesic!(du,u,p,τ)
 
 end 
 
+function geodesic2!(du,u,p,τ)
+
+    #Extract the coordinates/constants 
+    t,r,θ,ϕ,pᵗ,pʳ,pᶿ,pᵠ,sᵗ,sʳ,sᶿ,sᵠ = u #coordinate variables
+    a,m0,ϵ = p                          # constants 
+    
+    #Define vectors from the coordinate variables.Maybe just pass as vectors directly?
+    xvector = [t,r,θ,ϕ]
+    pvector = [pᵗ,pʳ,pᶿ,pᵠ]
+
+
+    #Define some useful quantities for this timestep 
+    g = covariant_metric(xvector,a)
+    Γ = christoffel(r,θ,a)
+    Riemann = riemann(r,θ,a) # This is the mixed contra/covar term
+    @tensor begin
+        Riemann_covar[μ,ν,ρ,σ] := g[μ,λ]*Riemann[λ,ν,ρ,σ] #This is the fully covariant form
+    end
+
+    #Get the derivative objects
+
+
+    uvector = calculate_four_velocity2(pvector,0.0,Riemann_covar,g,m0)
+
+    dp = calculate_four_momentum2(pvector,uvector,0.0,Γ,0.0,eps,m0)
+
+    ds = [0.0,0.0,0.0,0.0]
+
+
+    du[1:4] = uvector
+    du[5:8] = dp
+    du[9:12]= ds
+
+    nothing #function returns nothing
+
+
+end 
+
+
+
+
+
+
+
+
 function MPD!(du,u,p,τ)
 
+    #println("INSIDE THE MPd! FUNCTION")
 
 
     #Extract - can we do this better?
@@ -101,7 +147,7 @@ function MPD!(du,u,p,τ)
     ds = calculate_four_spin(pvector,dx,svector,Γ,Riemann_covar,eps,m0)
 
 
-    # println("dx = ",dx)
+    #println("dx = ",dx)
     # println("pv = ",pvector)
     # println("dp = ",dp)
     # println("ds = ",ds)
@@ -141,7 +187,22 @@ function MPD!(du,u,p,τ)
 end 
 
 
+function calculate_four_velocity2(pvector,Stensor,Riemann,g,m0)
 
+    
+    @tensor begin
+        dx[α] := -(pvector[α])/m0^2 
+    end
+
+    @tensor begin 
+        Vsq = g[μ,ν]*dx[μ]*dx[ν]
+    end 
+
+    PV = -sqrt(-1.0/Vsq)
+    dx = dx * PV
+    
+    return dx
+end 
 
 function calculate_four_velocity(pvector,Stensor,Riemann,g,m0)
 
@@ -180,6 +241,17 @@ function calculate_four_momentum(pvector,uvector,svector,Γ,Riemann,eps,m0)
     end
 
     return dp
+end 
+
+
+
+
+function calculate_four_momentum2(pvector,uvector,svector,Γ,Riemann,eps,m0)
+    @tensor begin
+       dp[α] := -Γ[α,μ,ν]*pvector[μ]*uvector[ν]
+   end
+
+   return dp
 end 
 
 
