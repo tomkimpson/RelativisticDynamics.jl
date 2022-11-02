@@ -47,6 +47,11 @@ s^{\mu \nu} p_{\nu} = 0
 Together, equations \autoref{eq:md1} - \autoref{eq:md3} form the Mathisson-Papetrou-Dixon (MPD) equations, and describe the spin-orbital evolution in a fully consistent way that is applicable to strong field regimes. 
 
 
+Relativistic dynamcis is...
+e.g. https://joss.readthedocs.io/en/latest/submitting.html
+
+
+
 
 # Statement of need
 

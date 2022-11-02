@@ -15,8 +15,6 @@ end
 
 @testset "Boundschecks" begin
 
-
-
     #Spin parameter out of bounds
     try
         solution,model = RelativisticDynamics.orbit(a=1.1)

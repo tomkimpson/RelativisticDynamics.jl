@@ -16,10 +16,12 @@ makedocs(;
     ),
     pages=[
         "Home" => "index.md",
+        "SOME TEST"=>"how_to_run.md"
     ],
 )
 
 deploydocs(;
     repo="github.com/tomkimpson/RelativisticDynamics.jl",
     devbranch="main",
+    versions = ["stable" => "v^", "v#.#.#", "dev" => "dev"]
 )
