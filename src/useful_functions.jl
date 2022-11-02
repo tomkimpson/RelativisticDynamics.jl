@@ -45,12 +45,6 @@ function Kretschmann_scalar(r,θ,a)
 end 
 
 
-# function metric_determinant(metric)
-
-#     return det(metric)
-
-# end 
-
 
 function permutation_tensor(metric,ϵ)
 
