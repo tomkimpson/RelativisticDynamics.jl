@@ -43,14 +43,12 @@ function MPD!(du,u,p,τ)
     g = covariant_metric(xvector,a)   #the metric 
     Γ = christoffel(r,θ,a)            #the Christoffel symbols
     Riemann = riemann(r,θ,a)          #the mixed contra/covar Riemann term R^{a}_{bcd}
-    @tensor begin
-        Riemann_covar[μ,ν,ρ,σ] := g[μ,λ]*Riemann[λ,ν,ρ,σ] #This is the fully covariant form R_{abcd}
-    end
+    @tullio Riemann_covar[μ,ν,ρ,σ] := g[μ,λ]*Riemann[λ,ν,ρ,σ] #This is the fully covariant form R_{abcd}
+    
 
     levi = permutation_tensor(g,ϵ)  #This is the fully contravariant Levi Civita tensor 
-    @tensor begin 
-        levi_mixed[ρ,σ,μ,ν] := g[μ,x]*g[ν,y] * levi[ρ,σ,x,y]
-    end 
+    @tullio levi_mixed[ρ,σ,μ,ν] := g[μ,x]*g[ν,y] * levi[ρ,σ,x,y]
+    
   
     stensor = spintensor(levi,pvector,svector,m0) #the fully contravariant spin tensor s^{ab}
 
@@ -81,22 +79,17 @@ end
 
 function calculate_four_velocity(pvector,Stensor,Riemann,g,m0)
 
-    @tensor begin 
-        scalar_divisor = Riemann[μ,ν,ρ,σ]*Stensor[μ,ν]*Stensor[ρ,σ] / 4.0
-    end 
+    @tullio scalar_divisor = Riemann[μ,ν,ρ,σ]*Stensor[μ,ν]*Stensor[ρ,σ] / 4.0
+    
 
-    @tensor begin
-        correction[α] := 0.50 *(Stensor[α,β]*Riemann[β,γ,μ,ν]*pvector[γ]*Stensor[μ, ν])/(m0^2 + scalar_divisor)
-    end
+    @tullio correction[α] := 0.50 *(Stensor[α,β]*Riemann[β,γ,μ,ν]*pvector[γ]*Stensor[μ, ν])/(m0^2 + scalar_divisor)
+    
 
     
-    @tensor begin
-        dx[α] := -(pvector[α] + correction[α])/m0^2 
-    end
+    @tullio dx[α] := -(pvector[α] + correction[α])/m0^2 
+    
 
-    @tensor begin 
-        Vsq = g[μ,ν]*dx[μ]*dx[ν]
-    end 
+    @tullio  Vsq = g[μ,ν]*dx[μ]*dx[ν] 
 
     PV = -sqrt(-1.0/Vsq)
     dx = dx * PV
@@ -109,15 +102,12 @@ function calculate_four_momentum(pvector,uvector,svector,Γ,Riemann,levi_mixed,m
 
 
 
-    @tensor begin
-        correction[α] := (Riemann[α,β,ρ,σ]*levi_mixed[ρ,σ,μ,ν]*svector[μ]*pvector[ν]*uvector[β])/(2*m0)
-
-    end
+    @tullio correction[α] := (Riemann[α,β,ρ,σ]*levi_mixed[ρ,σ,μ,ν]*svector[μ]*pvector[ν]*uvector[β])/(2*m0)
 
 
-    @tensor begin
-       dp[α] := -Γ[α,μ,ν]*pvector[μ]*uvector[ν] + correction[α]
-   end
+
+    @tullio dp[α] := -Γ[α,μ,ν]*pvector[μ]*uvector[ν] + correction[α]
+   
 
    return dp
 end 
@@ -126,15 +116,11 @@ end
 function calculate_four_spin(pvector,uvector,svector,Γ,Riemann_covar,levi_mixed,m0)
 
 
-    @tensor begin
-        correction[α] := pvector[α]*(Riemann_covar[γ,β,ρ,σ]*levi_mixed[ρ,σ,μ,ν]*svector[μ]*pvector[ν]*svector[γ]*uvector[β])/(2*m0^3)
-    end
+    @tullio correction[α] := pvector[α]*(Riemann_covar[γ,β,ρ,σ]*levi_mixed[ρ,σ,μ,ν]*svector[μ]*pvector[ν]*svector[γ]*uvector[β])/(2*m0^3)
+    
 
-
-
-    @tensor begin
-       ds[α] := -Γ[α,μ,ν]*svector[μ]*uvector[ν] + correction[α]
-   end
+    @tullio ds[α] := -Γ[α,μ,ν]*svector[μ]*uvector[ν] + correction[α]
+   
 
    return ds
 end 

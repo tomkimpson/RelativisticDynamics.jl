@@ -9,7 +9,8 @@ import Parameters: @with_kw, @unpack
 
 import DifferentialEquations
 
-using TensorOperations, Einsum,Combinatorics #, Symbolics
+#using TensorOperations, Einsum,Combinatorics #, Symbolics
+using Tullio,Combinatorics #, Symbolics
 
 
 # Exports

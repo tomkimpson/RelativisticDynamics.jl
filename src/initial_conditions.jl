@@ -34,7 +34,7 @@ function MPD_initial_conditions(M::Model)
     @unpack r_initial,θ_initial, ϕ_initial = M.constants
     xvector = [0.0,r_initial,θ_initial, ϕ_initial] # Starting coordinates
 
-
+    println("INSIDE IC")
 
     #1.1 Define some useful quantities
     @unpack a = M.parameters
@@ -44,30 +44,31 @@ function MPD_initial_conditions(M::Model)
     g  = covariant_metric(xvector,a)
 
    
-    # # 2. Four - momentum 
-    # @unpack E,L,Q,m0 = M.constants 
+    # 2. Four - momentum 
+    @unpack E,L,Q,m0 = M.constants 
 
 
-    # #These are 4 velocities from Schmidt 2002.
-    # #Initial Rdot is +ve as standard
-    # Pbar = E*(r^2+a^2) - a*L 
-    # Tbar = (r^2+a^2)*Pbar/Δ -a*(a*E*sin(θ)^2-L)
-    # Rbar = ((r^2+a^2)*E  -a*L)^2 -Δ*(r^2 + (L-a*E)^2+Q)
-    # θbar = Q - ((1-E^2)*a^2 + L^2/sin(θ)^2)*cos(θ)^2
-    # ϕbar = a*Pbar/Δ -a*E + L/sin(θ)^2
+    #These are 4 velocities from Schmidt 2002.
+    #Initial Rdot is +ve as standard
+    Pbar = E*(r^2+a^2) - a*L 
+    Tbar = (r^2+a^2)*Pbar/Δ -a*(a*E*sin(θ)^2-L)
+    Rbar = ((r^2+a^2)*E  -a*L)^2 -Δ*(r^2 + (L-a*E)^2+Q)
+    θbar = Q - ((1-E^2)*a^2 + L^2/sin(θ)^2)*cos(θ)^2
+    ϕbar = a*Pbar/Δ -a*E + L/sin(θ)^2
 
     
-    # tdot = Tbar/Σ
-    # rdot = sqrt(Rbar)/Σ
-    # θdot = sqrt(θbar)/Σ
-    # ϕdot = ϕbar/Σ
+    tdot = Tbar/Σ
+    rdot = sqrt(Rbar)/Σ
+    θdot = sqrt(θbar)/Σ
+    ϕdot = ϕbar/Σ
 
    
 
-    # #Turn 4 velocity into 4 momentum
-    # pvector = m0*[tdot,rdot,θdot,ϕdot]
-    # pvector_covar = convert_to_covariant(g,pvector)
+    #Turn 4 velocity into 4 momentum
+    pvector = m0*[tdot,rdot,θdot,ϕdot]
+    pvector_covar = convert_to_covariant(g,pvector)
 
+    println(pvector_covar)
 
     # #3. Four - spin
     # @unpack Sθ,Sϕ = M.parameters

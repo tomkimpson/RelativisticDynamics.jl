@@ -22,11 +22,8 @@ Convert a vector from contravariant form to convariant form using the covariant 
 function convert_to_covariant(metric,vector)
 
 
-    @tensor begin
-        vector_covar[μ] := metric[μ,ν] * vector[ν]  #:= allocates a new array
-    end
-
-
+    @tullio vector_covar[μ] := metric[μ,ν] * vector[ν]  #:= allocates a new array
+ 
     return vector_covar  
 
 end 
@@ -61,10 +58,8 @@ Calculate the contravariant spin tensor. See e.g. https://mathworld.wolfram.com/
 function spintensor(levi,pvector,svector,m0)
 
 
-    @tensor begin
-         Stensor[μ,ν] := levi[μ,ν,α,β]*pvector[α]*svector[β]/m0
-    end
-
+    @tullio Stensor[μ,ν] := levi[μ,ν,α,β]*pvector[α]*svector[β]/m0
+    
     return Stensor 
 
 end 

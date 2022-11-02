@@ -1,3 +1,4 @@
+using Zygote
 
 """
 Construct the NxN matrix of the covariant Minkowski metric.
@@ -20,7 +21,10 @@ Metric components are defined via indvidual functions to allow for auto diff in 
 """
 function covariant_metric(coords,a)
 
-    metric_covar = zeros(Float64,4,4)
+    xs = zeros(Float64,4,4)
+    metric_covar = Zygote.Buffer(xs) # https://fluxml.ai/Zygote.jl/latest/utils/#Zygote.Buffer
+
+    #metric_covar = zeros(Float64,4,4)
     
     metric_covar[1,1] =  metric_g11(coords,a) 
     metric_covar[2,2] =  metric_g22(coords,a) 
@@ -28,7 +32,19 @@ function covariant_metric(coords,a)
     metric_covar[4,4] =  metric_g44(coords,a) 
     metric_covar[1,4] =  metric_g14(coords,a) 
     metric_covar[4,1] =  metric_covar[1,4]
-    return metric_covar
+
+
+    # metric_covar = [metric_covar11 0 0 metric_covar14
+    #                 0 metric_covar22 0 0  
+    #                 0 0 metric_covar33 0 
+    #                 metric_covar14 0 0 metric_covar44 ]
+
+
+    #@tullio metric_covar[i,j] = 
+
+   # println(metric_covar)
+
+    return copy(metric_covar)
 end 
 
 
