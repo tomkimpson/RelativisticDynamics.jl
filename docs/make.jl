@@ -16,7 +16,9 @@ makedocs(;
     ),
     pages=[
         "Home" => "index.md",
-        "SOME TEST"=>"how_to_run.md"
+        "How to run RelativisticDynamics.jl"=>"how_to_run.md",
+        "MPD Equations"=>"how_to_run.md",
+        "Functions Index"=>"how_to_run.md",
     ],
 )
 

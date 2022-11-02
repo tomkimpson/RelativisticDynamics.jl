@@ -53,8 +53,12 @@ end
 
 
 """
-Christoffel symbols of the second kind 
-"""
+    map = gridded(  alms::AbstractMatrix;
+                    recompute_legendre::Bool=true,
+                    grid::Type{<:AbstractGrid}=FullGaussianGrid)
+Spectral transform (spectral to grid space) from spherical coefficients `alms` to a newly allocated gridded
+field `map`. Based on the size of `alms` the grid type `grid`, the spatial resolution is retrieved based
+on the truncation defined for `grid`. SpectralTransform struct `S` is allocated to execute `gridded(alms,S)`."""
 function christoffel(r,θ,a)
 
     #See Catalogue of spacetimes: https://arxiv.org/pdf/0904.4184.pdf
