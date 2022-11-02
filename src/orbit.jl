@@ -15,13 +15,22 @@ function orbit(::Type{NF}=Float64;              # number format, use Float64 as 
     C = Constants(P)                      # Constants
     M = Model(P,C)                        # Pack all of the above into a single *Model struct 
 
+
+
+
+
     #Initial conditions 
     initialization = initial_conditions(M)
 
+    println("FINISHED")
+    stuff = P.e^2
+    return stuff
+
     #Evolve in time
-    solution = timestepping(initialization, M)
+    #solution = timestepping(initialization, M)
     
-    return solution , M
+    #return solution , M
+    #return P.e * 0.1
 end
 
 

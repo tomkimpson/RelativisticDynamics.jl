@@ -1,3 +1,4 @@
+using Zygote
 """
 C = Constants(P)
 A struct to hold all variables which are constant over the course of the integration.
@@ -68,21 +69,25 @@ function Constants(P::SystemParameters)
     
     # Levi civita tensor
     levi = zeros(Float64,4,4,4,4) 
-    for i in 1:4
-        for j in 1:4
-            for k in 1:4
-                for l in 1:4
-                    permutation_vector = [i,j,k,l]
-                    levi[i,j,k,l] = levicivita(permutation_vector) #This is [i,j,k,l] from e.g. https://mathworld.wolfram.com/PermutationTensor.html
-                end
-            end 
-        end
-    end 
+    Zygote.ignore() do 
+
+        for i in 1:4
+            for j in 1:4
+                for k in 1:4
+                    for l in 1:4
+                        permutation_vector = [i,j,k,l]
+                        levi[i,j,k,l] = levicivita(permutation_vector) #This is [i,j,k,l] from e.g. https://mathworld.wolfram.com/PermutationTensor.html
+                    end
+                end 
+            end
+        end 
+
+    end #This can be safely ignored by the differentiator - no dependence on the input parameters. Otherwise throws issues relating to mutation
 
 
 
-
-    #Estimate the orbital period from Kepler's 3rd. Ofc inaccurate in relativity, but sufficient to get an approximate lengthscale
+    #Estimate the orbital period from Kepler's 3rd. 
+    #This is obviously inaccurate in relativity, but sufficient to get an approximate timescale over which to integrate 
     #over which to integrate 
     @unpack Norbits = P
     Tint = Norbits*2*π*α^(3/2)
@@ -90,13 +95,16 @@ function Constants(P::SystemParameters)
     
 
     
-    # This implies conversion to NF
+   # This implies conversion to NF
     return Constants{P.NF}(light_c,Newton_g,Msolar,
                            r_initial,θ_initial,ϕ_initial,
                            E,L,Q,
                            s0,m0,
                            levi,
                            Tint,)
+
+
+
 end
 
 
@@ -111,7 +119,7 @@ function ELQ(model,a,α,e,ι,D)
 
         zm = cos(ι)
 
-        if e > 0.0
+        #if e > 0.0
 
             r_periapsis= α*(1-e)
             r_apoapsis = α*(1+e)
@@ -141,7 +149,7 @@ function ELQ(model,a,α,e,ι,D)
         #     d2 = mapping_dprime(α,a,zm)
 
 
-        end 
+        #end 
         
 
 
