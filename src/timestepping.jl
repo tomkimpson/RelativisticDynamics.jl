@@ -29,31 +29,31 @@ end
 
 
 
-function geodesic!(du,u,p,τ)
+# function geodesic!(du,u,p,τ)
 
-    #Extract - can we do this better?
-    t,r,θ,ϕ,pᵗ,pʳ,pᶿ,pᵠ,sᵗ,sʳ,sᶿ,sᵠ = u #variables
-    a,m0 = p                          #parameters
+#     #Extract - can we do this better?
+#     t,r,θ,ϕ,pᵗ,pʳ,pᶿ,pᵠ,sᵗ,sʳ,sᶿ,sᵠ = u #variables
+#     a,m0 = p                          #parameters
     
-    #Define 4 momentum and 4 velocity vectors
-    pvector = [pᵗ,pʳ,pᶿ,pᵠ]
-    uvector = pvector/m0
+#     #Define 4 momentum and 4 velocity vectors
+#     pvector = [pᵗ,pʳ,pᶿ,pᵠ]
+#     uvector = pvector/m0
 
-    #What is the EOM for the 4-momentum derivative?
-    Γ = christoffel(r,θ,a)
-    @tensor begin
-        dp[α] := -Γ[α,μ,ν]*pvector[μ]*uvector[ν] 
-    end
-
-
-    du[1:4] = uvector
-    du[5:8] = dp
-    du[9:12]= [0.0,0.0,0.0,0.0]
-
-    nothing #function returns nothing
+#     #What is the EOM for the 4-momentum derivative?
+#     Γ = christoffel(r,θ,a)
+#     @tensor begin
+#         dp[α] := -Γ[α,μ,ν]*pvector[μ]*uvector[ν] 
+#     end
 
 
-end 
+#     du[1:4] = uvector
+#     du[5:8] = dp
+#     du[9:12]= [0.0,0.0,0.0,0.0]
+
+#     nothing #function returns nothing
+
+
+# end 
 
 function geodesic2!(du,u,p,τ)
 
@@ -61,27 +61,37 @@ function geodesic2!(du,u,p,τ)
     t,r,θ,ϕ,pᵗ,pʳ,pᶿ,pᵠ,sᵗ,sʳ,sᶿ,sᵠ = u #coordinate variables
     a,m0,ϵ = p                          # constants 
     
-    #Define vectors from the coordinate variables.Maybe just pass as vectors directly?
+    #Define vectors from the coordinate variables. Maybe just pass as vectors directly?
     xvector = [t,r,θ,ϕ]
     pvector = [pᵗ,pʳ,pᶿ,pᵠ]
+    svector = [sᵗ,sʳ,sᶿ,sᵠ]
 
 
     #Define some useful quantities for this timestep 
-    g = covariant_metric(xvector,a)
-    Γ = christoffel(r,θ,a)
-    Riemann = riemann(r,θ,a) # This is the mixed contra/covar term
+    g = covariant_metric(xvector,a)   #the metric 
+    Γ = christoffel(r,θ,a)            #the Christoffel symbols
+    Riemann = riemann(r,θ,a)          #the mixed contra/covar Riemann term R^{a}_{bcd}
     @tensor begin
-        Riemann_covar[μ,ν,ρ,σ] := g[μ,λ]*Riemann[λ,ν,ρ,σ] #This is the fully covariant form
+        Riemann_covar[μ,ν,ρ,σ] := g[μ,λ]*Riemann[λ,ν,ρ,σ] #This is the fully covariant form R_{abcd}
     end
+
+
+    levi = permutation_tensor(g,ϵ)  #This is the fully contravariant Levi Civita tensor 
+    @tensor begin 
+        levi_mixed[ρ,σ,μ,ν] := g[μ,x]*g[ν,y] * levi[ρ,σ,x,y]
+    end 
+  
+    stensor = spintensor(levi,pvector,svector,m0)
+
 
     #Get the derivative objects
 
 
-    uvector = calculate_four_velocity2(pvector,0.0,Riemann_covar,g,m0)
+    uvector = calculate_four_velocity2(pvector,stensor,Riemann_covar,g,m0)
 
-    dp = calculate_four_momentum2(pvector,uvector,0.0,Γ,0.0,eps,m0)
+    dp = calculate_four_momentum2(pvector,uvector,svector,Γ,Riemann,levi_mixed,m0)
 
-    ds = [0.0,0.0,0.0,0.0]
+    ds = calculate_four_spin2(pvector,uvector,svector,Γ,Riemann_covar,levi_mixed,m0)
 
 
     du[1:4] = uvector
@@ -189,9 +199,17 @@ end
 
 function calculate_four_velocity2(pvector,Stensor,Riemann,g,m0)
 
+    @tensor begin 
+        scalar_divisor = Riemann[μ,ν,ρ,σ]*Stensor[μ,ν]*Stensor[ρ,σ] / 4.0
+    end 
+
+    @tensor begin
+        correction[α] := 0.50 *(Stensor[α,β]*Riemann[β,γ,μ,ν]*pvector[γ]*Stensor[μ, ν])/(m0^2 + scalar_divisor)
+    end
+
     
     @tensor begin
-        dx[α] := -(pvector[α])/m0^2 
+        dx[α] := -(pvector[α] + correction[α])/m0^2 
     end
 
     @tensor begin 
@@ -246,13 +264,44 @@ end
 
 
 
-function calculate_four_momentum2(pvector,uvector,svector,Γ,Riemann,eps,m0)
+function calculate_four_momentum2(pvector,uvector,svector,Γ,Riemann,levi_mixed,m0)
+
+
+
     @tensor begin
-       dp[α] := -Γ[α,μ,ν]*pvector[μ]*uvector[ν]
+        correction[α] := (Riemann[α,β,ρ,σ]*levi_mixed[ρ,σ,μ,ν]*svector[μ]*pvector[ν]*uvector[β])/(2*m0)
+
+    end
+
+
+    @tensor begin
+       dp[α] := -Γ[α,μ,ν]*pvector[μ]*uvector[ν] + correction[α]
    end
 
    return dp
 end 
+
+
+function calculate_four_spin2(pvector,uvector,svector,Γ,Riemann_covar,levi_mixed,m0)
+
+
+    @tensor begin
+        correction[α] := pvector[α]*(Riemann_covar[γ,β,ρ,σ]*levi_mixed[ρ,σ,μ,ν]*svector[μ]*pvector[ν]*svector[γ]*uvector[β])/(2*m0^3)
+    end
+
+
+
+    @tensor begin
+       ds[α] := -Γ[α,μ,ν]*svector[μ]*uvector[ν] + correction[α]
+   end
+
+   return ds
+end 
+
+
+
+
+
 
 
 function calculate_four_spin(pvector,uvector,svector,Γ,Riemann_covar,eps,m0)

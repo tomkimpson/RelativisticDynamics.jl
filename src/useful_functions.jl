@@ -1,3 +1,5 @@
+using LinearAlgebra
+
 """
 Δ = delta(r,a)
 The well-known delta function of the Kerr metric
@@ -43,22 +45,30 @@ function Kretschmann_scalar(r,θ,a)
 end 
 
 
+# function metric_determinant(metric)
+
+#     return det(metric)
+
+# end 
+
+
+function permutation_tensor(metric,ϵ)
+
+    det_g = det(metric)
+
+    return ϵ/sqrt(abs(det_g))
+
+end 
+
+
 """
-Calculate the contravariant spin tensor
+Calculate the contravariant spin tensor. See e.g. https://mathworld.wolfram.com/PermutationTensor.html
 """
-function spintensor(xvector,pvector,svector,a,m0,ϵ)
+function spintensor(levi,pvector,svector,m0)
 
-
-    t,r,θ,ϕ = xvector
-    Σ = sigma(r,θ,a)
-    
-    metric_trace =-sin(θ)^2*Σ^2
-
-    #https://mathworld.wolfram.com/PermutationTensor.html
-    permutation_tensor = ϵ/sqrt(abs(metric_trace))
 
     @tensor begin
-         Stensor[μ,ν] := permutation_tensor[μ,ν,α,β]*pvector[α]*svector[β]/m0
+         Stensor[μ,ν] := levi[μ,ν,α,β]*pvector[α]*svector[β]/m0
     end
 
     return Stensor 

@@ -21,6 +21,7 @@ function orbit(::Type{NF}=Float64;              # number format, use Float64 as 
     #Evolve in time
     solution = timestepping(initialization, M)
     
+    println("Completed OK")
     return solution , M
 end
 

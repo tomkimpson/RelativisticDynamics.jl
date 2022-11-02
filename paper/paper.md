@@ -76,10 +76,10 @@ Future extensios of this code would be to estend the dynamcis beyond second orde
 
 
 
+higher order terms beyond the dipole 
 
 
-
-
+progenitors of the extreme-mass-ratio-inspirals (EMRIs) and intermediate-mass-ratio-inspirals (IMRIs) gravitational wave events
 
 via Fortran code, 
 
@@ -97,7 +97,7 @@ It solves the MPD equations numerically from a set of astrophysical initial cond
 
 
 
- 
+ primary focus is the dynamics - extensions include waveforms, unitary scaling for precision
 
 
 is also written in a way 
