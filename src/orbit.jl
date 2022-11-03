@@ -15,6 +15,7 @@ function orbit(::Type{NF}=Float64;              # number format, use Float64 as 
     C = Constants(P)                      # Constants
     M = Model(P,C)                        # Pack all of the above into a single *Model struct 
 
+    println("Called orbit() with e = ", P.e)
 
 
 
@@ -22,14 +23,21 @@ function orbit(::Type{NF}=Float64;              # number format, use Float64 as 
     #Initial conditions 
     initialization = initial_conditions(M)
 
-    println("FINISHED")
-    stuff = P.e^2
+    #Evolve in time
+    #println("entering timestepping")
+   # println(M)
+   # println(initialization)
+
+    solution = timestepping(initialization, M)
+    #print("the timestepping completed")
+
+    #println("FINISHED")
+    stuff = P.e^3
     return stuff
 
-    #Evolve in time
-    #solution = timestepping(initialization, M)
+
     
-    #return solution , M
+    #return solution, M
     #return P.e * 0.1
 end
 
@@ -47,3 +55,18 @@ function bounds_checks(P::SystemParameters)
     @boundscheck 0.0 < P.ι <= π/2.0     || throw(error("ι is outside of allowed range"))
 
 end 
+
+
+
+# function loss_function(::Type{NF}=Float64;              # number format, use Float64 as default
+#                        kwargs...                   # all additional non-default parameters
+#                       ) where {NF<:AbstractFloat}
+
+
+# true_solution,true_model = orbit()
+
+
+# new_solution,new_model = orbit(NF=NF;kwargs...)
+
+
+# end 

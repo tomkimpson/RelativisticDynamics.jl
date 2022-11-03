@@ -43,7 +43,37 @@ end
 
 
 
-function permutation_tensor(metric,ϵ)
+function calculate_levi()
+
+    # Levi civita tensor
+    levi = zeros(Float64,4,4,4,4) 
+    Zygote.ignore() do 
+
+        for i in 1:4
+            for j in 1:4
+                for k in 1:4
+                    for l in 1:4
+                        permutation_vector = [i,j,k,l]
+                        levi[i,j,k,l] = levicivita(permutation_vector) #This is [i,j,k,l] from e.g. https://mathworld.wolfram.com/PermutationTensor.html
+                    end
+                end 
+            end
+        end 
+
+    end #This can be safely ignored by the differentiator - no dependence on the input parameters. Otherwise throws issues relating to mutation
+
+
+    return levi 
+end 
+
+
+
+
+
+
+function permutation_tensor(metric)
+
+    ϵ = calculate_levi()
 
     det_g = det(metric)
 

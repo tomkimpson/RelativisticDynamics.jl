@@ -27,7 +27,7 @@ These are derived from the user-defined parameters
     m0 :: NF                 # Pulsar mass in natural units
 
     # 3. Mathematical/Tensor objects
-    ϵ ::AbstractArray{NF}   #levi cevita
+    #ϵ ::AbstractArray{NF}   #levi cevita
 
 
     # 4. Integration properties
@@ -67,22 +67,22 @@ function Constants(P::SystemParameters)
     m0 = mPSR/mBH
 
     
-    # Levi civita tensor
-    levi = zeros(Float64,4,4,4,4) 
-    Zygote.ignore() do 
+    # # Levi civita tensor
+    # levi = zeros(Float64,4,4,4,4) 
+    # Zygote.ignore() do 
 
-        for i in 1:4
-            for j in 1:4
-                for k in 1:4
-                    for l in 1:4
-                        permutation_vector = [i,j,k,l]
-                        levi[i,j,k,l] = levicivita(permutation_vector) #This is [i,j,k,l] from e.g. https://mathworld.wolfram.com/PermutationTensor.html
-                    end
-                end 
-            end
-        end 
+    #     for i in 1:4
+    #         for j in 1:4
+    #             for k in 1:4
+    #                 for l in 1:4
+    #                     permutation_vector = [i,j,k,l]
+    #                     levi[i,j,k,l] = levicivita(permutation_vector) #This is [i,j,k,l] from e.g. https://mathworld.wolfram.com/PermutationTensor.html
+    #                 end
+    #             end 
+    #         end
+    #     end 
 
-    end #This can be safely ignored by the differentiator - no dependence on the input parameters. Otherwise throws issues relating to mutation
+    # end #This can be safely ignored by the differentiator - no dependence on the input parameters. Otherwise throws issues relating to mutation
 
 
 
@@ -100,7 +100,7 @@ function Constants(P::SystemParameters)
                            r_initial,θ_initial,ϕ_initial,
                            E,L,Q,
                            s0,m0,
-                           levi,
+                           #levi,
                            Tint,)
 
 
