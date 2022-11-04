@@ -18,27 +18,14 @@ function orbit(::Type{NF}=Float64;              # number format, use Float64 as 
     println("Called orbit() with e = ", P.e)
 
 
-
-
     #Initial conditions 
     initialization = initial_conditions(M)
 
     #Evolve in time
-    #println("entering timestepping")
-   # println(M)
-   # println(initialization)
-
     solution = timestepping(initialization, M)
-    #print("the timestepping completed")
-
-    #println("FINISHED")
-    stuff = P.e^3
-    return stuff
-
-
     
-    #return solution, M
-    #return P.e * 0.1
+    return solution, M
+
 end
 
 

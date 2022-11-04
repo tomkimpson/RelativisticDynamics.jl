@@ -124,6 +124,7 @@ end
 
 
         levi = RelativisticDynamics.permutation_tensor(g,C.ϵ)  #This is the fully contravariant Levi Civita tensor 
+        
         spin_tensor = RelativisticDynamics.spintensor(levi,initialization.pvector,initialization.svector,C.m0) #the fully contravariant spin tensor s^{ab}
 
         pvector_covar = RelativisticDynamics.convert_to_covariant(g,initialization.pvector)

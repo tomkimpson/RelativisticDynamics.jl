@@ -1,5 +1,5 @@
 using LinearAlgebra
-
+using ChainRulesCore
 """
 Δ = delta(r,a)
 The well-known delta function of the Kerr metric
@@ -47,7 +47,9 @@ function calculate_levi()
 
     # Levi civita tensor
     levi = zeros(Float64,4,4,4,4) 
-    Zygote.ignore() do 
+    
+    ChainRulesCore.ignore_derivatives() do 
+    #Zygote.ignore() do 
 
         for i in 1:4
             for j in 1:4
@@ -62,7 +64,8 @@ function calculate_levi()
 
     end #This can be safely ignored by the differentiator - no dependence on the input parameters. Otherwise throws issues relating to mutation
 
-
+    #println("THIS IS LEVI")
+    #println(levi)
     return levi 
 end 
 

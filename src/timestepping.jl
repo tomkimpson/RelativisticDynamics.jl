@@ -1,4 +1,5 @@
 
+using DifferentialEquations
 using ComponentArrays
 using SciMLSensitivity
 using Parameters: @unpack
@@ -17,34 +18,17 @@ function timestepping(X::PrognosticVariables, M::Model)
 tspan = (0.0,M.constants.Tint) 
 
 
-#println("welcome to timesteppings")
-
 #Bring all vectors together
 u = vcat(X.xvector,X.pvector,X.svector)
-#params = ComponentArray(a=a,m0=m0,ϵ=ϵ)
+
 params = [a,m0,1]
 
 
-
-# lorenz_p = (σ=10.0, ρ=28.0, β=8/3)
-# lorenz_ic = ComponentArray(x=0.0, y=0.0, z=0.0)
-# lorenz_prob = ODEProblem(lorenz!, lorenz_ic, tspan, lorenz_p)
-
-
-
-
-
-
-#println(u)
-#println(params)
-
-#println(u.type)
 f = MPD! #The ODE 
 
-#println("ode prob")
-ode_prob = DifferentialEquations.ODEProblem(f,u,tspan,params)
-#println("ode soln")
-ode_solution = DifferentialEquations.solve(ode_prob,DifferentialEquations.RK4()) # abstol=1e-9,reltol=1e-9 ,saveat = 1.0
+
+ode_prob = ODEProblem(f,u,tspan,params)
+ode_solution = solve(ode_prob,DifferentialEquations.RK4()) # abstol=1e-9,reltol=1e-9 ,saveat = 1.0
 
 return ode_solution
     
@@ -123,10 +107,10 @@ function calculate_four_velocity(pvector,Stensor,Riemann,g,m0)
 
     @tullio  Vsq := g[μ,ν]*dx[μ]*dx[ν] 
 
-    println("VSQ = ")
-    println(Vsq)
-    println("dx = ")
-    println(dx)
+   # println("VSQ = ")
+   # println(Vsq)
+   # println("dx = ")
+   # println(dx)
     PV = -sqrt(-1.0/Vsq)
     dx = dx * PV
     
