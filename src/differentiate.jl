@@ -1,9 +1,7 @@
 using JLD
 using ChainRulesCore
-function differentiate(reference, ::Type{NF}=Float64;              # number format, use Float64 as default
-                        kwargs...                   # all additional non-default parameters
-                        ) where {NF<:AbstractFloat}
 
+function differentiate(e)
 
 
     # Load a reference solution from disk. Does not need to be differentiated
@@ -11,9 +9,11 @@ function differentiate(reference, ::Type{NF}=Float64;              # number form
     #println(reference)
 
     # Run the model. 
-    solution,model = orbit(NF=NF;kwargs...)
+    println("running the model with e = ", e)
+    solution,model = orbit(e=e)
     
     
+    #println("the value of blob is ", blob)
     # # loss=0 # Variable must be first declared outside of ignore_derivatives to make it accesible to the scope 
     # r = 0
     # ChainRulesCore.ignore_derivatives() do # Calculate the loss w.r.t the reference
@@ -31,9 +31,9 @@ function differentiate(reference, ::Type{NF}=Float64;              # number form
     
     # loss = sum(abs2, δ)
 
-    r = solution[2,33]
-    println(r)
-    #loss = sum(r)
+    r = solution[2,:]
+    #println(r)
+    loss = last(r) -  50.00001064382625
     #println(loss)
     #println(loss)
     #     loss = model.parameters.e#^2
@@ -45,7 +45,7 @@ function differentiate(reference, ::Type{NF}=Float64;              # number form
 
 
     #println(loss)
-    loss = r
+    #loss = 1
     return loss
 
 end
@@ -54,16 +54,3 @@ end
 
 
 
-
-# function loss_function(::Type{NF}=Float64;              # number format, use Float64 as default
-#                        kwargs...                   # all additional non-default parameters
-#                       ) where {NF<:AbstractFloat}
-
-
-# true_solution,true_model = orbit()
-
-
-# new_solution,new_model = orbit(NF=NF;kwargs...)
-
-
-# end 

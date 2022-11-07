@@ -1,4 +1,5 @@
 using Zygote
+using PreallocationTools
 
 """
 Construct the NxN matrix of the covariant Minkowski metric.
@@ -19,22 +20,59 @@ end
 Construct the NxN matrix of the covariant metric.
 Metric components are defined via indvidual functions to allow for auto diff in unit tests
 """
+# function covariant_metric(coords,a)
+
+#     #xs = zeros(4,4)
+#     #xs = dualcache(zeros(4,4))
+#     #metric_covar = Zygote.Buffer(xs) # https://fluxml.ai/Zygote.jl/latest/utils/#Zygote.Buffer
+
+#     #metric_covar = zeros(Float64,4,4)
+#     #println(coords[2])
+#     #println("coord is: ", coords[2])
+#     #println("now assign matrix value")
+#     #xs[1,1] =   coords[3] #Float64(1.223232) #Real(coords[2]) #coords[2] #metric_g11(coords,a) 
+#    # metric_covar[2,2] =  metric_g22(coords,a) 
+#    # metric_covar[3,3] =  metric_g33(coords,a) 
+#    # metric_covar[4,4] =  metric_g44(coords,a) 
+#    # metric_covar[1,4] =  metric_g14(coords,a) 
+#    # metric_covar[4,1] =  metric_covar[1,4]
+
+#    #println("done that ok")
+#     #return copy(metric_covar)
+#     #return metric_covar
+
+#     #xs[1,1] = metric_g11(coords,a)
+#     xs1 = [metric_g11(coords,a) 0 0 0;0 0 0 0]
+
+
+#     #println("xs:",typeof(xs))
+#     println("xs1:",typeof(xs1))
+#     return xs1
+# end 
+
 function covariant_metric(coords,a)
 
-    #xs = zeros(Float64,4,4)
-    #metric_covar = Zygote.Buffer(xs) # https://fluxml.ai/Zygote.jl/latest/utils/#Zygote.Buffer
+    #println("calling covar metric")
+    #println("coords = ")
+    #println(coords)
+    #g = similar(coords,4,4)
+    g = zeros(typeof(a),4,4)
 
-    metric_covar = zeros(Float64,4,4)
-    
-    metric_covar[1,1] =  metric_g11(coords,a) 
-    metric_covar[2,2] =  metric_g22(coords,a) 
-    metric_covar[3,3] =  metric_g33(coords,a) 
-    metric_covar[4,4] =  metric_g44(coords,a) 
-    metric_covar[1,4] =  metric_g14(coords,a) 
-    metric_covar[4,1] =  metric_covar[1,4]
+    g[1,1] =   metric_g11(coords,a) 
+    g[2,2] =   metric_g22(coords,a) 
+    g[3,3] =   metric_g33(coords,a) 
+    g[4,4] =   metric_g44(coords,a) 
+    g[1,4] =   metric_g14(coords,a) 
+    g[4,1] =   g[1,4] 
 
-    #return copy(metric_covar)
-    return metric_covar
+
+    #println(g)
+    #set_to_zero!(g)
+    #println(g)
+    #println("------------------------")
+    return g
+
+
 end 
 
 
@@ -65,10 +103,14 @@ end
 Spectral transform (spectral to grid space) from spherical coefficients `alms` to a newly allocated gridded
 field `map`. Based on the size of `alms` the grid type `grid`, the spatial resolution is retrieved based
 on the truncation defined for `grid`. SpectralTransform struct `S` is allocated to execute `gridded(alms,S)`."""
-function christoffel(r,θ,a)
+function christoffel(coords,a)
 
     #See Catalogue of spacetimes: https://arxiv.org/pdf/0904.4184.pdf
-    Γ = zeros(Float64,4,4,4) #Γ^{a}_{bc}
+    Γ = zeros(typeof(a),4,4,4) #Γ^{a}_{bc}
+    r = coords[2]
+    θ = coords[3]
+    #Γ = similar(coords,4,4,4)
+
 
     Δ = delta(r,a)
     Σ = sigma(r,θ,a)
@@ -127,7 +169,7 @@ function christoffel(r,θ,a)
     Γ[4,4,2]=Γ[4,2,4]  
     Γ[4,4,3]=Γ[4,3,4]  
 
-
+    #set_to_zero!(Γ)
     return Γ
 end 
 
@@ -135,10 +177,14 @@ end
 """
 Riemann tensor components of the Kerr metric. First index is the contravariant, others are covariant   
 """
-function riemann(r,θ,a)
+function riemann(coords,a)
 
-    
-    Rtensor = zeros(Float64,4,4,4,4) 
+    r = coords[2]
+    θ = coords[3]
+    #Rtensor = similar(coords,4,4,4,4)
+    Rtensor = zeros(typeof(a),4,4,4,4)
+
+
     Δ = delta(r,a)
     Σ = sigma(r,θ,a)
 
@@ -267,6 +313,8 @@ function riemann(r,θ,a)
     Rtensor[4,1,1,4]  =(part1+part2+part3+part4)/Σ^5
     Rtensor[4,1,4,1] = -Rtensor[4,1,1,4]
     
+
+    #set_to_zero!(Rtensor)
     return Rtensor
 
 end 
@@ -321,6 +369,7 @@ end
 
 # Pure function definitions
 function metric_g11(x,a)
+
     t,r,θ,ϕ =  x[1],x[2],x[3],x[4]
     Σ = RelativisticDynamics.sigma(r,θ,a)
     return -(1.0 - 2.0*r / Σ)
@@ -411,7 +460,19 @@ end
 
 
 
+function set_to_zero!(A)
 
+    for (i,v) in pairs(A)
+        
+        if isapprox(v,0.0; atol=eps(Float64), rtol=0)
+                A[i] = 0.0
+        end
+            
+    end
+
+
+
+end 
 
 
 
