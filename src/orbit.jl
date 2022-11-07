@@ -9,7 +9,7 @@ function orbit(::Type{NF}=Float64;              # number format, use Float64 as 
 
 
 
-    println("NF IS =", NF)
+    println("This is a single call to orbit()")
 
 
 
@@ -17,7 +17,7 @@ function orbit(::Type{NF}=Float64;              # number format, use Float64 as 
     P = SystemParameters(NF=NF;kwargs...) # Parameters
     bounds_checks(P)
 
-    println(P.a, typeof(P.a))
+    #println(P.a, typeof(P.a))
 
     C = Constants(P)                      # Constants
     M = Model(P,C)                        # Pack all of the above into a single *Model struct 
@@ -30,8 +30,10 @@ function orbit(::Type{NF}=Float64;              # number format, use Float64 as 
 
     #Evolve in time
     solution = timestepping(initialization, M)
-    
+    println("-----------------------------")
     return solution, M
+    #return M
+
 
 end
 

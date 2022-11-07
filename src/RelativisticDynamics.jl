@@ -14,7 +14,7 @@ using Tullio,Combinatorics #, Symbolics
 
 
 # Exports
-export  orbit,differentiate,loss_function #,SystemParameters, Constants, PrognosticVariables,PlotTrajectory #,PlotTrajectory,AnimateTrajectory
+export  orbit,differentiate,PlotTrajectory,difference #,SystemParameters, Constants, PrognosticVariables,PlotTrajectory #,PlotTrajectory,AnimateTrajectory
 
 #Includes
 include("system_parameters.jl")
