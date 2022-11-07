@@ -20,42 +20,9 @@ end
 Construct the NxN matrix of the covariant metric.
 Metric components are defined via indvidual functions to allow for auto diff in unit tests
 """
-# function covariant_metric(coords,a)
-
-#     #xs = zeros(4,4)
-#     #xs = dualcache(zeros(4,4))
-#     #metric_covar = Zygote.Buffer(xs) # https://fluxml.ai/Zygote.jl/latest/utils/#Zygote.Buffer
-
-#     #metric_covar = zeros(Float64,4,4)
-#     #println(coords[2])
-#     #println("coord is: ", coords[2])
-#     #println("now assign matrix value")
-#     #xs[1,1] =   coords[3] #Float64(1.223232) #Real(coords[2]) #coords[2] #metric_g11(coords,a) 
-#    # metric_covar[2,2] =  metric_g22(coords,a) 
-#    # metric_covar[3,3] =  metric_g33(coords,a) 
-#    # metric_covar[4,4] =  metric_g44(coords,a) 
-#    # metric_covar[1,4] =  metric_g14(coords,a) 
-#    # metric_covar[4,1] =  metric_covar[1,4]
-
-#    #println("done that ok")
-#     #return copy(metric_covar)
-#     #return metric_covar
-
-#     #xs[1,1] = metric_g11(coords,a)
-#     xs1 = [metric_g11(coords,a) 0 0 0;0 0 0 0]
-
-
-#     #println("xs:",typeof(xs))
-#     println("xs1:",typeof(xs1))
-#     return xs1
-# end 
-
 function covariant_metric(coords,a)
 
-    #println("calling covar metric")
-    #println("coords = ")
-    #println(coords)
-    #g = similar(coords,4,4)
+
     g = zeros(typeof(a),4,4)
 
     g[1,1] =   metric_g11(coords,a) 
@@ -65,11 +32,6 @@ function covariant_metric(coords,a)
     g[1,4] =   metric_g14(coords,a) 
     g[4,1] =   g[1,4] 
 
-
-    #println(g)
-    #set_to_zero!(g)
-    #println(g)
-    #println("------------------------")
     return g
 
 

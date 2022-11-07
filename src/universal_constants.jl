@@ -26,9 +26,6 @@ These are derived from the user-defined parameters
     s0 :: NF                 # Magnitude of spatial component of spin vector in natural units 
     m0 :: NF                 # Pulsar mass in natural units
 
-    # 3. Mathematical/Tensor objects
-    #ϵ ::AbstractArray{NF}   #levi cevita
-
 
     # 4. Integration properties
     Tint :: NF               # How long to integrate for
@@ -55,7 +52,7 @@ function Constants(P::SystemParameters)
 
     # Model specific constants
 
-    E,L,Q = ELQ(P.model,P.a,P.α,P.e,P.ι,P.orbit_dir)
+    E,L,Q = ELQ(P.a,P.α,P.e,P.ι,P.orbit_dir)
 
 
 
@@ -67,28 +64,8 @@ function Constants(P::SystemParameters)
     m0 = mPSR/mBH
 
     
-    # # Levi civita tensor
-    # levi = zeros(Float64,4,4,4,4) 
-    # Zygote.ignore() do 
-
-    #     for i in 1:4
-    #         for j in 1:4
-    #             for k in 1:4
-    #                 for l in 1:4
-    #                     permutation_vector = [i,j,k,l]
-    #                     levi[i,j,k,l] = levicivita(permutation_vector) #This is [i,j,k,l] from e.g. https://mathworld.wolfram.com/PermutationTensor.html
-    #                 end
-    #             end 
-    #         end
-    #     end 
-
-    # end #This can be safely ignored by the differentiator - no dependence on the input parameters. Otherwise throws issues relating to mutation
-
-
-
     #Estimate the orbital period from Kepler's 3rd. 
     #This is obviously inaccurate in relativity, but sufficient to get an approximate timescale over which to integrate 
-    #over which to integrate 
     @unpack Norbits = P
     Tint = Norbits*2*π*α^(3/2)
 
@@ -111,79 +88,46 @@ end
 
 
 """
-Calculate the energy, angular momentum and Carter constant for the different types of system
+Calculate the energy, angular momentum and Carter constant
 """
-function ELQ(model,a,α,e,ι,D)
+function ELQ(a,α,e,ι,D)
     
-    if model == :MPD 
 
-        zm = cos(ι)
+    zm = cos(ι)
 
-        #if e > 0.0
-
-            r_periapsis= α*(1-e)
-            r_apoapsis = α*(1+e)
-            
-            #Define some orbital coefficients
-            f1 = mapping_f(r_periapsis,a,zm)
-            g1 = mapping_g(r_periapsis,a)
-            h1 = mapping_h(r_periapsis,a,zm)
-            d1 = mapping_d(r_periapsis,a,zm)
+    r_periapsis= α*(1-e)
+    r_apoapsis = α*(1+e)
     
-            f2 = mapping_f(r_apoapsis,a,zm)
-            g2 = mapping_g(r_apoapsis,a)
-            h2 = mapping_h(r_apoapsis,a,zm)
-            d2 = mapping_d(r_apoapsis,a,zm)
+    #Define some orbital coefficients
+    f1 = mapping_f(r_periapsis,a,zm)
+    g1 = mapping_g(r_periapsis,a)
+    h1 = mapping_h(r_periapsis,a,zm)
+    d1 = mapping_d(r_periapsis,a,zm)
 
-        # elseif e == 0.0
+    f2 = mapping_f(r_apoapsis,a,zm)
+    g2 = mapping_g(r_apoapsis,a)
+    h2 = mapping_h(r_apoapsis,a,zm)
+    d2 = mapping_d(r_apoapsis,a,zm)
 
-        #     #Define some orbital coefficients
-        #     f1 = mapping_f(α,a,zm)
-        #     g1 = mapping_g(α,a)
-        #     h1 = mapping_h(α,a,zm)
-        #     d1 = mapping_d(α,a,zm)
-    
-        #     f2 = mapping_fprime(α,a,zm)
-        #     g2 = mapping_gprime(a)
-        #     h2 = mapping_hprime(α,zm)
-        #     d2 = mapping_dprime(α,a,zm)
-
-
-        #end 
-        
+ 
+    #Determinants 
+    κ = d1*h2 - d2*h1 
+    ϵ = d1*g2 - d2*g1 
+    ρ = f1*h2 - f2*h1
+    η = f1*g2 - f2*g1 
+    σ = g1*h2 - g2*h1 
 
 
+    #Energy
+    E_numerator   = κ*ρ+2.0*η*σ-2.0*D*sqrt(σ*(σ*ϵ^2 + ρ*ϵ*κ-η*κ^2))
+    E_denominator = ρ^2 + 4.0*η*σ
+    E = sqrt(E_numerator/E_denominator)
 
+    #Angular momentum 
+    L = -g1*E/h1 + D*sqrt(g1^2 * E^2 +(f1*E^2 -d1)*h1)/h1
 
-        #Determinants 
-        κ = d1*h2 - d2*h1 
-        ϵ = d1*g2 - d2*g1 
-        ρ = f1*h2 - f2*h1
-        η = f1*g2 - f2*g1 
-        σ = g1*h2 - g2*h1 
-
-
-        #Energy
-        #Need to include an ornbit direction correction here?        
-        E_numerator   = κ*ρ+2.0*η*σ-2.0*D*sqrt(σ*(σ*ϵ^2 + ρ*ϵ*κ-η*κ^2))
-        E_denominator = ρ^2 + 4.0*η*σ
-        E = sqrt(E_numerator/E_denominator)
-
-
-        #Angular momentum 
-        L = -g1*E/h1 + D*sqrt(g1^2 * E^2 +(f1*E^2 -d1)*h1)/h1
-
-
-
-        #Carter 
-        Q = zm^2*(a^2*(1.0-E^2)+L^2/(1.0-zm^2))
-
-    else
-        println(model)
-        println("ELQ for that model selection is not yet defined")
-        println("Please choose one of: MPD")
-        return
-    end 
+    #Carter 
+    Q = zm^2*(a^2*(1.0-E^2)+L^2/(1.0-zm^2))
 
     return E,L,Q
 
@@ -229,38 +173,6 @@ function mapping_d(r,a,zminus)
 return (r^2 +a^2 * zminus^2)*Δ
 end
 
-
-# """
-# fprime = mapping_fprime(r,a,zminus)
-# Mapping function `fprime` used when converting from Keplerian orbital parameters to constants of motion
-# """
-# function mapping_fprime(r,a,zminus)
-# return 4*r^3 + 2*a^2*((1+zminus^2)*r + (1-zminus^2))
-# end
-
-# """
-# gprime = mapping_gprime(a)
-# Mapping function `gprime` used when converting from Keplerian orbital parameters to constants of motion
-# """
-# function mapping_gprime(a)
-# return 2*a
-# end
-
-# """
-# hprime = mapping_hprime(r,zminus)
-# Mapping function `hprime` used when converting from Keplerian orbital parameters to constants of motion
-# """
-# function mapping_hprime(r,zminus)
-# return 2*(r-1.0)/(1.0-zminus^2)
-# end
-
-# """
-# dprime = mapping_dprime(r,a,zminus)
-# Mapping function `dprime` used when converting from Keplerian orbital parameters to constants of motion
-# """
-# function mapping_dprime(r,a,zminus)
-# return 2*(2*r-3)*r^2 + 2*a^2*((1+zminus^2)*r - zminus^2)
-# end
 
 
 

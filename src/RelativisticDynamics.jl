@@ -14,7 +14,7 @@ using Tullio,Combinatorics #, Symbolics
 
 
 # Exports
-export  orbit,differentiate,PlotTrajectory,difference #,SystemParameters, Constants, PrognosticVariables,PlotTrajectory #,PlotTrajectory,AnimateTrajectory
+export  orbit, PlotTrajectory #differentiate,,dfference #,SystemParameters, Constants, PrognosticVariables,PlotTrajectory #,PlotTrajectory,AnimateTrajectory
 
 #Includes
 include("system_parameters.jl")
@@ -26,7 +26,7 @@ include("initial_conditions.jl")
 include("timestepping.jl")
 include("orbit.jl")
 include("plotting.jl")
-include("differentiate.jl")
+#include("differentiate.jl")
 
 
 print("Welcome to the Relativistic Dynamics module!")

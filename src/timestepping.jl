@@ -20,21 +20,15 @@ function timestepping(X::PrognosticVariables, M::Model)
 # # Integration time 
 tspan = (0.0,M.constants.Tint) 
 
-println("tint type:", typeof(Tint))
 # #Bring all vectors together
 u = vcat(X.xvector,X.pvector,X.svector)
 
 params = [a,m0]
 
-println("TYPES - u1 ",typeof(u[1]))
-println("TYPES - u ",typeof(u))
-println("TYPES - t ",typeof(tspan))
-println("TYPES - p ",typeof(params))
 
 
 
 f = MPD! #The ODE 
-println("HERE")
 ode_prob = ODEProblem(MPD!,u,tspan,params)
 ode_solution = solve(ode_prob,DifferentialEquations.RK4()) # abstol=1e-9,reltol=1e-9 ,saveat = 1.0
 
@@ -50,18 +44,11 @@ end
 
 
 
-function lotka_volterra!(du,u,p,t)
-  du[1] = dx = p[1]*u[1] - p[2]*u[1]*u[2]
-  du[2] = dy = -p[3]*u[2] + p[4]*u[1]*u[2]
-end
-
-
 
 
 
 function MPD!(du,u,p,τ)
 
-    #println("isnide MPD")
     #Extract the coordinates/constants 
     t,r,θ,ϕ,pᵗ,pʳ,pᶿ,pᵠ,sᵗ,sʳ,sᶿ,sᵠ = u # coordinate variables
     a,m0 = p                            # constants
@@ -98,22 +85,11 @@ function MPD!(du,u,p,τ)
     # #4-spin
     ds = calculate_four_spin(pvector,uvector,svector,Γ,Riemann_covar,levi_mixed,m0)
 
-    #println(uvector)
     #Package it up 
     du[1:4] = uvector
     du[5:8] = dp
     du[9:12]= ds
-    # println("outputs")
-    # println(uvector)
-    # println(dp)
-    # println(ds)
-    # println("-----------------------------------")
-
-
-    #du[1:4] = [0.0,pʳ*g[1,1],0.0,0.0]
-    #du[5:8] = [0.0,0.0,0.0,0.0]
-    #du[9:12]= [0.0,0.0,0.0,0.0]
-
+ 
     nothing #function returns nothing
 
 
@@ -121,8 +97,6 @@ end
 
 
 function calculate_four_velocity(pvector,Stensor,Riemann,g,m0)
-    #println("enter 4 velocity")
-    #println(g)
 
     @tullio scalar_divisor := Riemann[μ,ν,ρ,σ]*Stensor[μ,ν]*Stensor[ρ,σ] / 4.0
     
@@ -138,10 +112,7 @@ function calculate_four_velocity(pvector,Stensor,Riemann,g,m0)
 
     @tullio  Vsq := g[μ,ν]*dx[μ]*dx[ν] 
 
-#    println("VSQ = ")
-#    println(Vsq)
-#    println("dx = ")
-#    println(dx)
+
     PV = -sqrt(-1.0/Vsq)
     dx = dx * PV
 

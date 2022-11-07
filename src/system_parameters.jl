@@ -9,9 +9,6 @@ The default values of the keywords define the default model setup.
     # NUMBER FORMATS
     NF::DataType       # Number format. Default is defined in orbit.jl
 
-    #Type of system to integrate 
-    model::Symbol=:MPD  # Only :MPD is currently defined. 
-
     #BH parameters
     a::Real   = 0.1     # BH spin parameter
     mBH::Real = 4e6     # BH mass in solar masses

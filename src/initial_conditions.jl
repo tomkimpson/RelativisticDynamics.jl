@@ -6,26 +6,8 @@ struct PrognosticVariables{NF<:AbstractFloat}
 end
 
 
-
-
-function initial_conditions(M::Model)
-
-    if M.parameters.model == :MPD                     
-        prognostic_vars = MPD_initial_conditions(M)
-    else
-        println("Initial conditions are not yet defined for that model")
-    end 
-
-    return prognostic_vars
-
-end 
-
-
-
-
-
 """Setup the initial conditions for the MPD orbital dynamics"""
-function MPD_initial_conditions(M::Model)
+function initial_conditions(M::Model)
 
 
     @unpack NF = M.parameters
@@ -39,20 +21,9 @@ function MPD_initial_conditions(M::Model)
     r,θ= xvector[2],xvector[3] 
     Δ = delta(r,a)
     Σ = sigma(r,θ,a)
+    g = covariant_metric(xvector,a) # the metric 
 
 
-    xs = zeros(Float64,4,4)
-    metric_covar = Zygote.Buffer(xs) # https://fluxml.ai/Zygote.jl/latest/utils/#Zygote.Buffer
-    metric_covar[1,1] =  metric_g11(xvector,a) 
-    metric_covar[2,2] =  metric_g22(xvector,a) 
-    metric_covar[3,3] =  metric_g33(xvector,a) 
-    metric_covar[4,4] =  metric_g44(xvector,a) 
-    metric_covar[1,4] =  metric_g14(xvector,a) 
-    metric_covar[4,1] =  metric_covar[1,4]
-    g = copy(metric_covar)
-
-
-    #g  = covariant_metric(xvector,a)
 
    
     # 2. Four - momentum 
@@ -85,8 +56,6 @@ function MPD_initial_conditions(M::Model)
     # #3. Four - spin
     @unpack Sθ,Sϕ = M.parameters
     @unpack s0 = M.constants 
-
-    #svector = [0.0,0.0,0.0,0.0]
 
     #Set the spatial components of the spin vector
     svector2 =  s0 * sin(Sθ) * cos(Sϕ)
