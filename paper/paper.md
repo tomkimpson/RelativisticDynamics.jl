@@ -8,14 +8,14 @@ tags:
   - general relativity
 authors:
   - name: Tom Kimpson
-    orcid: 0000-0000-0000-0000
-    equal-contrib: true
+    orcid: 0000-0002-6542-6032
+    #equal-contrib: true
     affiliation: 1, 2 # (Multiple affiliations must be quoted)
   # - name: Tom Kimpson 2
   #   equal-contrib: true # (This is how you can denote equal contributions between multiple authors)
   #   affiliation: 2
 affiliations:
- - name: School of Physics, University of Melbourne, Parkville, VIC 3010, Australia
+ - name: School of Physics, University of Melbourne, Parkville, VIC 3010, Australia \\
    index: 1
  - name: Australian Research Council (ARC) Centre of Excellence for Gravitational Wave Discovery (OzGrav)
    index: 2
@@ -50,11 +50,9 @@ The system is closed by providing a spin supplementary condition
 \begin{equation}\label{eq:mp3}
 s^{\mu \nu} p_{\nu} = 0
 \end{equation}
-Together, equations \autoref{eq:md1} - \autoref{eq:md3} form the Mathisson-Papetrou-Dixon (MPD) equations, and describe the spin-orbital evolution in a fully consistent way that is applicable to strong field regimes. 
+Together, equations \ref{eq:md1} - \ref{eq:md3} form the Mathisson-Papetrou-Dixon (MPD) equations, and describe the spin-orbital evolution in a fully consistent way that is applicable to strong field regimes. 
 
-\ref{eq:mpd1}
-
-
+citation test: [@LISA]
 
 <!-- A Statement of need section that clearly illustrates the research purpose of the software and places it in the context of related work -->
 # Statement of need
@@ -152,8 +150,8 @@ Figure sizes can be customized by adding an optional second parameter:
 
 # Acknowledgements
 
-We acknowledge contributions from Brigitta Sipocz, Syrtis Major, and Semyeong
-Oh, and support from Kathryn Johnston during the genesis of this project.
+This work exploring the spin-evolution of relativistic systems via the the MPD equations was originally motivated through interesting discussions with Kinwah Wu. The port to a modern, precision-flexible model in Julia was heavily inspired by Milan Klöwer. Our thanks to both
+
 
 # References
 

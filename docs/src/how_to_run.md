@@ -25,7 +25,7 @@ Please see `notebooks/demo.ipynb` for some worked examples using `RelativisticDy
 
 
 
-
+<!-- 
 ```@docs
 orbit
 ```
@@ -43,7 +43,7 @@ orbit
 
 ```@docs
 bounds_checks
-```
+``` -->
 
 
 

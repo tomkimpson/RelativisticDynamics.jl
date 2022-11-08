@@ -1,6 +1,7 @@
 
 """
-progn_vars = run_speedy(NF,kwargs...)
+    progn_vars = run_speedy(NF,kwargs...)
+    
 Runs SpeedyWeather.jl with number format `NF` and any additional parameters in the keyword arguments
 `kwargs...`. Any unspecified parameters will use the default values as defined in `src/parameters.jl`."""
 function orbit(::Type{NF}=Float64;              # number format, use Float64 as default
