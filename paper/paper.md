@@ -1,5 +1,5 @@
 ---
-title: 'RelativisticDynamics.jl: Relativisitc Spin-Orbital Dynamics in Julia'
+title: 'RelativisticDynamics.jl: Relativistic Spin-Orbital Dynamics in Julia'
 tags:
   - Julia
   - astronomy
@@ -7,17 +7,17 @@ tags:
   - gravity
   - general relativity
 authors:
-  - name: Tom Kimpson 1
+  - name: Tom Kimpson
     orcid: 0000-0000-0000-0000
     equal-contrib: true
     affiliation: 1, 2 # (Multiple affiliations must be quoted)
-  - name: Tom Kimpson 2
-    equal-contrib: true # (This is how you can denote equal contributions between multiple authors)
-    affiliation: 2
+  # - name: Tom Kimpson 2
+  #   equal-contrib: true # (This is how you can denote equal contributions between multiple authors)
+  #   affiliation: 2
 affiliations:
  - name: School of Physics, University of Melbourne, Parkville, VIC 3010, Australia
    index: 1
- - name: OzGrav, University of Melbourne, Parkville, VIC 3010, Australia
+ - name: Australian Research Council (ARC) Centre of Excellence for Gravitational Wave Discovery (OzGrav)
    index: 2
 date: 14 October 2022
 bibliography: paper.bib
@@ -28,10 +28,16 @@ bibliography: paper.bib
 #aas-journal: Astrophysical Journal <- The name of the AAS journal.
 ---
 
+
+
+
+
+<!-- A summary describing the high-level functionality and purpose of the software for a diverse, non-specialist audience. -->
+
 # Summary
-Relativistic binaries composed of a millisecond pulsar (MSP) orbiting a much more massive BH ($\gtrsim 10^3 M_{\odot}$) are exceptional probes for investigating key questions of fundamental physics and astrophysics. Such systems are natural sources of gravitational waves in the mHz regime, expected to be detectable by LISA. The associated radio emission from the companion pulsar raises the possibility of an EM counterpart enabling high precision multimessenger measurements to be made. The description of the orbital dynamics of these systems, and the influence on the resultant EM and GW observed signal, is non-trivial. Whilst models commonly treat the motion via a PN or geodesic description, such an approach neglects the non-linear influence of the pulsar spin on the underlying spacetime metric. A proper treatment of the spin-orbital dynamics can be derived from the conservation of the energy-momentum tensor
+Relativistic binaries composed of a millisecond pulsar (MSP) orbiting a much more massive BH ($\gtrsim 10^3 M_{\odot}$) are exceptional probes for investigating key questions of fundamental physics and astrophysics. Such systems are natural sources of gravitational waves (GWs)in the mHz regime, expected to be detectable by the next generation of space-based GW detectors such as LISA \cite{LISA}. The associated radio emission from the companion pulsar raises the possibility of an electromagnetic counterpart, enabling high precision multimessenger measurements to be made. The description of the orbital dynamics of these systems, and the influence on the resultant EM and GW observed signal, is non-trivial. Whilst models commonly treat the motion via a post-Newtonian or geodesic description, such an approach neglects the non-linear influence of the pulsar spin on the underlying spacetime metric. A proper treatment of the spin-orbital dynamics can be derived from the conservation of the energy-momentum tensor
 \begin{equation}\label{eq:conservation}
-T^{\mu \nu}_{;\nu} = 0
+{T^{\mu \nu}}_{;\nu} = 0
 \end{equation}
 which when expanded into a set of infinite multipole moments leads to a description of the momentum vector $p^{\mu}$ and the spin tensor $s^{\mu \nu}$ 
 \begin{equation}\label{eq:mpd1}
@@ -46,13 +52,11 @@ s^{\mu \nu} p_{\nu} = 0
 \end{equation}
 Together, equations \autoref{eq:md1} - \autoref{eq:md3} form the Mathisson-Papetrou-Dixon (MPD) equations, and describe the spin-orbital evolution in a fully consistent way that is applicable to strong field regimes. 
 
-
-Relativistic dynamcis is...
-e.g. https://joss.readthedocs.io/en/latest/submitting.html
+\ref{eq:mpd1}
 
 
 
-
+<!-- A Statement of need section that clearly illustrates the research purpose of the software and places it in the context of related work -->
 # Statement of need
 
 `RelativisticDynamics.jl` is an open-source Julia package for relativistic spin-orbital dynamics in the gravitational strong field. Existing codes for modelling the dynamics of spinning objects like pulsars in the strong-field regime are generally lacking, since such systems occupy an intermediate regime that is generally overlooked. At the "low" end of the gravitational there are post-Newtonian or geodesic descriptions which neglect non-linear spin contributions, whilst at the ""high" end there is the full are full Numerical Relativity (NR) solutions which are primarily applicable to two BHs with a mass ratio $\mathcal{O}(1)$, and are computationally intractable for these MSP systems which are observed over a large number of orbital cycles. 
@@ -115,7 +119,7 @@ is also written in a way
 whlst the research motivation in developing this package is in modeling relativistic pulsar systems, could also be extended generally to any systems with a sufficent mass ratio which need an accurate spin description. In the zero spo limit the solution reduces to the usual geodesic solution
 
 
-
+unbound systems, parabolic etc.
 
 
 Whilst the primary application is in modelling 
