@@ -25,7 +25,7 @@ The default values of the keywords define the default model setup.
     e::Real=0.50        # Keplerian eccentricity 
     ι::Real=π/6.0       # Inclination w.r.t equatorial plane in radians. The extrema of θ. 
     orbit_dir::Int=1    # Orbit direction prograde/retrograde
-    Norbits = 1.0      # Number of orbits to integrate for 
+    Norbits = 10.0      # Number of orbits to integrate for 
 
 
 
