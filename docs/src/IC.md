@@ -1,4 +1,4 @@
-# How to run RelativisticDynamics.jl
+# Initial Conditions
 
 The simplest way to run RelativisticDynamics.jl with default parameters is
 

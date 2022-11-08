@@ -129,9 +129,8 @@ end
 
         pvector_covar = RelativisticDynamics.convert_to_covariant(g,initialization.pvector)
 
-        @tensor begin
-            val[μ] := spin_tensor[μ,ν]*pvector_covar[ν]
-       end
+        @tullio val[μ] := spin_tensor[μ,ν]*pvector_covar[ν]
+   
         
        @test isapprox(val,[0.0,0.0,0.0,0.0],atol=eps(NF))
 

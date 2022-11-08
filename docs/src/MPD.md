@@ -1,4 +1,4 @@
-# How to run RelativisticDynamics.jl
+# Mathisson-Papetrou-Dixon Equations
 
 The simplest way to run RelativisticDynamics.jl with default parameters is
 

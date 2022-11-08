@@ -75,7 +75,7 @@ end
         end
 
         #Compare with the analytical solution
-        Γ_analytical = RelativisticDynamics.christoffel(r,θ,a)
+        Γ_analytical = RelativisticDynamics.christoffel(coords,a)
         @test isapprox(Γ,Γ_analytical)
 
 
@@ -150,7 +150,7 @@ end
 
 
         #Compare with the analytical solution
-        Riemann_analytical = RelativisticDynamics.riemann(r,θ,a)
+        Riemann_analytical = RelativisticDynamics.riemann(coords,a)
         @test isapprox(Riemann,Riemann_analytical)
 
 
@@ -191,11 +191,11 @@ end
 
 
         #Get the Riemann tensor solution, analytically
-        Riemann_analytical = RelativisticDynamics.riemann(r,θ,a)
+        Riemann_analytical = RelativisticDynamics.riemann(coords,a)
         
 
         #Get the schwazchild solution
-        Riemann_covar_schwarzchild = RelativisticDynamics.schwarzchild_covariant_riemann(r,θ,a)
+        Riemann_covar_schwarzchild = RelativisticDynamics.schwarzchild_covariant_riemann(coords,a)
 
         #The contra/covar version of the Riemann tensor for schwarzchild
         @tensor begin
@@ -232,7 +232,7 @@ end
 
        
         #Rieman tensor, mixed indices
-        Riemann = RelativisticDynamics.riemann(r,θ,a)
+        Riemann = RelativisticDynamics.riemann(coords,a)
       
 
         #Fully covariant form 

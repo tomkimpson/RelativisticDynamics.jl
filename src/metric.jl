@@ -2,7 +2,11 @@ using Zygote
 using PreallocationTools
 
 """
-Construct the NxN matrix of the covariant Minkowski metric.
+    m = roundup_fft(n::Int;
+                    small_primes::Vector{Int}=[2,3,5])
+Returns an integer `m >= n` with only small prime factors 2, 3, 5 (default, others can be specified
+with the keyword argument `small_primes`) to obtain an efficiently fourier-transformable number of
+longitudes, m = 2^i * 3^j * 5^k >= n, with i,j,k >=0.
 """
 function covariant_minkowski()
 
@@ -71,7 +75,6 @@ function christoffel(coords,a)
     Γ = zeros(typeof(a),4,4,4) #Γ^{a}_{bc}
     r = coords[2]
     θ = coords[3]
-    #Γ = similar(coords,4,4,4)
 
 
     Δ = delta(r,a)
@@ -143,9 +146,7 @@ function riemann(coords,a)
 
     r = coords[2]
     θ = coords[3]
-    #Rtensor = similar(coords,4,4,4,4)
     Rtensor = zeros(typeof(a),4,4,4,4)
-
 
     Δ = delta(r,a)
     Σ = sigma(r,θ,a)
@@ -158,7 +159,7 @@ function riemann(coords,a)
     Rtensor[1,2,2,4] = 3.0*sin(θ)^2*a*r*(r^2+a^2)*(r^2-3.0*a^2*cos(θ)^2)/(Σ^3*Δ)
     Rtensor[1,2,3,4] = -cos(θ)*sin(θ)*a*(3.0*r^2-a^2*cos(θ)^2)*(2.0*(r^2+a^2)^2+a^2*sin(θ)^2*Δ)/(Σ^3*Δ)
     
-    #Antisymmetric under exchange of last two indices. More concise way to do this surely?!
+    #Antisymmetric under exchange of last two indices. 
     Rtensor[1,1,4,1] = -Rtensor[1,1,1,4]
     Rtensor[1,1,3,2] = -Rtensor[1,1,2,3]
     Rtensor[1,2,2,1] = -Rtensor[1,2,1,2]
@@ -286,10 +287,13 @@ end
 Special case - the fully covariant components of the Riemann tensor for schwarzchild.
 From https://arxiv.org/pdf/0904.4184.pdf
 """
-function schwarzchild_covariant_riemann(r,θ,a)
+function schwarzchild_covariant_riemann(coords,a)
 
-    
-    Rtensor = zeros(Float64,4,4,4,4) 
+    r = coords[2]
+    θ = coords[3]
+   
+    Rtensor = zeros(typeof(a),4,4,4,4)
+
     Δ = delta(r,a)
     Σ = sigma(r,θ,a)
 
