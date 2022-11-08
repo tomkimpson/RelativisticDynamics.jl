@@ -37,6 +37,7 @@ PlotlyJS = "0.18"
 Plots = "1"
 ProtoStructs = "1"
 Revise = "3"
+UnicodePlots = "3"
 julia = "1.1"
 
 [extras]
