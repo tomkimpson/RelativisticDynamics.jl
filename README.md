@@ -7,7 +7,7 @@
 
 Welcome to RelativisticDynamics.jl!
 
-The focus of this package is to numerically solve orbital equations for the Kerr spacetime.
+The focus of this package is to numerically model spinning objects, such as pulsars, in curved spacetime.
 
 Please see the [documentation](https://tomkimpson.github.io/RelativisticDynamics.jl/dev/).
 
