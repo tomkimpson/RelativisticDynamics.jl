@@ -63,6 +63,11 @@ Together, equations \ref{eq:mpd1} - \ref{eq:mpd3} form the Mathisson-Papetrou-Di
 In addition to providing a fast, modern package for strong field spin dynamics, `RelativisticDynamics.jl` has two additional important features from the perspective of modern relativistic astrophysics. Firstly, it is fully type flexible, being able to support arbitrary number formats. By making use of Julia's type-flexibility the model is written in such a way so as to be able to support hardware accelerated, low precision arithmetic and alternative rounding methods such as stochastic rounding. This enables rapid prototyping and exploration of reduced precision numerical techniques in astrophysics, an approach common in other numerical fields such as weather and climate modelling [e.g. @ECMWF]
 
 
+
+[@ECMWF; @Kimpson2019]
+
+
+
 Secondly, `RelativisticDynamcis.jl` is also written to be fully differentiable via automatic differentiation. This enables the package to be used for differentiable physics applications in astrophysics, for example gravitational waveform modelling and parameter estimation or training neural networks based on the model. Automatic differentiation also provides a potential avenue for extension of the package to general (i.e. non-Kerr) spacetimes, whereby a user can specify the metric and the associated Christoffel symbols and Riemann tensors - which are simply linear combinations of the metric derivatives - are calculated automatically 
 
 
