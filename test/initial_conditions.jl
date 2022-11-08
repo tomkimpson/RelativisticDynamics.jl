@@ -5,13 +5,14 @@ using Zygote
 using TensorOperations
 using LinearAlgebra
 using Distributions
+using Tullio
 
 
 @testset "Initial conditions runs OK for default initialization" begin
     
     NF = Float64
-    P = SystemParameters(NF=NF)
-    C = Constants(P)                      
+    P = RelativisticDynamics.SystemParameters(NF=NF)
+    C = RelativisticDynamics.Constants(P)                      
     M = RelativisticDynamics.Model(P,C)                       
 
     try
@@ -34,8 +35,8 @@ end
         α    = rand(Uniform(10.0,500)) 
         e    = rand(Uniform(0.01, 0.90))
 
-        P = SystemParameters(NF=NF,α=α,e=e)
-        C = Constants(P)                                   
+        P = RelativisticDynamics.SystemParameters(NF=NF,α=α,e=e)
+        C = RelativisticDynamics.Constants(P)                                   
         M = RelativisticDynamics.Model(P,C)                       
 
 
@@ -61,8 +62,8 @@ end
         ι    = rand(Uniform(0.0,π/2.0)) 
         e    = rand(Uniform(0.01, 0.90))
 
-        P = SystemParameters(NF=NF,α=α,e=e,ι=ι)
-        C = Constants(P)                                   
+        P = RelativisticDynamics.SystemParameters(NF=NF,α=α,e=e,ι=ι)
+        C = RelativisticDynamics.Constants(P)                                   
         M = RelativisticDynamics.Model(P,C)                       
 
 
@@ -87,8 +88,8 @@ end
         ι    = π/2.0
         e    = rand(Uniform(0.01, 0.90))
 
-        P = SystemParameters(NF=NF,α=α,e=e,ι=ι)
-        C = Constants(P)                                   
+        P = RelativisticDynamics.SystemParameters(NF=NF,α=α,e=e,ι=ι)
+        C = RelativisticDynamics.Constants(P)                                   
         M = RelativisticDynamics.Model(P,C)                       
 
 
@@ -112,8 +113,8 @@ end
         a    = rand(Uniform(0.01, 0.99))
 
 
-        P = SystemParameters(NF=NF,α=α,e=e,ι=ι,a=a)
-        C = Constants(P)                                   
+        P = RelativisticDynamics.SystemParameters(NF=NF,α=α,e=e,ι=ι,a=a)
+        C = RelativisticDynamics.Constants(P)                                   
         M = RelativisticDynamics.Model(P,C)                       
 
 
@@ -123,7 +124,7 @@ end
         g  = RelativisticDynamics.covariant_metric(initialization.xvector,a)
 
 
-        levi = RelativisticDynamics.permutation_tensor(g,C.ϵ)  #This is the fully contravariant Levi Civita tensor 
+        levi = RelativisticDynamics.permutation_tensor(g)  #This is the fully contravariant Levi Civita tensor 
         
         spin_tensor = RelativisticDynamics.spintensor(levi,initialization.pvector,initialization.svector,C.m0) #the fully contravariant spin tensor s^{ab}
 

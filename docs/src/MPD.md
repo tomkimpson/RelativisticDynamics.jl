@@ -7,6 +7,8 @@ using RelativisticDynamics
 solution,model = orbit()
 ```
 
+we paramterise in terms of proper time
+
 The `orbit()` funciton returns two objects. The first, `solution` holds the evolution of the position, momentum and spin vectors. The second, `model`, holds a copy of all the parameters and settings used to generate the solution (e.g. what was the BH spin?).
 
 All default parameters can be found in `src/default_parameters.jl`. Passing a keyword argument to `orbit()` overrides the defaults e.g.
