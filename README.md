@@ -11,26 +11,7 @@ The focus of this package is to numerically solve orbital equations for the Kerr
 
 Please see the [documentation](https://tomkimpson.github.io/RelativisticDynamics.jl/dev/).
 
-## Relativistic spin orbital dynamics
-
-
-
-
-
-
-# Getting started 
-
-```
-using RelativisticDynamics
-solution,model = orbit();
-```
-`solution` is the time evolution of the variables $x^{\mu}, p^{\mu}, s^{\mu}$. `model` is a struct containing a copy of all the settings that were used to generate that solution.
-
-All user-defined parameters are set in `system_parameters.jl`. Default values can be overridden by passing to `orbit()` e.g.
-
-```
-solution,model = orbit(NF=Float32,model=:MPD)
-```
+![image](example_media/e08_stacked.pdf)
 
 
 

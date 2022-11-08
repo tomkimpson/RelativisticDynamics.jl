@@ -23,25 +23,25 @@ Please see the following pages of the documentation for more details
 - [Index of functions](how_to_run.md)
 
 
-## Scope
+## Features
 
-The focus of SpeedyWeather.jl is to develop a global atmospheric model of intermediate complexity, that can run at various levels of precision (16, 32 and 64-bit) on different architectures (x86 and ARM, currently planned, GPUs probably in the future). Additionally, the model is written in an entirely number format-flexible way, such that any custom number format can be used and Julia will compile to the format automatically.
+As well as accurately describing the relativistic spin-orbital evolution of a spinning body in a curved spacetime `RelativisticDynamics.jl` is written in a way so as to be fully flexible in the number format. This enables the model to run not only at various levels of native precision (e.g. half/single/double) but also use custom number formats (e.g. [Stochastic Rounding](https://github.com/milankl/StochasticRounding.jl)). Moreover, `RelativisticDynamics.jl` is generally differentiable using [Zygote.jl](https://fluxml.ai/Zygote.jl/latest/), allowing for the input parameters to be tuned with respect to some user-defined loss function.
+
 
 
 ## Installation
 
-SpeedyWeather.jl is registered in the Julia Registry. Open Julia's package manager from the REPL with `]`
-and `add` the github repository to install SpeedyWeather.jl and all dependencies
+RelativisticDynamics.jl is registered in the Julia Registry. Open Julia's package manager from the REPL with `]`
+and `add` the github repository to install RelativisticDynamics.jl and all dependencies
 ```julia
-(@v1.7) pkg> add SpeedyWeather
+(@v1.7) pkg> add RelativisticDynamics
 ```
-which will automatically install the latest release. However, you may want to install directly from the
-main branch with
-```julia
-(@v1.7) pkg> add https://github.com/milankl/SpeedyWeather.jl#main
-```
-other branches than `#main` can be installed by adding `#branch_name` instead.
+which will automatically install the latest release. 
 
+Direct installation from the git branch is also possible:
+```julia
+(@v1.7) pkg> add https://github.com/tomkimpson/RelativisticDynamics.jl#branch_name
+```
 
 
 
