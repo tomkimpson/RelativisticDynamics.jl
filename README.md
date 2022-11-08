@@ -11,7 +11,7 @@ The focus of this package is to numerically solve orbital equations for the Kerr
 
 Please see the [documentation](https://tomkimpson.github.io/RelativisticDynamics.jl/dev/).
 
-![image](example_media/e08_stacked.pdf)
+![image](example_media/e08_stacked.png)
 
 
 
