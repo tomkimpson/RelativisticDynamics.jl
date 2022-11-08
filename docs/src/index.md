@@ -19,6 +19,7 @@ Please see the following pages of the documentation for more details
 - [How to run RelativisticDynamics.jl](how_to_run.md)
 - [Initial conditions](IC.md)
 - [MPD Equations](how_to_run.md)
+- [Visualisation](visualisation.md)
 - [Index of functions](how_to_run.md)
 
 

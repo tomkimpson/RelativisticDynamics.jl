@@ -46,7 +46,7 @@ which when expanded into a set of infinite multipole moments leads to a descript
 \begin{equation}\label{eq:mpd2}
 \frac{Ds^{\mu \nu}}{d \lambda} =p^{\mu}u^{\nu} - p^{\nu}u^{\mu}
 \end{equation}
-The system is closed by providing a spin supplementary condition
+for affine parameter $\lambda$, 4-velocity $u^{\nu}$ and Riemann curvature tensor $R^{\mu}_{\nu \alpha \beta}$.  The system is closed by providing a spin supplementary condition
 \begin{equation}\label{eq:mp3}
 s^{\mu \nu} p_{\nu} = 0
 \end{equation}
@@ -66,7 +66,7 @@ citation test: [@LISA]
 
 
 
-particularly relevant for spinning systems like pulsars where the spin/rotation axis is very important 
+particularly relevant for spinning systems like pulsars where the spin/rotation axis is very important. This is important and a key aim.  
 
 
 
@@ -142,7 +142,7 @@ RelativisticDynamics.jl
 # Figures
 
 Figures can be included like this:
-![Caption for example figure.\label{fig:example}](figure.png)
+![Caption for example figure.\label{fig:example}](../example_media/e01_stacked.pdf)
 and referenced from text using \autoref{fig:example}.
 
 Figure sizes can be customized by adding an optional second parameter:

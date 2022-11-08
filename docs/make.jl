@@ -19,6 +19,7 @@ makedocs(;
         "How to run RelativisticDynamics.jl"=>"how_to_run.md",
         "Initial Conditions"=>"IC.md",
         "MPD Equations"=>"MPD.md",
+        "Visualisation"=>"visualisation.md",
         "Functions Index"=>"functions_index.md",
         "Additional Notes"=>"how_to_run.md",
     ],
