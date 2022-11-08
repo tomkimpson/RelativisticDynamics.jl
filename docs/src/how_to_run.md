@@ -25,7 +25,25 @@ Please see `notebooks/demo.ipynb` for some worked examples using `RelativisticDy
 
 
 
+<!-- 
+```@docs
+orbit
+```
+
+## The `run_speedy` interface
 
 ```@docs
 orbit
 ```
+
+
+
+
+## The `run_speedy2` interface
+
+```@docs
+bounds_checks
+``` -->
+
+
+

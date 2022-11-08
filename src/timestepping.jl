@@ -36,9 +36,7 @@ return ode_solution
 
 
 
-#p = X.pvector*1e7; u0 = [1.0;1.0]
-#prob = ODEProblem(lotka_volterra!,u0,(0.0,10.0),p)
-#sol = solve(prob,Tsit5(),reltol=1e-6,abstol=1e-6)
+
 
 end 
 
@@ -106,9 +104,7 @@ function calculate_four_velocity(pvector,Stensor,Riemann,g,m0)
 
     
     @tullio dx[α] := -(pvector[α] + correction[α])/m0^2 
-    #@tullio dx[α] := -(pvector[α] )/m0^2 
 
-    
 
     @tullio  Vsq := g[μ,ν]*dx[μ]*dx[ν] 
 

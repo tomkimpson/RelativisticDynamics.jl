@@ -424,21 +424,3 @@ end
 
 
 
-
-
-function set_to_zero!(A)
-
-    for (i,v) in pairs(A)
-        
-        if isapprox(v,0.0; atol=eps(Float64), rtol=0)
-                A[i] = 0.0
-        end
-            
-    end
-
-
-
-end 
-
-
-
