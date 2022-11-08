@@ -5,8 +5,8 @@ using Test
 @testset "Basic run through" begin
 
         NF = Float64
-        P = SystemParameters(NF=NF)
-        C = Constants(P)                      
+        P = RelativisticDynamics.SystemParameters(NF=NF)
+        C = RelativisticDynamics.Constants(P)                      
         M = RelativisticDynamics.Model(P,C)                       
         initialization = RelativisticDynamics.initial_conditions(M)
         
