@@ -43,8 +43,8 @@ for metric $g^{\alpha \beta}$.
 
 In order to determine the spin vector we must first specify the moment of inertia of the pulsar. We model the pulsar as a solid sphere such that
 
-$$I = \frac{2}{5} m_{\rm PSR} r_{\rm PSR}^2 $$
-The angular momentum/spin magnitude is then 
+$$I = \frac{2}{5} m_{\rm PSR} r_{\rm PSR}^2$$
+The angular momentum/spin magnitude is, 
 
 $$s_0 = 2 \pi I / P_{\rm PSR}$$
 where $P_{\rm PSR}$ is the spin period of the pulsar. The spatial components of the spin vector are then,
@@ -53,8 +53,8 @@ $$s^r = s_0 \sin(S_{\theta}) \cos(S_{\phi})$$
 
 $$s^{\theta} = -s_0 \cos(S_{\theta})/r$$
 
-$$s^{\phi} = s_0 \sin(S_{\theta}) \sin(S_{\phi})/(r \sin(\theta))$$
-see e.g. [Mashhoon & Singh, 2006](https://arxiv.org/abs/astro-ph/0608278). The temporal component $s^{t}$ is enforced by the spin condition. Throughout this package we take the Tulczyjew-Dixon (TD) condition (see e.g. [Costa & Natário, 2015](https://arxiv.org/abs/1410.6443) for discussion of TD condition and other options)
+$$s^{\phi} = s_0 \sin(S_{\theta}) \sin(S_{\phi})/r \sin(\theta)$$
+where $S_{\theta, \phi}$ are the latitude and azimuthal angles of the spin axis, see e.g. [Mashhoon & Singh, 2006](https://arxiv.org/abs/astro-ph/0608278). The temporal component $s^{t}$ is enforced by the spin condition. Throughout this package we take the Tulczyjew-Dixon (TD) condition (see e.g. [Costa & Natário, 2015](https://arxiv.org/abs/1410.6443) for discussion of TD condition and other options)
  $$s^{\mu}p_{\mu}  = 0 $$
 
 

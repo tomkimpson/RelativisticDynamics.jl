@@ -22,4 +22,5 @@ One can also create a stacked plot of the trajectory in the $x-y$ and $x-z$ plan
 StackedPlot(solution,model,"../example_media/e08_stacked.pdf")
 ```
 
-![cap](../example_media/e08_stacked.pdf)
+
+![image](example_media/e08_stacked.png)
