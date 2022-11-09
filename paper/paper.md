@@ -65,32 +65,32 @@ In addition to providing a fast, modern package for strong field spin dynamics, 
 
 Future potential extensions of this code include taking the dynamics beyond second order in the multipole expansion, and the inclusion of alternative spin conditions and spacetime metrics. The inclusion of a diagnostics tool for extracting gravitational waveforms in the time domain via a numerical kludge method would also be a worthwhile addition. Moreover, we have considered only bound dynamical systems - the ability to also explore hyberbolic systems would also be an interesting development
 
-![Example orbital trajectory for a ms-pulsar orbiting a massive BH extremal spin, $a=0.998$, in the $x-y$ plane (top panel) and $x-z$ plane (bottom panel). The pulsar is initialised in the orbital plane with zero inclination and eccentricity $e=0.1$. In the absence of spin-curvature coupling the particle would remain in the plane ($z=0$). Note the $z$-motion is on the scale of km, not gravitational radii. \label{fig:example}](../example_media/e01_stacked.pdf){ width=50% }
+<!-- ![Example orbital trajectory for a ms-pulsar orbiting a massive BH extremal spin, $a=0.998$, in the $x-y$ plane (top panel) and $x-z$ plane (bottom panel). The pulsar is initialised in the orbital plane with zero inclination and eccentricity $e=0.1$. In the absence of spin-curvature coupling the particle would remain in the plane ($z=0$). Note the $z$-motion is on the scale of km, not gravitational radii. \label{fig:example}](../example_media/e01_stacked.pdf){ width=50% }
 
-![Example orbital trajectory for a ms-pulsar orbiting a massive BH extremal spin, $a=0.998$, in the $x-y$ plane (top panel) and $x-z$ plane (bottom panel). The pulsar is initialised in the orbital plane with zero inclination and eccentricity $e=0.1$. In the absence of spin-curvature coupling the particle would remain in the plane ($z=0$). Note the $z$-motion is on the scale of km, not gravitational radii. \label{fig:example}](../example_media/e01_stacked.pdf){ width=50% }
-
-
+![Example orbital trajectory for a ms-pulsar orbiting a massive BH extremal spin, $a=0.998$, in the $x-y$ plane (top panel) and $x-z$ plane (bottom panel). The pulsar is initialised in the orbital plane with zero inclination and eccentricity $e=0.1$. In the absence of spin-curvature coupling the particle would remain in the plane ($z=0$). Note the $z$-motion is on the scale of km, not gravitational radii. \label{fig:example}](../example_media/e01_stacked.pdf){ width=50% } -->
 
 
-![TEST CAP](../example_media/e01_stacked.pdf){ width=40% }\ ![CAP 2](../example_media/e01_stacked.pdf){ width=40% }
 
 
-![](https://upload.wikimedia.org/wikipedia/commons/7/70/Example.png){width=60%}
-![](https://upload.wikimedia.org/wikipedia/commons/7/70/Example.png){width=40%}
+<!-- ![TEST CAP](../example_media/e01_stacked.pdf){ width=40% }\ ![CAP 2](../example_media/e01_stacked.pdf){ width=40% } -->
+
+
+![](../example_media/e01_stacked.pdf){width=50%}
+![](../example_media/e08_stacked.pdf){width=50%}
 \begin{figure}[!h]
-\caption{A single caption for the two subfigures}
+\caption{Example orbital trajectories for a ms-pulsar with eccentricity $e=0.1$ (left panels), $e=0.8$ (right panels), orbiting a massive BH with extremal spin, $a=0.998$, in the $x-y$ plane (top panels) and $x-z$ plane (bottom panels). The pulsar is initialised in the orbital plane with zero inclination. In the absence of spin-curvature coupling the particle would remain in the plane ($z=0$). Note the $z$-motion is on the scale of km, not gravitational radii. \label{fig:example}}
 \end{figure}
 
 
 
 
-<div id="fig:fig1">
+<!-- <div id="fig:fig1">
 
 ![](../example_media/e01_stacked.pdf){width=50%}\hfill
 ![](../example_media/e08_stacked.pdf){width=50%}
 
 Example orbital trajectory for a ms-pulsar orbiting a massive BH extremal spin, $a=0.998$, in the $x-y$ plane (top panel) and $x-z$ plane (bottom panel). The pulsar is initialised in the orbital plane with zero inclination and eccentricity $e=0.1$. In the absence of spin-curvature coupling the particle would remain in the plane ($z=0$). Note the $z$-motion is on the scale of km, not gravitational radii.
-</div>
+</div> -->
 
 
 # Acknowledgements
