@@ -73,7 +73,6 @@ function Constants(P::SystemParameters)
                            r_initial,θ_initial,ϕ_initial,
                            E,L,Q,
                            s0,m0,
-                           #levi,
                            Tint,)
 
 
@@ -84,7 +83,8 @@ end
 
 
 """
-Calculate the energy, angular momentum and Carter constant
+    E,L,Q = ELQ(a,α,e,ι,D)
+Calculate the energy, angular momentum and Carter constant given the Keplerian orbital parameters, and the BH spin/direction
 """
 function ELQ(a,α,e,ι,D)
     
@@ -133,7 +133,7 @@ end
 
 
 """
-f = mapping_f(r,a,zminus)
+    f = mapping_f(r,a,zminus)
 Mapping function `f` used when converting from Keplerian orbital parameters to constants of motion
 """
 function mapping_f(r,a,zminus)
@@ -143,7 +143,7 @@ end
 
 
 """
-g = mapping_g(r,a)
+    g = mapping_g(r,a)
 Mapping function `g` used when converting from Keplerian orbital parameters to constants of motion
 """
 function mapping_g(r,a)
@@ -151,7 +151,7 @@ return 2*a*r
 end
 
 """
-h = mapping_h(r,a,zminus)
+    h = mapping_h(r,a,zminus)
 Mapping function `h` used when converting from Keplerian orbital parameters to constants of motion
 """
 function mapping_h(r,a,zminus)
@@ -161,7 +161,7 @@ end
 
 
 """
-d = mapping_d(r,a,zminus)
+    d = mapping_d(r,a,zminus)
 Mapping function `d` used when converting from Keplerian orbital parameters to constants of motion
 """
 function mapping_d(r,a,zminus)
