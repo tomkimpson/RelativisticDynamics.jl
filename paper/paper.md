@@ -75,17 +75,6 @@ Future potential extensions of this code include taking the dynamics beyond seco
 \end{figure}
 
 
-
-
-<!-- <div id="fig:fig1">
-
-![](../example_media/e01_stacked.pdf){width=50%}\hfill
-![](../example_media/e08_stacked.pdf){width=50%}
-
-Example orbital trajectory for a ms-pulsar orbiting a massive BH extremal spin, $a=0.998$, in the $x-y$ plane (top panel) and $x-z$ plane (bottom panel). The pulsar is initialised in the orbital plane with zero inclination and eccentricity $e=0.1$. In the absence of spin-curvature coupling the particle would remain in the plane ($z=0$). Note the $z$-motion is on the scale of km, not gravitational radii.
-</div> -->
-
-
 # Acknowledgements
 
 This work exploring the spin-evolution of relativistic systems via the the MPD equations was originally motivated through interesting discussions with Kinwah Wu. The port to a modern, precision-flexible model in Julia was heavily inspired by Milan Klöwer. Our thanks to both

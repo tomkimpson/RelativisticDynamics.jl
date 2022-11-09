@@ -1,33 +1,24 @@
 # Mathisson-Papetrou-Dixon Equations
 
-The simplest way to run RelativisticDynamics.jl with default parameters is
+The MPD equations are derived from the conservation of the energy-momentum tensor:
+$${T^{\mu \nu}}_{;\nu} = 0$$
+Taking the multipole expansion leads to a description of the momentum vector $p^{\mu}$ (0th moment) and the spin tensor $s^{\mu \nu}$ (dipole moment)
 
-```julia
-using RelativisticDynamics
-solution,model = orbit()
-```
+$$\frac{Dp^{\mu}}{d \lambda} = -\frac{1}{2}{R^{\mu}}_{\nu \alpha \beta} u^{\nu} s^{\alpha \beta}$$
+$$\frac{Ds^{\mu \nu}}{d \lambda} =p^{\mu}u^{\nu} - p^{\nu}u^{\mu}$$
+for affine parameter $\lambda$, 4-velocity $u^{\nu}$ and Riemann curvature tensor ${R^{\mu}}_{\nu \alpha \beta}$. We ignore the higher order moments since for pulsar mass << BH mass and pulsar radius << BH radius, the motion is dominated by the lowest order moments. 
 
-we paramterise in terms of proper time
+The system is closed by providing a spin supplementary condition. Throughout this package we take the Tulczyjew-Dixon (TD) condition
+\begin{equation}\label{eq:mpd3}
+s^{\mu \nu} p_{\nu} = 0
+\end{equation}
+see e.g. [Costa & Natário, 2015](https://arxiv.org/abs/1410.6443) for discussion of the spin conditions.
 
-The `orbit()` funciton returns two objects. The first, `solution` holds the evolution of the position, momentum and spin vectors. The second, `model`, holds a copy of all the parameters and settings used to generate the solution (e.g. what was the BH spin?).
+The the extreme mass ration limit m << M, the pulsar Möller radius is much less than the gravitational lengthscale. This means that the pole-dipole interaction is much stronger than the dipole-dipole interaction. Within this approximation, the MPD equations reduced to a set of ODEs (see e.g. [Mashoon & Singh, 2006](https://arxiv.org/abs/astro-ph/0608278), [Singh, Wu & Sarty, 2014](https://arxiv.org/abs/1403.7171))
 
-All default parameters can be found in `src/default_parameters.jl`. Passing a keyword argument to `orbit()` overrides the defaults e.g.
+$$\frac{dp^{\alpha}}{d\lambda} = - \Gamma_{\mu\nu}^{\alpha} p^{\mu}u^{\nu} + \rho \left( \frac{1}{2m} R^{\alpha}_{\beta \rho \sigma} \epsilon^{\rho \sigma}_{\quad \mu \nu} s^{\mu} p^{\nu} u^{\beta}\right) \ ,$$
 
-```julia
-run_speedy(e=0.6,a=0.99)
-```
-would generate the solution for a system with an eccentricity = 0.6, around a BH with an extramal spin. 
+$$\frac{ds^{\alpha}}{d \lambda} = - \Gamma^{\alpha}_{\mu \nu} s^{\mu}u^{\nu} + \rho \left(\frac{1}{2m^3}R_{\gamma \beta \rho \sigma} \epsilon^{\rho \sigma}_{\quad \mu \nu} s^{\mu} p^{\nu} s^{\gamma} u^{\beta}\right)p^{\alpha} \ ,$$
 
-If provided, the number format has to be the first argument, all other arguments are keyword arguments. e.g. 
-```julia
-run_speedy(Float32,e=0.6,a=0.99)
-```
-
-Please see `notebooks/demo.ipynb` for some worked examples using `RelativisticDynamics.jl`, including the application of autodiff methods.
-
-
-
-
-```@docs
-orbit
-```
+$$\frac{dx^{\alpha}}{d\lambda} = -\frac{p^{\delta}u_{\delta}}{m^2} \left[ p^{\alpha} + \frac{1}{2} \frac{\rho (s^{\alpha \beta} R_{\beta \gamma \mu \nu} p^{\gamma} s^{\mu \nu})}{m^2 + \rho(R_{\mu \nu \rho \sigma} s^{\mu \nu} s^{\beta \sigma}/4)}\right] \ ,$$
+Whilst $\lambda$ has the freedom to be any affine parameter, we take it to be the proper time $\tau$ such that $g_{\mu \nu}u^{\mu} u^{\nu}=-1$. These equations are generally covariant, we take the astrophysically motivated [Kerr metric](https://en.wikipedia.org/wiki/Kerr_metric) for a spinning BH.

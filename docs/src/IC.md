@@ -23,35 +23,18 @@ For the Kerr spacetime we have 3 conserved quantities, the energy $E$, the angul
 Given the first order ODEs for $r$ and $\theta$ from the Kerr Hamiltonian, solve 
 
 $$\frac{dr}{d\lambda} = 0 ; \, \, \frac{d\theta}{d\lambda} = 0$$
-
-$$\alpha$$
-
-
-$\alpha$
-
-
 i.e. the turning points of the radial and polar motion. One can solve these equations to find $E,L,Q$ given $\alpha, e, \iota$. 
 
-
 With the conserved quantities in hand, the 4-velocity is defined from the Kerr Hamiltonian,
-
-
-$$\sigma \frac{dt}{d\lambda} = \frac{r^2 + a^2}{\Delta} P - a(aE\sin^2 \theta -L_z) $$
-
-
-$$\sigma \frac{dr}{d\lambda} = \pm \sqrt{R} $$
-
-
-$$\sigma \frac{d\Theta}{d\lambda} = \pm \sqrt{\Theta} $$
-
-
+$$\sigma \frac{dt}{d\lambda} = \frac{r^2 + a^2}{\Delta} P - a(aE\sin^2 \theta -L_z)$$
+$$\sigma \frac{dr}{d\lambda} = \pm \sqrt{R}$$
+$$\sigma \frac{d\theta}{d\lambda} = \pm \sqrt{\Theta}$$
+$$\sigma \frac{d\phi}{d\lambda} = \frac{a}{\Delta} - aE + \frac{L_z}{\sin^2 \theta}$$
 where $R,\Theta$ and $P$ are again given in [Schmidt 2002](https://arxiv.org/abs/gr-qc/0202090). We always take the positive square root for the initialisation, such that the initial motion of the pulsar is "outwards and upwards" (increasing $r$ and $\theta$). 
 
 The covariant 4-velocity can then be translated into a contravariant 4-momentum as
-
-$$p^{\alpha} = m_0 g^{\alpha \beta} u_{\beta} $$
+$$p^{\alpha} = m_0 g^{\alpha \beta} u_{\beta}$$
 for metric $g^{\alpha \beta}$.
-
 ## Spin, $s^{\mu}$
 
 In order to determine the spin vector we must first specify the moment of inertia of the pulsar. We model the pulsar as a solid sphere such that
@@ -62,7 +45,7 @@ where $P_{\rm PSR}$ is the spin period of the pulsar. The spatial components of 
 $$s^r = s_0 \sin(S_{\theta}) \cos(S_{\phi}) $$
 $$s^{\theta} = -s_0 \cos(S_{\theta})/r $$
 $$s^{\phi} = s_0 \sin(S_{\theta}) \sin(S_{\phi})/(r \sin(\theta)) $$
-see e.g. [Mashhoon & Singh, 2006](https://arxiv.org/abs/astro-ph/0608278). The temporal component is enforced by the spin condition. Throughout we take the Tulczyjew-Dixon condition (see e.g. [Costa & Natário, 2015](https://arxiv.org/abs/1410.6443) for discussion of TD condition and other options)
+see e.g. [Mashhoon & Singh, 2006](https://arxiv.org/abs/astro-ph/0608278). The temporal component $s^{t}$ is enforced by the spin condition. Throughout this package we take the Tulczyjew-Dixon (TD) condition (see e.g. [Costa & Natário, 2015](https://arxiv.org/abs/1410.6443) for discussion of TD condition and other options)
  $$s^{\mu}p_{\mu}  = 0 $$
 
 
