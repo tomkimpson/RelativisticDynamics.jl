@@ -50,7 +50,7 @@ for affine parameter $\lambda$, 4-velocity $u^{\nu}$ and Riemann curvature tenso
 \begin{equation}\label{eq:mpd3}
 s^{\mu \nu} p_{\nu} = 0
 \end{equation}
-Together, equations \ref{eq:mpd1} - \ref{eq:mpd3} form the Mathisson-Papetrou-Dixon (MPD) equations [@Mathisson1937,@Papapetrou1951, @Dixon1964], and describe the spin-orbital evolution in a fully consistent way that is applicable to strong field regimes. 
+Together, equations \ref{eq:mpd1} - \ref{eq:mpd3} form the Mathisson-Papetrou-Dixon (MPD) equations [@Mathisson1937;@Papapetrou1951; @Dixon1964], and describe the spin-orbital evolution in a fully consistent way that is applicable to strong field regimes. 
 
 
 <!-- A Statement of need section that clearly illustrates the research purpose of the software and places it in the context of related work -->
