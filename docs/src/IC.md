@@ -3,28 +3,32 @@
 We need to initialise 3 vectors $x^{\mu}, p^{\mu}, s^{\mu}$ for position, momentum and spin respectively. All this takes place in `src/universal_constants.jl` and `src/initial_conditions.jl`.
 
 
-## Position $x^{\mu}$
+## Position, $x^{\mu}$
 
-The initial coordinates are specified straightforwardly. [Working in Boyer-Lindquist coordinates](https://en.wikipedia.org/wiki/Boyer%E2%80%93Lindquist_coordinates), we set $t=0$, $\theta = \pi/2$, $\phi=0.0$ and set the radial coordiante $r$ equal to the value of the semi-major axis specified in `src/system_parameters.jl`. 
+The initial coordinates are specified straightforwardly. [Working in Boyer-Lindquist coordinates](https://en.wikipedia.org/wiki/Boyer%E2%80%93Lindquist_coordinates), we set $t=0$, $\theta = \pi/2$, $\phi=0.0$ and set the radial coordiante $r$ equal to the value of the semi-major axis $\alpha$ specified in `src/system_parameters.jl`. 
 
 
-## Momentum $p^{\mu}$
+## Momentum, $p^{\mu}$
 The specification of the initial momentum proceeds via two steps.
 
 1. Map from the user-specified Keplerian orbital parameters to the conserved quantities
 2. Define the momenta from the first-order equations of motion derived from the Hamilton-Jacobi function for the Kerr metric.
 
 
-Both of these steps are well-described in [Schmidt 2002](https://arxiv.org/abs/gr-qc/0202090). 
-
-To summarise the main steps:
+Both of these steps are well-described in [Schmidt 2002](https://arxiv.org/abs/gr-qc/0202090). The general overview is as follows:
 
 
-For the Kerr spacetime we have 3 conserved quantities, the energy $E$, the angular momentum $L_z$ and the Carter constant $Q$.
+For the Kerr spacetime we have 3 conserved quantities, the energy $E$, the angular momentum $L_z$ and the Carter constant $Q$. We want to be able to determine the value of these quantities, given the Keplerian orbital parameters, $\alpha, e, \iota$. 
 
 Given the first order ODEs for $r$ and $\theta$ from the Kerr Hamiltonian, solve 
 
-$$  \frac{dr}{d\lambda} = 0 ; \, \, \frac{d\theta}{d\lambda} = 0 $$
+$$\frac{dr}{d\lambda} = 0 ; \, \, \frac{d\theta}{d\lambda} = 0$$
+
+$$\alpha$$
+
+
+$\alpha$
+
 
 i.e. the turning points of the radial and polar motion. One can solve these equations to find $E,L,Q$ given $\alpha, e, \iota$. 
 
@@ -48,7 +52,7 @@ The covariant 4-velocity can then be translated into a contravariant 4-momentum 
 $$p^{\alpha} = m_0 g^{\alpha \beta} u_{\beta} $$
 for metric $g^{\alpha \beta}$.
 
-## Spin $s^{\mu}$
+## Spin, $s^{\mu}$
 
 In order to determine the spin vector we must first specify the moment of inertia of the pulsar. We model the pulsar as a solid sphere such that
 $$ I = \frac{2}{5} m_{\rm PSR} r_{\rm PSR}^2 $$
