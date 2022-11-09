@@ -5,7 +5,7 @@ We need to initialise 3 vectors $x^{\mu}, p^{\mu}, s^{\mu}$ for position, moment
 
 ## Position, $x^{\mu}$
 
-The initial coordinates are specified straightforwardly. [Working in Boyer-Lindquist coordinates](https://en.wikipedia.org/wiki/Boyer%E2%80%93Lindquist_coordinates), we set $t=0$, $\theta = \pi/2$, $\phi=0.0$ and set the radial coordiante $r$ equal to the value of the semi-major axis $\alpha$ specified in `src/system_parameters.jl`. 
+The initial coordinates are specified straightforwardly. [Working in Boyer-Lindquist coordinates](https://en.wikipedia.org/wiki/Boyer%E2%80%93Lindquist_coordinates), we set $t=0$, $\theta = \pi/2$, $\phi=0.0$ and set the radial coordinate $r$ equal to the value of the semi-major axis $\alpha$ specified in `src/system_parameters.jl`. 
 
 
 ## Momentum, $p^{\mu}$
@@ -27,13 +27,13 @@ i.e. the turning points of the radial and polar motion. One can solve these equa
 
 With the conserved quantities in hand, the 4-velocity is defined from the Kerr Hamiltonian,
 
-$$\sigma \frac{dt}{d\lambda} = \frac{r^2 + a^2}{\Delta} P - a(aE\sin^2 \theta -L_z)$$
+$$\Sigma \frac{dt}{d\lambda} = \frac{r^2 + a^2}{\Delta} P - a(aE\sin^2 \theta -L_z)$$
 
-$$\sigma \frac{dr}{d\lambda} = \pm \sqrt{R}$$
+$$\Sigma \frac{dr}{d\lambda} = \pm \sqrt{R}$$
 
-$$\sigma \frac{d\theta}{d\lambda} = \pm \sqrt{\Theta}$$
+$$\Sigma \frac{d\theta}{d\lambda} = \pm \sqrt{\Theta}$$
 
-$$\sigma \frac{d\phi}{d\lambda} = \frac{a}{\Delta} - aE + \frac{L_z}{\sin^2 \theta}$$
+$$\Sigma \frac{d\phi}{d\lambda} = \frac{a}{\Delta} - aE + \frac{L_z}{\sin^2 \theta}$$
 where $R,\Theta$ and $P$ are again given in [Schmidt 2002](https://arxiv.org/abs/gr-qc/0202090). We always take the positive square root for the initialisation, such that the initial motion of the pulsar is "outwards and upwards" (increasing $r$ and $\theta$). 
 
 The covariant 4-velocity can then be translated into a contravariant 4-momentum as
@@ -54,9 +54,10 @@ $$s^r = s_0 \sin(S_{\theta}) \cos(S_{\phi})$$
 $$s^{\theta} = -s_0 \cos(S_{\theta})/r$$
 
 $$s^{\phi} = s_0 \sin(S_{\theta}) \sin(S_{\phi})/r \sin(\theta)$$
-where $S_{\theta, \phi}$ are the latitude and azimuthal angles of the spin axis, see e.g. [Mashhoon & Singh, 2006](https://arxiv.org/abs/astro-ph/0608278). The temporal component $s^{t}$ is enforced by the spin condition. Throughout this package we take the Tulczyjew-Dixon (TD) condition (see e.g. [Costa & Natário, 2015](https://arxiv.org/abs/1410.6443) for discussion of TD condition and other options)
- $$s^{\mu}p_{\mu}  = 0 $$
+where $S_{\theta, \phi}$ are the latitude and azimuthal angles of the spin axis, see e.g. [Mashhoon & Singh, 2006](https://arxiv.org/abs/astro-ph/0608278). The temporal component $s^{t}$ is enforced by the spin condition. Throughout this package we take the Tulczyjew-Dixon (TD) condition 
 
+ $$s^{\mu}p_{\mu}  = 0$$
+see e.g. [Costa & Natário, 2015](https://arxiv.org/abs/1410.6443) for discussion of the TD condition and other options
 
 
 

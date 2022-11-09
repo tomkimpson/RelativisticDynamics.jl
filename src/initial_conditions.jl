@@ -1,4 +1,8 @@
-"""Struct holding the so-called 'prognostic' variables"""
+"""
+Struct holding the so-called 'prognostic' variables.
+'Prognostic' terminology is borrowed from cliamte science where it refers to 
+any variables that are predicted via integration
+"""
 struct PrognosticVariables{NF<:AbstractFloat}
     xvector         ::AbstractVector{NF}       
     pvector         ::AbstractVector{NF}      

@@ -7,14 +7,14 @@ using RelativisticDynamics
 solution,model = orbit()
 ```
 
-The `orbit()` funciton returns two objects. The first, `solution` holds the evolution of the position, momentum and spin vectors. The second, `model`, holds a copy of all the parameters and settings used to generate the solution (e.g. what was the BH spin?).
+The `orbit()` function returns two objects. The first, `solution` holds the evolution of the position, momentum and spin vectors. The second, `model`, holds a copy of all the parameters and settings used to generate the solution, e.g. what was the BH spin?
 
 All default parameters can be found in `src/default_parameters.jl`. Passing a keyword argument to `orbit()` overrides the defaults e.g.
 
 ```julia
 run_speedy(e=0.6,a=0.99)
 ```
-would generate the solution for a system with an eccentricity = 0.6, around a BH with an extramal spin. 
+would generate the solution for a system with an eccentricity = 0.6, around a BH with an extremal spin. 
 
 If provided, the number format has to be the first argument, all other arguments are keyword arguments. e.g. 
 ```julia

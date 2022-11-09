@@ -30,8 +30,7 @@ As well as accurately describing the relativistic spin-orbital evolution of a sp
 
 ## Installation
 
-RelativisticDynamics.jl is registered in the Julia Registry. Open Julia's package manager from the REPL with `]`
-and `add` the github repository to install RelativisticDynamics.jl and all dependencies
+RelativisticDynamics.jl is registered in the Julia Registry. To install RelativisticDynamics.jl and its associated dependencies just:
 ```julia
 (@v1.7) pkg> add RelativisticDynamics
 ```

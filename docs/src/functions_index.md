@@ -1,7 +1,4 @@
-# Index of functions
-
-
-
+# Index of all functions
 
 
 ```@index

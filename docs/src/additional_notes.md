@@ -6,6 +6,9 @@ normalsied units / boyer lindquist
 
 
 
+zygote for autodif 
+
+
 Integration time 
 
 

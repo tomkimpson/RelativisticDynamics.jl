@@ -1,5 +1,5 @@
 # Visualisation of the solution
-It is often desireable as a sanity check to plot the solution. One the `orbit()` call completes, the output can be quickly plotted using the usual [Plots.jl](https://docs.juliaplots.org/stable/) interface e.g.
+It is often desireable, as a sanity check, to plot the orbital solution. Once the `orbit()` call completes, the output can be quickly plotted using the usual [Plots.jl](https://docs.juliaplots.org/stable/) interface e.g.
 
 ```julia
 using Plots
@@ -21,6 +21,3 @@ One can also create a stacked plot of the trajectory in the $x-y$ and $x-z$ plan
 ```julia
 StackedPlot(solution,model,"../example_media/e08_stacked.pdf")
 ```
-
-
-![image](example_media/e08_stacked.png)

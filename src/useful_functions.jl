@@ -1,7 +1,7 @@
 using LinearAlgebra
 using ChainRulesCore
 """
-Δ = delta(r,a)
+    Δ = delta(r,a)
 The well-known delta function of the Kerr metric
 """
 function delta(r,a)
@@ -9,7 +9,7 @@ return r^2 -2.0*r + a^2
 end 
 
 """
-Σ = sigma(r,θ,a)
+    Σ = sigma(r,θ,a)
 The well-known sigma function of the Kerr metric
 """
 function sigma(r,θ,a)
@@ -17,10 +17,10 @@ return r^2 + a^2 * cos(θ)^2
 end 
 
 """
+    p_{\mu} = convert_to_covariant(metric,p^{\mu})
 Convert a vector from contravariant form to convariant form using the covariant metric 
 """
 function convert_to_covariant(metric,vector)
-
 
     @tullio vector_covar[μ] := metric[μ,ν] * vector[ν]  #:= allocates a new array
  
@@ -31,6 +31,7 @@ end
 
 
 """
+    K =  Kretschmann_scalar(r,θ,a)
 Kretschman scalar for the Kerr metric
 """
 function Kretschmann_scalar(r,θ,a)
@@ -42,12 +43,14 @@ function Kretschmann_scalar(r,θ,a)
 end 
 
 
-
-function calculate_levi()
+"""
+    l = calculate_levi(NF)
+Determine the Levi-civita psuedo tensor
+"""
+function calculate_levi(NF)
 
     # Levi civita tensor
-    levi = zeros(Float64,4,4,4,4) 
-    
+    levi = zeros(NF,4,4,4,4) 
     ChainRulesCore.ignore_derivatives() do # This can be safely ignored by the differentiator - no dependence on the input parameters.
 
         for i in 1:4
@@ -70,10 +73,13 @@ end
 
 
 
-
+"""
+    ϵ = permutation_tensor(metric)
+Calcualte the Levi-civita tensor in an arbitrary basis.
+"""
 function permutation_tensor(metric)
 
-    ϵ = calculate_levi()
+    ϵ = calculate_levi(typeof(metric[1,1]))
 
     det_g = det(metric)
 
@@ -83,10 +89,10 @@ end
 
 
 """
-Calculate the contravariant spin tensor. See e.g. https://mathworld.wolfram.com/PermutationTensor.html
+    S^{μ ν} = spintensor(levi,pvector,svector,m0)
+Calculate the contravariant spin tensor. 
 """
 function spintensor(levi,pvector,svector,m0)
-
 
     @tullio Stensor[μ,ν] := levi[μ,ν,α,β]*pvector[α]*svector[β]/m0
     
