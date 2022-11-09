@@ -16,9 +16,9 @@ see e.g. [Costa & Natário, 2015](https://arxiv.org/abs/1410.6443) for discussio
 
 The the extreme mass ration limit m << M, the pulsar Möller radius is much less than the gravitational lengthscale. This means that the pole-dipole interaction is much stronger than the dipole-dipole interaction. Within this approximation, the MPD equations reduced to a set of ODEs (see e.g. [Mashoon & Singh, 2006](https://arxiv.org/abs/astro-ph/0608278), [Singh, Wu & Sarty, 2014](https://arxiv.org/abs/1403.7171))
 
-$$\frac{dp^{\alpha}}{d\lambda} = - \Gamma_{\mu\nu}^{\alpha} p^{\mu}u^{\nu} + \rho \left( \frac{1}{2m} R^{\alpha}_{\beta \rho \sigma} \epsilon^{\rho \sigma}_{\quad \mu \nu} s^{\mu} p^{\nu} u^{\beta}\right) \ ,$$
+$$\frac{dp^{\alpha}}{d\lambda} = - \Gamma_{\mu\nu}^{\alpha} p^{\mu}u^{\nu} +  \left( \frac{1}{2m} {R^{\alpha}}_{\beta \rho \sigma} \epsilon^{\rho \sigma}_{\quad \mu \nu} s^{\mu} p^{\nu} u^{\beta}\right) \ ,$$
 
-$$\frac{ds^{\alpha}}{d \lambda} = - \Gamma^{\alpha}_{\mu \nu} s^{\mu}u^{\nu} + \rho \left(\frac{1}{2m^3}R_{\gamma \beta \rho \sigma} \epsilon^{\rho \sigma}_{\quad \mu \nu} s^{\mu} p^{\nu} s^{\gamma} u^{\beta}\right)p^{\alpha} \ ,$$
+$$\frac{ds^{\alpha}}{d \lambda} = - \Gamma^{\alpha}_{\mu \nu} s^{\mu}u^{\nu} + \left(\frac{1}{2m^3}R_{\gamma \beta \rho \sigma} \epsilon^{\rho \sigma}_{\quad \mu \nu} s^{\mu} p^{\nu} s^{\gamma} u^{\beta}\right)p^{\alpha} \ ,$$
 
-$$\frac{dx^{\alpha}}{d\lambda} = -\frac{p^{\delta}u_{\delta}}{m^2} \left[ p^{\alpha} + \frac{1}{2} \frac{\rho (s^{\alpha \beta} R_{\beta \gamma \mu \nu} p^{\gamma} s^{\mu \nu})}{m^2 + \rho(R_{\mu \nu \rho \sigma} s^{\mu \nu} s^{\beta \sigma}/4)}\right] \ ,$$
-Whilst $\lambda$ has the freedom to be any affine parameter, we take it to be the proper time $\tau$ such that $g_{\mu \nu}u^{\mu} u^{\nu}=-1$. These equations are generally covariant, we take the astrophysically motivated [Kerr metric](https://en.wikipedia.org/wiki/Kerr_metric) for a spinning BH.
+$$\frac{dx^{\alpha}}{d\lambda} = -\frac{p^{\delta}u_{\delta}}{m^2} \left[ p^{\alpha} + \frac{1}{2} \frac{\rho (s^{\alpha \beta} R_{\beta \gamma \mu \nu} p^{\gamma} s^{\mu \nu})}{m^2 + (R_{\mu \nu \rho \sigma} s^{\mu \nu} s^{\rho \sigma}/4)}\right] \ ,$$
+Whilst $\lambda$ has the freedom to be any affine parameter, we take it to be the proper time $\tau$ such that $g_{\mu \nu}u^{\mu} u^{\nu}=-1$. These equations are generally covariant - we take the astrophysically motivated [Kerr metric](https://en.wikipedia.org/wiki/Kerr_metric) for a spinning BH and work in Boyer-Lindquist coordinates.
