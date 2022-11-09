@@ -1,6 +1,5 @@
-using Zygote
 """
-C = Constants(P)
+    C = Constants(P)
 A struct to hold all variables which are constant over the course of the integration.
 These are derived from the user-defined parameters 
 """
@@ -26,7 +25,6 @@ These are derived from the user-defined parameters
     s0 :: NF                 # Magnitude of spatial component of spin vector in natural units 
     m0 :: NF                 # Pulsar mass in natural units
 
-
     # 4. Integration properties
     Tint :: NF               # How long to integrate for
 end
@@ -50,15 +48,13 @@ function Constants(P::SystemParameters)
 
 
 
-    # Model specific constants
-
+    # Energy/Angular Momentum/Carter Constant 
     E,L,Q = ELQ(P.a,P.α,P.e,P.ι,P.orbit_dir)
-
 
 
     #Pulsar 
     @unpack rPSR,mPSR,mBH,p0 = P
-    inertia = 0.40*mPSR*Msolar*(rPSR*1e3)^2         # Moment of inertia in SI units. Assumes solid ball 
+    inertia = 0.40*mPSR*Msolar*(rPSR*1e3)^2         # Moment of inertia in SI units. Assumes a solid ball 
     convert_spin= light_c/(Newton_g*(mBH*Msolar)^2) # Multiply by this to go TO Natural units
     s0 = convert_spin*2.0*pi*inertia/p0
     m0 = mPSR/mBH

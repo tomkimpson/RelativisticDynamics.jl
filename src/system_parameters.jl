@@ -1,5 +1,6 @@
 """
-P = Parameters(kwargs...)
+    P = Parameters(kwargs...)
+
 A struct to hold all model parameters that may be changed by the user.
 The struct uses keywords such that default values can be changed at creation.
 The default values of the keywords define the default model setup.
@@ -26,8 +27,5 @@ The default values of the keywords define the default model setup.
     ι::Real=π/6.0       # Inclination w.r.t equatorial plane in radians. The extrema of θ. 
     orbit_dir::Int=1    # Orbit direction prograde/retrograde
     Norbits = 10.0      # Number of orbits to integrate for 
-
-
-
 
 end

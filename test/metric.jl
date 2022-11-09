@@ -28,17 +28,6 @@ using Distributions
 end
 
 
-@testset "Minkowski metric" begin
-
-    g = RelativisticDynamics.covariant_minkowski()
-    @test g[1,1] == -1
-    @test g[2,2] ==  1
-    @test g[3,3] ==  1
-    @test g[4,4] ==  1
-    @test sum(g) == 2
-
-end
-
 
 @testset "Christoffel tensor components" begin
     

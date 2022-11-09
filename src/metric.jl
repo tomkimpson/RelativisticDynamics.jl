@@ -1,24 +1,6 @@
 using Zygote
 using PreallocationTools
 
-"""
-    m = roundup_fft(n::Int;
-                    small_primes::Vector{Int}=[2,3,5])
-Returns an integer `m >= n` with only small prime factors 2, 3, 5 (default, others can be specified
-with the keyword argument `small_primes`) to obtain an efficiently fourier-transformable number of
-longitudes, m = 2^i * 3^j * 5^k >= n, with i,j,k >=0.
-"""
-function covariant_minkowski()
-
-    metric_covar = zeros(Float64,4,4)
-    
-    metric_covar[1,1] =  -1.0
-    metric_covar[2,2] =  1.0
-    metric_covar[3,3] =  1.0
-    metric_covar[4,4] =  1.0 
-    return metric_covar
-end
-
 
 """
 Construct the NxN matrix of the covariant metric.
@@ -48,7 +30,7 @@ Metric components are defined via indvidual functions to allow for auto diff in 
 """
 function contravariant_metric(coords,a)
 
-    metric_contra = zeros(Float64,4,4)
+    metric_contra = zeros(typeof(a),4,4)
 
     metric_contra[1,1] = metric_contra_g11(coords,a)
     metric_contra[2,2] = metric_contra_g22(coords,a)
