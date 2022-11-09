@@ -71,12 +71,11 @@ Future potential extensions of this code include taking the dynamics beyond seco
 
 
 <div id="fig:fig1">
-![Cool horse](../example_media/e01_stacked.pdf){width=50%}
 
-![Book horse](../example_media/e01_stacked.pdf){width=30%}\hfill
-![Pink horse](../example_media/e01_stacked.pdf){width=30%}
+![](../example_media/e01_stacked.pdf){width=50%}\hfill
+![](../example_media/e08_stacked.pdf){width=50%}
 
-Look at my tiny horses!
+Example orbital trajectory for a ms-pulsar orbiting a massive BH extremal spin, $a=0.998$, in the $x-y$ plane (top panel) and $x-z$ plane (bottom panel). The pulsar is initialised in the orbital plane with zero inclination and eccentricity $e=0.1$. In the absence of spin-curvature coupling the particle would remain in the plane ($z=0$). Note the $z$-motion is on the scale of km, not gravitational radii.
 </div>
 
 
