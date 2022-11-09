@@ -75,7 +75,11 @@ Future potential extensions of this code include taking the dynamics beyond seco
 ![TEST CAP](../example_media/e01_stacked.pdf){ width=40% }\ ![CAP 2](../example_media/e01_stacked.pdf){ width=40% }
 
 
-
+![](https://upload.wikimedia.org/wikipedia/commons/7/70/Example.png){width=60%}
+![](https://upload.wikimedia.org/wikipedia/commons/7/70/Example.png){width=40%}
+\begin{figure}[!h]
+\caption{A single caption for the two subfigures}
+\end{figure}
 
 
 
