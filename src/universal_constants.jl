@@ -27,8 +27,6 @@ These are derived from the user-defined parameters
 
     # 4. Integration properties
     Tint :: NF               # How long to integrate for
-    Tspan :: NF               # How long to integrate for
-
 
 end
 
@@ -67,7 +65,7 @@ function Constants(P::SystemParameters)
     #This is obviously inaccurate in relativity, but sufficient to get an approximate timescale over which to integrate 
     @unpack Norbits = P
     Tint = Norbits*2*π*α^(3/2)
-    Tspan = (0.0,Tint) 
+
 
     
 
@@ -77,7 +75,7 @@ function Constants(P::SystemParameters)
                            r_initial,θ_initial,ϕ_initial,
                            E,L,Q,
                            s0,m0,
-                           Tint,Tspan)
+                           Tint)
 
 
 

@@ -12,10 +12,10 @@ The timestepping integration once all variables have been initialised
 function timestepping(X::PrognosticVariables, M::Model)
 
 @unpack a,e = M.parameters
-@unpack m0, Tint, integrator_method = M.constants
+@unpack m0, Tint = M.constants
 
 
-tspan = (0.0,M.constants.Tint) 
+tspan = (zero(M.parameters.NF),M.constants.Tint) 
 u = vcat(X.xvector,X.pvector,X.svector)
 params = [a,m0]
 
