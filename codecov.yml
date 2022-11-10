@@ -1,2 +1,16 @@
 ignore:
   - "src/plotting.jl"  # Not part of numerical model
+
+
+coverage:
+  status:
+    project:
+      default:
+        # basic
+        target: auto
+        threshold: 10%
+        base: auto 
+        flags: 
+          - unit
+        paths: 
+          - "src"
