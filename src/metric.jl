@@ -3,11 +3,10 @@ using PreallocationTools
 
 
 """
+    g=covariant_metric(coords,a)
 Construct the NxN matrix of the covariant metric.
-Metric components are defined via indvidual functions to allow for auto diff in unit tests
 """
 function covariant_metric(coords,a)
-
 
     g = zeros(typeof(a),4,4)
 
@@ -20,11 +19,11 @@ function covariant_metric(coords,a)
 
     return g
 
-
 end 
 
 
 """
+    g=contravariant_metric(coords,a)
 Construct the NxN matrix of the contravariant metric.
 Metric components are defined via indvidual functions to allow for auto diff in unit tests
 """
@@ -45,12 +44,9 @@ end
 
 
 """
-    map = gridded(  alms::AbstractMatrix;
-                    recompute_legendre::Bool=true,
-                    grid::Type{<:AbstractGrid}=FullGaussianGrid)
-Spectral transform (spectral to grid space) from spherical coefficients `alms` to a newly allocated gridded
-field `map`. Based on the size of `alms` the grid type `grid`, the spatial resolution is retrieved based
-on the truncation defined for `grid`. SpectralTransform struct `S` is allocated to execute `gridded(alms,S)`."""
+    Γ = christoffel(coords,a)
+The christoffel symbols of the Kerr metric. See e.g. https://arxiv.org/pdf/0904.4184.pdf
+"""
 function christoffel(coords,a)
 
     #See Catalogue of spacetimes: https://arxiv.org/pdf/0904.4184.pdf
@@ -122,6 +118,7 @@ end
 
 
 """
+    R = riemann(coords,a) 
 Riemann tensor components of the Kerr metric. First index is the contravariant, others are covariant   
 """
 function riemann(coords,a)
@@ -266,8 +263,10 @@ end
 
 
 """
-Special case - the fully covariant components of the Riemann tensor for schwarzchild.
-From https://arxiv.org/pdf/0904.4184.pdf
+    R = schwarzchild_covariant_riemann(coords,a)
+
+Special case - the fully covariant components of the Riemann tensor for schwarzchild metric
+Used for testing 
 """
 function schwarzchild_covariant_riemann(coords,a)
 
@@ -275,9 +274,6 @@ function schwarzchild_covariant_riemann(coords,a)
     θ = coords[3]
    
     Rtensor = zeros(typeof(a),4,4,4,4)
-
-    Δ = delta(r,a)
-    Σ = sigma(r,θ,a)
 
     Rtensor[1,2,1,2] = -2.0/r^3
     Rtensor[1,3,1,3] = (r-2.0)/r^2
@@ -315,16 +311,21 @@ function schwarzchild_covariant_riemann(coords,a)
 
 end 
 
-# Pure function definitions
+"""
+    g = metric_g11(coords,a)
+The covariant tt component of the Kerr metric in Boyer Lindquist coordinates
+"""
 function metric_g11(x,a)
-
     t,r,θ,ϕ =  x[1],x[2],x[3],x[4]
     Σ = RelativisticDynamics.sigma(r,θ,a)
     return -(1.0 - 2.0*r / Σ)
 end 
 
 
-
+"""
+    g = metric_g22(coords,a)
+The covariant rr component of the Kerr metric in Boyer Lindquist coordinates
+"""
 function metric_g22(x,a)
     t,r,θ,ϕ =  x[1],x[2],x[3],x[4]
     Σ = RelativisticDynamics.sigma(r,θ,a)
@@ -332,12 +333,20 @@ function metric_g22(x,a)
     return Σ / Δ
 end 
 
+"""
+    g = metric_g33(coords,a)
+The covariant θθ component of the Kerr metric in Boyer Lindquist coordinates
+"""
 function metric_g33(x,a)
     t,r,θ,ϕ =  x[1],x[2],x[3],x[4]
     Σ = RelativisticDynamics.sigma(r,θ,a)
     return Σ 
 end 
 
+"""
+    g = metric_g44(coords,a)
+The covariant ϕϕ component of the Kerr metric in Boyer Lindquist coordinates
+"""
 function metric_g44(x,a)
     t,r,θ,ϕ =  x[1],x[2],x[3],x[4]
     Σ = RelativisticDynamics.sigma(r,θ,a)
@@ -345,6 +354,10 @@ function metric_g44(x,a)
     return sin(θ)^2 * ((r^2 +a^2)^2 - Δ*a^2*sin(θ)^2) / Σ
 end 
 
+"""
+    g = metric_g14(coords,a)
+The covariant tϕ component of the Kerr metric in Boyer Lindquist coordinates
+"""
 function metric_g14(x,a)
     t,r,θ,ϕ =  x[1],x[2],x[3],x[4]
     Σ = RelativisticDynamics.sigma(r,θ,a)
@@ -352,11 +365,10 @@ function metric_g14(x,a)
 end 
 
 
-
-
-
-#CONTRAVARIANT pure form 
-
+"""
+    g = metric_g11(coords,a)
+The covariant tt component of the Kerr metric in Boyer Lindquist coordinates
+"""
 function metric_contra_g11(x,a)
     t,r,θ,ϕ =  x[1],x[2],x[3],x[4]
     Σ = RelativisticDynamics.sigma(r,θ,a)
@@ -367,7 +379,10 @@ function metric_contra_g11(x,a)
 end 
 
 
-
+"""
+    g = metric_g22(coords,a)
+The covariant rr component of the Kerr metric in Boyer Lindquist coordinates
+"""
 function metric_contra_g22(x,a)
     t,r,θ,ϕ =  x[1],x[2],x[3],x[4]
     Σ = RelativisticDynamics.sigma(r,θ,a)
@@ -375,12 +390,20 @@ function metric_contra_g22(x,a)
     return  Δ/Σ 
 end 
 
+"""
+    g = metric_g33(coords,a)
+The covariant θθ component of the Kerr metric in Boyer Lindquist coordinates
+"""
 function metric_contra_g33(x,a)
     t,r,θ,ϕ =  x[1],x[2],x[3],x[4]
     Σ = RelativisticDynamics.sigma(r,θ,a)
     return 1.0/Σ 
 end 
 
+"""
+    g = metric_g44(coords,a)
+The covariant ϕϕ component of the Kerr metric in Boyer Lindquist coordinates
+"""
 function metric_contra_g44(x,a)
     t,r,θ,ϕ =  x[1],x[2],x[3],x[4]
     Σ = RelativisticDynamics.sigma(r,θ,a)
@@ -391,6 +414,10 @@ function metric_contra_g44(x,a)
     return -covar/denom
 end 
 
+"""
+    g = metric_g14(coords,a)
+The covariant tϕ component of the Kerr metric in Boyer Lindquist coordinates
+"""
 function metric_contra_g14(x,a)
     t,r,θ,ϕ =  x[1],x[2],x[3],x[4]
     Σ = RelativisticDynamics.sigma(r,θ,a)

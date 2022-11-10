@@ -6,6 +6,7 @@ using LaTeXStrings
 using Printf
 
 """
+    PlotTrajectory(solution,model,dimensions=[1,2,3],savepath="")
 Plot trajectory of a body. Assumes coordinates are Boyer Lindquist. 
 Plots in either 2D or 3D depending on specification of dimensions.
 Saves a low resolution PNG figure to disk in example_media/
@@ -82,6 +83,7 @@ end
 
 
 """
+    StackedPlot(solution,model,savepath="")
 Plot the x-y and x-z trajectory of a body on two separate subplots
 """
 function StackedPlot(solution,model,savepath="")

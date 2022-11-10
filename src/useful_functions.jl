@@ -17,7 +17,7 @@ return r^2 + a^2 * cos(θ)^2
 end 
 
 """
-    p_{\mu} = convert_to_covariant(metric,p^{\mu})
+    p_{μ} = convert_to_covariant(metric,p^{μ})
 Convert a vector from contravariant form to convariant form using the covariant metric 
 """
 function convert_to_covariant(metric,vector)

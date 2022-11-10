@@ -10,7 +10,9 @@ struct PrognosticVariables{NF<:AbstractFloat}
 end
 
 
-"""Setup the initial conditions for the MPD orbital dynamics"""
+"""
+    initialization = initial_conditions(M)
+Setup the initial conditions for the MPD orbital dynamics"""
 function initial_conditions(M::Model)
 
 

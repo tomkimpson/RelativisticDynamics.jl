@@ -6,7 +6,8 @@ using Parameters: @unpack
 
 
 """
-The timesteppig Integration
+    solution = timestepping(X,M)
+The timestepping integration once all variables have been initialised
 """
 function timestepping(X::PrognosticVariables, M::Model)
 
@@ -21,7 +22,7 @@ params = [a,m0]
 
 f = MPD! #The ODE 
 ode_prob = ODEProblem(MPD!,u,tspan,params)
-ode_solution = solve(ode_prob,DifferentialEquations.Tsit5())
+ode_solution = solve(ode_prob,DifferentialEquations.RK4())
 
 return ode_solution
 

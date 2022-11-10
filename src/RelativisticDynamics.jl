@@ -5,13 +5,8 @@ module RelativisticDynamics
 
 # Imports
 import Parameters: @with_kw, @unpack
-
-
 import DifferentialEquations
-
-#using TensorOperations, Einsum,Combinatorics #, Symbolics
-using Tullio,Combinatorics #, Symbolics
-
+using Tullio,Combinatorics
 
 # Exports
 export  orbit, PlotTrajectory, StackedPlot
