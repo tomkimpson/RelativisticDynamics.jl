@@ -21,7 +21,6 @@ makedocs(;
         "MPD Equations"=>"MPD.md",
         "Visualisation"=>"visualisation.md",
         "Functions Index"=>"functions_index.md",
-        "Additional Notes"=>"additional_notes.md",
     ],
 )
 
