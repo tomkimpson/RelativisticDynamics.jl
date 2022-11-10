@@ -27,6 +27,8 @@ These are derived from the user-defined parameters
 
     # 4. Integration properties
     Tint :: NF               # How long to integrate for
+    integrator_type :: Symbol
+
 end
 
 
@@ -65,6 +67,8 @@ function Constants(P::SystemParameters)
     @unpack Norbits = P
     Tint = Norbits*2*π*α^(3/2)
 
+
+    #if P.NF == 
     
 
     
