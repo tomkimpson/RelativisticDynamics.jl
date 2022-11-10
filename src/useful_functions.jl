@@ -50,7 +50,7 @@ Determine the Levi-civita psuedo tensor
 function calculate_levi(NF)
 
     # Levi civita tensor
-    levi = zeros(NF,4,4,4,4) 
+    levi = zeros(Float64,4,4,4,4) 
     ChainRulesCore.ignore_derivatives() do # This can be safely ignored by the differentiator - no dependence on the input parameters.
 
         for i in 1:4

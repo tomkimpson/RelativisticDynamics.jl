@@ -21,7 +21,6 @@ include("initial_conditions.jl")
 include("timestepping.jl")
 include("orbit.jl")
 include("plotting.jl")
-include("throwaway.jl")
 
 
 print("Welcome to the Relativistic Dynamics module!")
