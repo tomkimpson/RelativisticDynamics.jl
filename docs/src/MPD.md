@@ -11,7 +11,7 @@ for affine parameter $\lambda$, 4-velocity $u^{\nu}$ and Riemann curvature tenso
 
 The system is closed by providing a spin supplementary condition. Throughout this package we take the Tulczyjew-Dixon (TD) condition
 
-$$ s^{\mu \nu} p_{\nu} = 0$$
+$$s^{\mu \nu} p_{\nu} = 0$$
 see e.g. [Costa & Natário, 2015](https://arxiv.org/abs/1410.6443) for discussion of the spin conditions.
 
 In the extreme mass ratio limit m << M, the pulsar Möller radius is much less than the gravitational lengthscale. This means that the pole-dipole interaction is much stronger than the dipole-dipole interaction. Within this approximation, the MPD equations reduced to a set of ODEs (see e.g. [Mashoon & Singh, 2006](https://arxiv.org/abs/astro-ph/0608278), [Singh, Wu & Sarty, 2014](https://arxiv.org/abs/1403.7171))
