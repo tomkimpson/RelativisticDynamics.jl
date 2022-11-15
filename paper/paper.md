@@ -8,7 +8,7 @@ tags:
   - general relativity
 authors:
   - name: Tom Kimpson
-    orcid: 0000-0002-6542-6032
+    #orcid: 0000-0002-6542-6032
     #equal-contrib: true
     affiliation: 1, 2 # (Multiple affiliations must be quoted)
   # - name: Tom Kimpson 2
