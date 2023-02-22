@@ -1,4 +1,4 @@
-module RelativisticDynamics
+module SpinningRelativisticGravitationlDynamics
 
 
 
