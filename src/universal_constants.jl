@@ -28,6 +28,9 @@ These are derived from the user-defined parameters
     # 4. Integration properties
     Tint :: NF               # How long to integrate for
 
+    # 5. Spin parameter
+    a :: NF 
+
 end
 
 
@@ -75,7 +78,8 @@ function Constants(P::SystemParameters)
                            r_initial,θ_initial,ϕ_initial,
                            E,L,Q,
                            s0,m0,
-                           Tint)
+                           Tint,
+                           P.a)
 
 
 

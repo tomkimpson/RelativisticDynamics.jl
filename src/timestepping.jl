@@ -11,17 +11,18 @@ The timestepping integration once all variables have been initialised
 """
 function timestepping(X::PrognosticVariables, M::Model)
 
-@unpack a,e = M.parameters
-@unpack m0, Tint = M.constants
+
+@unpack a,m0, Tint = M.constants
 
 
 tspan = (zero(M.parameters.NF),M.constants.Tint) 
 u = vcat(X.xvector,X.pvector,X.svector)
 params = [a,m0]
 
-f = MPD! #The ODE 
+
 ode_prob = ODEProblem(MPD!,u,tspan,params)
 ode_solution = solve(ode_prob,DifferentialEquations.RK4())
+#ode_solution = solve(ode_prob,DifferentialEquations.Tsit5()) #, reltol=1e-8, abstol=1e-8)
 
 
 return ode_solution
@@ -59,7 +60,6 @@ function MPD!(du,u,p,τ)
   
     stensor = spintensor(levi,pvector,svector,m0) #the fully contravariant spin tensor s^{ab}
 
-    
 
     # #Get the derivative objects
     # #4-velocity
@@ -83,15 +83,15 @@ end
 
 function calculate_four_velocity(pvector,Stensor,Riemann,g,m0)
 
-    @tullio scalar_divisor := Riemann[μ,ν,ρ,σ]*Stensor[μ,ν]*Stensor[ρ,σ] / 4.0
+    @tullio scalar_divisor := Riemann[μ,ν,ρ,σ]*Stensor[μ,ν]*Stensor[ρ,σ] / 4
     
-    @tullio correction[α] := 0.50 *(Stensor[α,β]*Riemann[β,γ,μ,ν]*pvector[γ]*Stensor[μ, ν])/(m0^2 + scalar_divisor)
+    @tullio correction[α] := (Stensor[α,β]*Riemann[β,γ,μ,ν]*pvector[γ]*Stensor[μ, ν])/(2*(m0^2 + scalar_divisor))
         
     @tullio dx[α] := -(pvector[α] + correction[α])/m0^2 
 
     @tullio  Vsq := g[μ,ν]*dx[μ]*dx[ν] 
 
-    PV = -sqrt(-1.0/Vsq)
+    PV = -sqrt(-1/Vsq)
     dx = dx * PV
 
     return dx

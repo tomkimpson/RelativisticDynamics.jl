@@ -47,10 +47,10 @@ end
     l = calculate_levi(NF)
 Determine the Levi-civita psuedo tensor
 """
-function calculate_levi(NF)
+function calculate_levi()
 
     # Levi civita tensor
-    levi = zeros(Float64,4,4,4,4) 
+    levi = zeros(Integer,4,4,4,4) 
     ChainRulesCore.ignore_derivatives() do # This can be safely ignored by the differentiator - no dependence on the input parameters.
 
         for i in 1:4
@@ -79,7 +79,7 @@ Calcualte the Levi-civita tensor in an arbitrary basis.
 """
 function permutation_tensor(metric)
 
-    ϵ = calculate_levi(typeof(metric[1,1]))
+    ϵ = calculate_levi()
 
     det_g = det(metric)
 
