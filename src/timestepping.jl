@@ -54,7 +54,7 @@ function MPD!(du,u,p,τ)
     
 
 
-    levi = permutation_tensor(g)  #This is the fully contravariant Levi Civita tensor 
+    levi = levi_civita_tensor(g)  #This is the fully contravariant Levi Civita tensor 
     @tullio levi_mixed[ρ,σ,μ,ν] := g[μ,x]*g[ν,y] * levi[ρ,σ,x,y]
     
   
