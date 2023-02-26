@@ -1,5 +1,5 @@
-using LinearAlgebra
-using ChainRulesCore
+#using LinearAlgebra
+#using ChainRulesCore
 
 
 """
@@ -23,7 +23,7 @@ function levi_civita_symbol()
 
     # Levi civita tensor
     levi = zeros(Integer,4,4,4,4) 
-    ChainRulesCore.ignore_derivatives() do # This can be safely ignored by the differentiator - no dependence on the input parameters.
+    #ChainRulesCore.ignore_derivatives() do # This can be safely ignored by the differentiator - no dependence on the input parameters.
 
         for i in 1:4
             for j in 1:4
@@ -36,7 +36,7 @@ function levi_civita_symbol()
             end
         end 
 
-    end  
+    #end  
 
     return levi 
 end 

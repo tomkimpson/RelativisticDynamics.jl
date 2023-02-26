@@ -3,7 +3,7 @@
 
 using Plots 
 using LaTeXStrings
-using Printf
+#using Printf
 
 """
     PlotTrajectory(solution,model,dimensions=[1,2,3],savepath="")

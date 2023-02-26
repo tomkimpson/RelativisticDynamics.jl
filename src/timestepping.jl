@@ -1,7 +1,7 @@
 
 using DifferentialEquations
-using ComponentArrays
-using SciMLSensitivity
+#using ComponentArrays
+#using SciMLSensitivity
 using Parameters: @unpack
 
 
@@ -9,7 +9,7 @@ using Parameters: @unpack
     solution = timestepping(X,M)
 The timestepping integration once all variables have been initialised
 """
-function timestepping(X::PrognosticVariables, M::Model)
+function timestepping(X::PrognosticVariables, M)
 
 
 @unpack a,m0, Tint = M.constants

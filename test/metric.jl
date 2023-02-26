@@ -1,8 +1,8 @@
 using RelativisticDynamics
 using Test
 using Enzyme
-using TensorOperations
-using LinearAlgebra
+#using TensorOperations
+#using LinearAlgebra
 using Distributions
 
 @testset "Trace of the metric" begin

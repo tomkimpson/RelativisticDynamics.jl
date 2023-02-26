@@ -3,7 +3,7 @@
     solution,model = orbit(NF,kwargs...)
     
 Runs RelativisticDynamics.jl with number format `NF` and any additional parameters in the keyword arguments
-`kwargs...`. Any unspecified parameters will use the default values as defined in `src/parameters.jl`."""
+`kwargs...`. Any unspecified parameters will use the default values as defined in `src/system_parameters.jl`."""
 function orbit(::Type{NF}=Float64;              # number format, use Float64 as default
                kwargs...                        # all additional non-default parameters
                ) where {NF<:AbstractFloat}
@@ -43,7 +43,7 @@ end
     M = Model(P,C) 
 The model struct which holds all the parameters (P) and constants (C)
 """
-struct Model{NF<:AbstractFloat} <: ModelSetup
+struct Model{NF<:AbstractFloat} #<: ModelSetup
     parameters::SystemParameters
     constants::Constants{NF}
 end

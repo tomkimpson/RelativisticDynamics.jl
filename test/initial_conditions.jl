@@ -1,9 +1,9 @@
 
 using RelativisticDynamics
 using Test
-using Zygote
+#using Zygote
 using TensorOperations
-using LinearAlgebra
+#using LinearAlgebra
 using Distributions
 using Tullio
 
