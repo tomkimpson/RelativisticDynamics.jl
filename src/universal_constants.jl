@@ -8,8 +8,8 @@ These are derived from the user-defined parameters
      
     # 1. Fundamental constants
     light_c  :: NF            # Speed of light in a vacuum, m/s
-    Newton_g :: NF            # Newton's gravitational constant, m3⋅kg−1⋅s−2 
-    Msolar   :: NF            # Solar mass, kg 
+    μ        :: NF            # Standard gravitational parameter GM, m^3⋅s−2
+
 
     # 2. Initial spacetime coordinates 
     r_initial :: NF
@@ -40,9 +40,10 @@ Generator function for a Constants struct.
 function Constants(P::SystemParameters)
 
     # Fundamental constants
-    light_c  = 3e8
-    Newton_g = 6.67408e-11
-    Msolar   = 1.989e30
+    light_c  = 299792458.0 #speed of light in m/s
+    μ        = 1.32712440018e20 #standard gravitational parameter GM, m^3⋅s−2
+    
+
 
     #Initial coordinates
     @unpack α = P
@@ -58,8 +59,8 @@ function Constants(P::SystemParameters)
 
     #Pulsar 
     @unpack rPSR,mPSR,mBH,p0 = P
-    inertia = 0.40*mPSR*Msolar*(rPSR*1e3)^2         # Moment of inertia in SI units. Assumes a solid ball 
-    convert_spin= light_c/(Newton_g*(mBH*Msolar)^2) # Multiply by this to go TO Natural units
+    inertia = 0.40*mPSR*(rPSR*1e3)^2         # Moment of inertia. Assumes a solid ball 
+    convert_spin= light_c/(μ*mBH^2)          # Multiply by this to go TO Natural units
     s0 = convert_spin*2.0*pi*inertia/p0
     m0 = mPSR/mBH
 
@@ -74,7 +75,7 @@ function Constants(P::SystemParameters)
 
     
    # This implies conversion to NF
-    return Constants{P.NF}(light_c,Newton_g,Msolar,
+    return Constants{P.NF}(light_c,μ,
                            r_initial,θ_initial,ϕ_initial,
                            E,L,Q,
                            s0,m0,

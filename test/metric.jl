@@ -1,9 +1,9 @@
 using RelativisticDynamics
 using Test
 using Enzyme
-#using TensorOperations
-#using LinearAlgebra
+using LinearAlgebra
 using Distributions
+using Tullio
 
 @testset "Trace of the metric" begin
     
@@ -19,9 +19,9 @@ using Distributions
         g = RelativisticDynamics.covariant_metric(coords,a)
         g_inverse = RelativisticDynamics.contravariant_metric(coords,a)
         #Check metric trace is OK 
-        @tensor begin
-        δ[a,c] := g[a,b] * g_inverse[b,c]  #:= allocates a new array
-        end
+        
+        @tullio δ[a,c] := g[a,b] * g_inverse[b,c]  #:= allocates a new array
+        #end
         @test isapprox(tr(δ),4.0)
     end
 
@@ -55,9 +55,8 @@ end
             g_∂[:,:,i] = autodiff(Forward, RelativisticDynamics.covariant_metric, DuplicatedNoNeed, Duplicated(x, shadow[i]), Const(a))[1]
         end 
         
-        @tensor begin
-            Γ[μ,ν,λ] := 0.50*g_inverse[μ,ρ]*(g_∂[ρ,ν,λ] +g_∂[ρ,λ,ν]-g_∂[ν,λ,ρ])  #:= allocates a new array
-        end
+        @tullio Γ[μ,ν,λ] := 0.50*g_inverse[μ,ρ]*(g_∂[ρ,ν,λ] +g_∂[ρ,λ,ν]-g_∂[ν,λ,ρ])  #:= allocates a new array
+        #end
 
         #Compare with the analytical solution
         Γ_analytical = RelativisticDynamics.christoffel(x,a)
@@ -218,11 +217,30 @@ Kretschman scalar for the Kerr metric
 """
 function Kretschmann_scalar(r,θ,a)
 
-    Σ = sigma(r,θ,a)
+    Σ = r^2 + a^2 * cos(θ)^2
 
     return 48.0*(2.0*r^2-Σ)*(Σ^2-16.0*r^2*a^2*cos(θ)^2)/Σ^6
 
 end 
+
+# @testset "Kerr functions for a=0" begin
+    
+#     r = rand(Uniform(3.0,1e5))      # Radial coordinate. 3.0 as rough lower limit of an event horizon
+#     θ = rand(Uniform(0.0, 2.0*π))
+#     a = 0.0
+
+
+#     Δ = delta(r,a)
+#     Σ =  sigma(r,θ,a)
+ 
+#     #This is what they should be if a=0.0
+#     @test Δ == r^2 - 2.0*r
+#     @test Σ == r^2 
+
+#     K = Kretschmann_scalar(r,θ,a)
+#     @test isapprox(K,48.0/r^6,atol=eps(Float64))
+
+# end
 
 
 
@@ -255,9 +273,8 @@ end
         Riemann_covar_schwarzchild = schwarzchild_covariant_riemann(coords,a)
 
         #The contra/covar version of the Riemann tensor for schwarzchild
-        @tensor begin
-            Riemann_schwarzchild[μ,ν,ρ,σ] := g_inverse[μ,λ]*Riemann_covar_schwarzchild[λ,ν,ρ,σ]
-        end
+        @tullio Riemann_schwarzchild[μ,ν,ρ,σ] := g_inverse[μ,λ]*Riemann_covar_schwarzchild[λ,ν,ρ,σ]
+       # end
 
         #Compare 
         @test isapprox(Riemann_analytical,Riemann_schwarzchild)
@@ -293,23 +310,50 @@ end
       
 
         #Fully covariant form 
-        @tensor begin
-            Riemann_covar[μ,ν,ρ,σ] := g[μ,λ]*Riemann[λ,ν,ρ,σ]
-        end
+        @tullio Riemann_covar[μ,ν,ρ,σ] := g[μ,λ]*Riemann[λ,ν,ρ,σ]
+        #end
         #Fully contravariant form 
-        @tensor begin
-            Riemann_contra[μ,ν,α,β] := g_inverse[μ,i]*g_inverse[ν,j]*g_inverse[α,k]*g_inverse[β,l]*Riemann_covar[i,j,k,l]
-        end
+        @tullio Riemann_contra[μ,ν,α,β] := g_inverse[μ,i]*g_inverse[ν,j]*g_inverse[α,k]*g_inverse[β,l]*Riemann_covar[i,j,k,l]
+        
 
         #Kretschman scalar 
-        @tensor begin
-            Kretschman = Riemann_contra[α,β,μ,ν] * Riemann_covar[α,β,μ,ν] 
-        end
+        @tullio Kretschman = Riemann_contra[α,β,μ,ν] * Riemann_covar[α,β,μ,ν] 
+        #end
 
-        Kretschman_formula = RelativisticDynamics.Kretschmann_scalar(r,θ,a)
+        Kretschman_formula = Kretschmann_scalar(r,θ,a)
         @test isapprox(Kretschman,Kretschman_formula)
 
     end
+
+
+
+# @testset "Zero spin MPD case for mapping functions" begin
+    
+#     NF = Float64
+
+#     m = :MPD
+#     a = 0.0
+
+#     for i in 1:5
+#         r = rand(Uniform(3.0,1e5)) 
+#         θ = rand(Uniform(0.0, 2.0*π))
+        
+#         #Mapping functions
+#         fr = RelativisticDynamics.mapping_f(r,a,cos(θ))
+#         gr = RelativisticDynamics.mapping_g(r,a)
+#         hr = RelativisticDynamics.mapping_h(r,a,cos(θ))
+#         dr = RelativisticDynamics.mapping_d(r,a,cos(θ))
+
+#         #Zero spin definitions
+#         @test fr == r^4
+#         @test gr == 0.0
+#         @test isapprox(hr, r*(r-2.0) + (cos(θ)^2)/(1.0 - cos(θ)^2) *(r^2-2.0*r))
+#         @test isapprox(dr, (r^2)*(r^2-2.0*r))
+
+#     end 
+    
+# end
+
 
 end 
 

@@ -110,10 +110,10 @@ function StackedPlot(solution,model,savepath="")
 
     #Convert to km in the z-direction
     mBH = model.parameters.mBH
-    Msolar = 2e30
-    c = 3e8
-    G = 6.67e-11
-    factor = G*mBH*Msolar/c^2
+    c   = model.constant.light_c
+    μ   = model.constant.μ
+   
+    factor = mBH*μ/c^2
     z_km = z * factor/1e3
 
 

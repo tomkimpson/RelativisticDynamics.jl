@@ -9,10 +9,11 @@ $$\frac{Dp^{\mu}}{d \lambda} = -\frac{1}{2}{R^{\mu}}_{\nu \alpha \beta} u^{\nu} 
 $$\frac{Ds^{\mu \nu}}{d \lambda} =p^{\mu}u^{\nu} - p^{\nu}u^{\mu}$$
 for affine parameter $\lambda$, 4-velocity $u^{\nu}$ and Riemann curvature tensor ${R^{\mu}}_{\nu \alpha \beta}$, with $\frac{D}{d\lambda}$ denoting a covariant derivative. We ignore the higher order moments since for pulsar mass ($m$) << BH mass ($M$) and pulsar radius << BH radius, the motion is dominated by the lowest order moments. 
 
-The system is closed by providing a spin supplementary condition. Throughout this package we take the Tulczyjew-Dixon (TD) condition
+The system is closed by providing a spin supplementary condition (SSC). Choosing an SSC is equivalent to choosing the observer who measures the centre of mass of the spinning body - in GR the centre of mass is observer dependent! Multiple SSCs exist, and different choices of SSC will naturally lead to different solutions for the system. However, for the Kerr spacetime and within the pole-dipole approximation (see below) all these solutions for the centre of mass (the "minimal worldtube") are contained within the convex hull of the body's worldtube (see [Costa & Natário, 2015](https://arxiv.org/abs/1410.6443) for an thorough discussion of the spin conditions). Throughout this package we take the Tulczyjew-Dixon (TD) condition
 
 $$s^{\mu \nu} p_{\nu} = 0$$
-see e.g. [Costa & Natário, 2015](https://arxiv.org/abs/1410.6443) for discussion of the spin conditions.
+which is equivalent to choosing the centre of mass to be the one measured in the zero-3 momentum frame, which has the advantage of specifying a unique worldline 
+
 
 In the extreme mass ratio limit m << M, the pulsar Möller radius is much less than the gravitational lengthscale. This means that the pole-dipole interaction is much stronger than the dipole-dipole interaction. Within this approximation, the MPD equations reduced to a set of ODEs (see e.g. [Mashoon & Singh, 2006](https://arxiv.org/abs/astro-ph/0608278), [Singh, Wu & Sarty, 2014](https://arxiv.org/abs/1403.7171))
 
