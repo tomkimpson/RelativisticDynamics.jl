@@ -1,7 +1,3 @@
-using RelativisticDynamics
-using Test
-
-
 @testset "Basic run through" begin
     try
         solution,model = RelativisticDynamics.orbit()

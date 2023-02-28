@@ -1,8 +1,9 @@
 using RelativisticDynamics
 using Test
-#using Zygote
-#using LinearAlgebra
+using LinearAlgebra
 using Distributions
+using Tullio
+using Enzyme
 
 # GENERAL
 include("metric.jl")

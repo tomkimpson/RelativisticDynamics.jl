@@ -1,6 +1,5 @@
-#using Zygote
-#using PreallocationTools
-
+using SciMLSensitivity
+using Zygote
 
 """
     Δ = delta(r,a)
@@ -26,9 +25,11 @@ Construct the NxN matrix of the covariant metric.
 function covariant_metric(coords,a)
 
     g = zeros(typeof(a),4,4)
+
     t,r,θ,ϕ =  coords[1],coords[2],coords[3],coords[4]
     Σ = sigma(r,θ,a)
     Δ = delta(r,a)
+
 
     g[1,1] =   -(1.0 - 2.0*r / Σ)
     g[2,2] =   Σ / Δ

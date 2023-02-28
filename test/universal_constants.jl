@@ -1,17 +1,3 @@
-using RelativisticDynamics
-using Test
-#using Zygote
-#using LinearAlgebra
-using Distributions
-
-
-using Combinatorics
-
-
-
-
-
-
 @testset "MPD Carter constant for zero inclination" begin
     
     NF = Float64

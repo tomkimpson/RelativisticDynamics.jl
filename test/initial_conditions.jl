@@ -1,12 +1,3 @@
-
-using RelativisticDynamics
-using Test
-#using Zygote
-#using LinearAlgebra
-using Distributions
-using Tullio
-
-
 @testset "Initial conditions runs OK for default initialization" begin
     
     NF = Float64

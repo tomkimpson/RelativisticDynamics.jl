@@ -1,7 +1,3 @@
-using LinearAlgebra
-#using ChainRulesCore
-
-
 """
     p_{μ} = convert_to_covariant(metric,p^{μ})
 Convert a vector from contravariant form to convariant form using the covariant metric 
@@ -23,8 +19,6 @@ function levi_civita_symbol()
 
     # Levi civita tensor
     levi = zeros(Integer,4,4,4,4) 
-    #ChainRulesCore.ignore_derivatives() do # This can be safely ignored by the differentiator - no dependence on the input parameters.
-
         for i in 1:4
             for j in 1:4
                 for k in 1:4
@@ -34,9 +28,7 @@ function levi_civita_symbol()
                     end
                 end 
             end
-        end 
-
-    #end  
+        end  
 
     return levi 
 end 

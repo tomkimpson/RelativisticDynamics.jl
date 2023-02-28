@@ -1,9 +1,3 @@
-using RelativisticDynamics
-using Test
-using Enzyme
-using LinearAlgebra
-using Distributions
-using Tullio
 
 @testset "Trace of the metric" begin
     

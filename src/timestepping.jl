@@ -1,7 +1,5 @@
 
 using DifferentialEquations
-#using ComponentArrays
-#using SciMLSensitivity
 using Parameters: @unpack
 
 
@@ -11,9 +9,7 @@ The timestepping integration once all variables have been initialised
 """
 function timestepping(X::PrognosticVariables, M)
 
-
 @unpack a,m0, Tint = M.constants
-
 
 tspan = (zero(M.parameters.NF),M.constants.Tint) 
 u = vcat(X.xvector,X.pvector,X.svector)
@@ -22,9 +18,6 @@ params = [a,m0]
 
 ode_prob = ODEProblem(MPD!,u,tspan,params)
 ode_solution = solve(ode_prob,DifferentialEquations.RK4())
-#ode_solution = solve(ode_prob,DifferentialEquations.Tsit5()) #, reltol=1e-8, abstol=1e-8)
-
-
 return ode_solution
 
 

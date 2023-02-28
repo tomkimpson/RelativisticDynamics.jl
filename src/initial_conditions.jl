@@ -52,7 +52,6 @@ function initial_conditions(M)
 
     #Turn 4 velocity into 4 momentum
     pvector = m0*[tdot,rdot,θdot,ϕdot]
-    
     pvector_covar = convert_to_covariant(g,pvector)
 
     

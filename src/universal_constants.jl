@@ -48,7 +48,7 @@ function Constants(P::SystemParameters)
     #Initial coordinates
     @unpack α = P
     r_initial = α
-    θ_initial = π/2.0
+    θ_initial = π/2.0 # starts in the plane by default
     ϕ_initial = 0.0
 
 
@@ -70,9 +70,6 @@ function Constants(P::SystemParameters)
     @unpack Norbits = P
     Tint = Norbits*2*π*α^(3/2)
 
-
-    
-
     
    # This implies conversion to NF
     return Constants{P.NF}(light_c,μ,
@@ -81,7 +78,6 @@ function Constants(P::SystemParameters)
                            s0,m0,
                            Tint,
                            P.a)
-
 
 
 end
