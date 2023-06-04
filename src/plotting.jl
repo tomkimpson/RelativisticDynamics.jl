@@ -3,7 +3,6 @@
 
 using Plots 
 using LaTeXStrings
-using Printf
 
 """
     PlotTrajectory(solution,model,dimensions=[1,2,3],savepath="")
@@ -15,8 +14,8 @@ function PlotTrajectory(solution,model,dimensions=[1,2,3],savepath="")
 
     @unpack a = model.parameters    #Get the BH spin parameter 
     
-    println("Plotting the solution generated with the following user defined parameters")
-    display(model.parameters)
+    println("Plotting the solution generated with the below user-defined parameters")
+    println(model.parameters)
     println("-------------------------------")
 
     #Interpolate to higher resolution for smooth plotting   
@@ -110,10 +109,10 @@ function StackedPlot(solution,model,savepath="")
 
     #Convert to km in the z-direction
     mBH = model.parameters.mBH
-    Msolar = 2e30
-    c = 3e8
-    G = 6.67e-11
-    factor = G*mBH*Msolar/c^2
+    c   = model.constant.light_c
+    μ   = model.constant.μ
+   
+    factor = mBH*μ/c^2
     z_km = z * factor/1e3
 
 

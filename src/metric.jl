@@ -1,5 +1,21 @@
+using SciMLSensitivity
 using Zygote
-using PreallocationTools
+
+"""
+    Δ = delta(r,a)
+The well-known delta function of the Kerr metric
+"""
+function delta(r,a)
+return r^2 -2.0*r + a^2
+end 
+
+"""
+    Σ = sigma(r,θ,a)
+The well-known sigma function of the Kerr metric
+"""
+function sigma(r,θ,a)
+return r^2 + a^2 * cos(θ)^2
+end 
 
 
 """
@@ -10,11 +26,16 @@ function covariant_metric(coords,a)
 
     g = zeros(typeof(a),4,4)
 
-    g[1,1] =   metric_g11(coords,a) 
-    g[2,2] =   metric_g22(coords,a) 
-    g[3,3] =   metric_g33(coords,a) 
-    g[4,4] =   metric_g44(coords,a) 
-    g[1,4] =   metric_g14(coords,a) 
+    t,r,θ,ϕ =  coords[1],coords[2],coords[3],coords[4]
+    Σ = sigma(r,θ,a)
+    Δ = delta(r,a)
+
+
+    g[1,1] =   -(1.0 - 2.0*r / Σ)
+    g[2,2] =   Σ / Δ
+    g[3,3] =   Σ 
+    g[4,4] =   sin(θ)^2 * ((r^2 +a^2)^2 - Δ*a^2*sin(θ)^2) / Σ
+    g[1,4] =   -2.0*a*r*sin(θ)^2/Σ 
     g[4,1] =   g[1,4] 
 
     return g
@@ -30,17 +51,21 @@ Metric components are defined via indvidual functions to allow for auto diff in 
 function contravariant_metric(coords,a)
 
     metric_contra = zeros(typeof(a),4,4)
+    t,r,θ,ϕ =  coords[1],coords[2],coords[3],coords[4]
+    Σ = sigma(r,θ,a)
+    Δ = delta(r,a)
 
-    metric_contra[1,1] = metric_contra_g11(coords,a)
-    metric_contra[2,2] = metric_contra_g22(coords,a)
-    metric_contra[3,3] = metric_contra_g33(coords,a)
-    metric_contra[4,4] = metric_contra_g44(coords,a)
-    metric_contra[1,4] = metric_contra_g14(coords,a)
+    
+    denom = Δ*sin(θ)^2
+
+    metric_contra[1,1] = -(sin(θ)^2 * ((r^2 +a^2)^2 - Δ*a^2*sin(θ)^2) / Σ)/denom 
+    metric_contra[2,2] = Δ/Σ
+    metric_contra[3,3] = 1.0/Σ 
+    metric_contra[4,4] = -(-(1.0 - 2.0*r / Σ))/denom
+    metric_contra[1,4] = (-2.0*a*r*sin(θ)^2/Σ)/denom
     metric_contra[4,1] = metric_contra[1,4]
     return metric_contra
 end 
-
-
 
 
 """
@@ -112,7 +137,7 @@ function christoffel(coords,a)
     Γ[4,4,2]=Γ[4,2,4]  
     Γ[4,4,3]=Γ[4,3,4]  
 
-    #set_to_zero!(Γ)
+    
     return Γ
 end 
 
@@ -256,175 +281,83 @@ function riemann(coords,a)
     Rtensor[4,1,4,1] = -Rtensor[4,1,1,4]
     
 
-    #set_to_zero!(Rtensor)
+    
     return Rtensor
 
 end 
 
 
-"""
-    R = schwarzchild_covariant_riemann(coords,a)
-
-Special case - the fully covariant components of the Riemann tensor for schwarzchild metric
-Used for testing 
-"""
-function schwarzchild_covariant_riemann(coords,a)
-
-    r = coords[2]
-    θ = coords[3]
-   
-    Rtensor = zeros(typeof(a),4,4,4,4)
-
-    Rtensor[1,2,1,2] = -2.0/r^3
-    Rtensor[1,3,1,3] = (r-2.0)/r^2
-    Rtensor[1,4,1,4] = (r-2.0)*sin(θ)^2/r^2
-    Rtensor[2,3,2,3] = -1.0/(r-2.0)
-    Rtensor[2,4,2,4] = -sin(θ)^2/(r-2.0)
-    Rtensor[3,4,3,4] = r*2.0*sin(θ)^2
-
-
-    #Symmetries
-    Rtensor[1,2,2,1] = -Rtensor[1,2,1,2]
-    Rtensor[1,3,3,1] = -Rtensor[1,3,1,3]
-    Rtensor[1,4,4,1] = -Rtensor[1,4,1,4]
-    Rtensor[2,3,3,2]=  -Rtensor[2,3,2,3]
-    Rtensor[2,4,4,2] = -Rtensor[2,4,2,4]
-    Rtensor[3,4,4,3] = -Rtensor[3,4,3,4]
-
-    Rtensor[2,1,1,2] = -Rtensor[1,2,1,2]
-    Rtensor[3,1,1,3] = -Rtensor[1,3,1,3]
-    Rtensor[4,1,1,4] = -Rtensor[1,4,1,4]
-    Rtensor[3,2,2,3]=  -Rtensor[2,3,2,3]
-    Rtensor[4,2,2,4] = -Rtensor[2,4,2,4]
-    Rtensor[4,3,3,4] = -Rtensor[3,4,3,4]
-
-    Rtensor[2,1,2,1] = Rtensor[1,2,1,2]
-    Rtensor[3,1,3,1] = Rtensor[1,3,1,3] 
-    Rtensor[4,1,4,1] = Rtensor[1,4,1,4] 
-    Rtensor[3,2,3,2] = Rtensor[2,3,2,3] 
-    Rtensor[4,2,4,2] = Rtensor[2,4,2,4] 
-    Rtensor[4,3,4,3] = Rtensor[3,4,3,4] 
-
-    return Rtensor
-
-
-
-end 
-
-"""
-    g = metric_g11(coords,a)
-The covariant tt component of the Kerr metric in Boyer Lindquist coordinates
-"""
-function metric_g11(x,a)
-    t,r,θ,ϕ =  x[1],x[2],x[3],x[4]
-    Σ = RelativisticDynamics.sigma(r,θ,a)
-    return -(1.0 - 2.0*r / Σ)
-end 
 
 
 """
-    g = metric_g22(coords,a)
-The covariant rr component of the Kerr metric in Boyer Lindquist coordinates
+    E,L,Q = ELQ(a,α,e,ι,D)
+Calculate the energy, angular momentum and Carter constant given the Keplerian orbital parameters, and the BH spin/direction
+Specific to the Kerr metric, see Schmidt 2002 arXiv:0202090
 """
-function metric_g22(x,a)
-    t,r,θ,ϕ =  x[1],x[2],x[3],x[4]
-    Σ = RelativisticDynamics.sigma(r,θ,a)
-    Δ = RelativisticDynamics.delta(r,a)
-    return Σ / Δ
-end 
-
-"""
-    g = metric_g33(coords,a)
-The covariant θθ component of the Kerr metric in Boyer Lindquist coordinates
-"""
-function metric_g33(x,a)
-    t,r,θ,ϕ =  x[1],x[2],x[3],x[4]
-    Σ = RelativisticDynamics.sigma(r,θ,a)
-    return Σ 
-end 
-
-"""
-    g = metric_g44(coords,a)
-The covariant ϕϕ component of the Kerr metric in Boyer Lindquist coordinates
-"""
-function metric_g44(x,a)
-    t,r,θ,ϕ =  x[1],x[2],x[3],x[4]
-    Σ = RelativisticDynamics.sigma(r,θ,a)
-    Δ = RelativisticDynamics.delta(r,a)
-    return sin(θ)^2 * ((r^2 +a^2)^2 - Δ*a^2*sin(θ)^2) / Σ
-end 
-
-"""
-    g = metric_g14(coords,a)
-The covariant tϕ component of the Kerr metric in Boyer Lindquist coordinates
-"""
-function metric_g14(x,a)
-    t,r,θ,ϕ =  x[1],x[2],x[3],x[4]
-    Σ = RelativisticDynamics.sigma(r,θ,a)
-    return -2.0*a*r*sin(θ)^2/Σ
-end 
+function ELQ(a,α,e,ι,D)
 
 
-"""
-    g = metric_g11(coords,a)
-The covariant tt component of the Kerr metric in Boyer Lindquist coordinates
-"""
-function metric_contra_g11(x,a)
-    t,r,θ,ϕ =  x[1],x[2],x[3],x[4]
-    Σ = RelativisticDynamics.sigma(r,θ,a)
-    Δ = RelativisticDynamics.delta(r,a)
-    covar = sin(θ)^2 * ((r^2 +a^2)^2 - Δ*a^2*sin(θ)^2) / Σ
-    denom = Δ*sin(θ)^2
-    return -covar/denom 
-end 
+
+    #First define some nested functions
+    function mapping_f(r,a,zminus)
+        Δ = delta(r,a)
+        return r^4 +a^2 * (r*(r+2.0) + zminus^2 * Δ)
+    end
+
+    function mapping_g(r,a)
+        return 2*a*r
+    end
+
+    function mapping_h(r,a,zminus)
+        Δ = delta(r,a)
+        return r*(r-2.0) + (zminus^2 * Δ)/(1.0 - zminus^2)
+    end
+
+    function mapping_d(r,a,zminus)
+        Δ = delta(r,a)
+        return (r^2 +a^2 * zminus^2)*Δ
+    end
+        
+
+    zm = cos(ι)
+
+    r_periapsis= α*(1-e)
+    r_apoapsis = α*(1+e)
+    
+    #Define some orbital coefficients
+    f1 = mapping_f(r_periapsis,a,zm)
+    g1 = mapping_g(r_periapsis,a)
+    h1 = mapping_h(r_periapsis,a,zm)
+    d1 = mapping_d(r_periapsis,a,zm)
+
+    f2 = mapping_f(r_apoapsis,a,zm)
+    g2 = mapping_g(r_apoapsis,a)
+    h2 = mapping_h(r_apoapsis,a,zm)
+    d2 = mapping_d(r_apoapsis,a,zm)
+
+ 
+    #Determinants 
+    κ = d1*h2 - d2*h1 
+    ϵ = d1*g2 - d2*g1 
+    ρ = f1*h2 - f2*h1
+    η = f1*g2 - f2*g1 
+    σ = g1*h2 - g2*h1 
 
 
-"""
-    g = metric_g22(coords,a)
-The covariant rr component of the Kerr metric in Boyer Lindquist coordinates
-"""
-function metric_contra_g22(x,a)
-    t,r,θ,ϕ =  x[1],x[2],x[3],x[4]
-    Σ = RelativisticDynamics.sigma(r,θ,a)
-    Δ = RelativisticDynamics.delta(r,a)
-    return  Δ/Σ 
-end 
+    #Energy
+    E_numerator   = κ*ρ+2.0*η*σ-2.0*D*sqrt(σ*(σ*ϵ^2 + ρ*ϵ*κ-η*κ^2))
+    E_denominator = ρ^2 + 4.0*η*σ
+    E = sqrt(E_numerator/E_denominator)
 
-"""
-    g = metric_g33(coords,a)
-The covariant θθ component of the Kerr metric in Boyer Lindquist coordinates
-"""
-function metric_contra_g33(x,a)
-    t,r,θ,ϕ =  x[1],x[2],x[3],x[4]
-    Σ = RelativisticDynamics.sigma(r,θ,a)
-    return 1.0/Σ 
-end 
+    #Angular momentum 
+    L = -g1*E/h1 + D*sqrt(g1^2 * E^2 +(f1*E^2 -d1)*h1)/h1
 
-"""
-    g = metric_g44(coords,a)
-The covariant ϕϕ component of the Kerr metric in Boyer Lindquist coordinates
-"""
-function metric_contra_g44(x,a)
-    t,r,θ,ϕ =  x[1],x[2],x[3],x[4]
-    Σ = RelativisticDynamics.sigma(r,θ,a)
-    Δ = RelativisticDynamics.delta(r,a)
-    covar = -(1.0 - 2.0*r / Σ)
-    denom = Δ*sin(θ)^2
+    #Carter 
+    Q = zm^2*(a^2*(1.0-E^2)+L^2/(1.0-zm^2))
 
-    return -covar/denom
-end 
+    return E,L,Q
 
-"""
-    g = metric_g14(coords,a)
-The covariant tϕ component of the Kerr metric in Boyer Lindquist coordinates
-"""
-function metric_contra_g14(x,a)
-    t,r,θ,ϕ =  x[1],x[2],x[3],x[4]
-    Σ = RelativisticDynamics.sigma(r,θ,a)
-    Δ = RelativisticDynamics.delta(r,a)
-    covar = -2.0*a*r*sin(θ)^2/Σ
-    denom = Δ*sin(θ)^2
-    return covar/denom
+
 end 
 
 

@@ -4,3 +4,6 @@
 *.jl.mem
 /docs/build/
 Manifest.toml
+notes.md
+test/ad.jl
+test/mwe.jl

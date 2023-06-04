@@ -1,7 +1,5 @@
 
 using DifferentialEquations
-using ComponentArrays
-using SciMLSensitivity
 using Parameters: @unpack
 
 
@@ -9,21 +7,17 @@ using Parameters: @unpack
     solution = timestepping(X,M)
 The timestepping integration once all variables have been initialised
 """
-function timestepping(X::PrognosticVariables, M::Model)
+function timestepping(X::PrognosticVariables, M)
 
-@unpack a,e = M.parameters
-@unpack m0, Tint = M.constants
-
+@unpack a,m0, Tint = M.constants
 
 tspan = (zero(M.parameters.NF),M.constants.Tint) 
 u = vcat(X.xvector,X.pvector,X.svector)
 params = [a,m0]
 
-f = MPD! #The ODE 
+
 ode_prob = ODEProblem(MPD!,u,tspan,params)
 ode_solution = solve(ode_prob,DifferentialEquations.RK4())
-
-
 return ode_solution
 
 
@@ -53,13 +47,12 @@ function MPD!(du,u,p,τ)
     
 
 
-    levi = permutation_tensor(g)  #This is the fully contravariant Levi Civita tensor 
+    levi = levi_civita_tensor(g)  #This is the fully contravariant Levi Civita tensor 
     @tullio levi_mixed[ρ,σ,μ,ν] := g[μ,x]*g[ν,y] * levi[ρ,σ,x,y]
     
   
     stensor = spintensor(levi,pvector,svector,m0) #the fully contravariant spin tensor s^{ab}
 
-    
 
     # #Get the derivative objects
     # #4-velocity
@@ -83,15 +76,15 @@ end
 
 function calculate_four_velocity(pvector,Stensor,Riemann,g,m0)
 
-    @tullio scalar_divisor := Riemann[μ,ν,ρ,σ]*Stensor[μ,ν]*Stensor[ρ,σ] / 4.0
+    @tullio scalar_divisor := Riemann[μ,ν,ρ,σ]*Stensor[μ,ν]*Stensor[ρ,σ] / 4
     
-    @tullio correction[α] := 0.50 *(Stensor[α,β]*Riemann[β,γ,μ,ν]*pvector[γ]*Stensor[μ, ν])/(m0^2 + scalar_divisor)
+    @tullio correction[α] := (Stensor[α,β]*Riemann[β,γ,μ,ν]*pvector[γ]*Stensor[μ, ν])/(2*(m0^2 + scalar_divisor))
         
     @tullio dx[α] := -(pvector[α] + correction[α])/m0^2 
 
     @tullio  Vsq := g[μ,ν]*dx[μ]*dx[ν] 
 
-    PV = -sqrt(-1.0/Vsq)
+    PV = -sqrt(-1/Vsq)
     dx = dx * PV
 
     return dx

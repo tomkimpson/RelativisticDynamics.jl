@@ -1,26 +1,6 @@
-@testset "Kerr functions for a=0" begin
-    
-    r = rand(Uniform(3.0,1e5))      # Radial coordinate. 3.0 as rough lower limit of an event horizon
-    θ = rand(Uniform(0.0, 2.0*π))
-    a = 0.0
-
-
-    Δ = RelativisticDynamics.delta(r,a)
-    Σ =  RelativisticDynamics.sigma(r,θ,a)
- 
-    #This is what they should be if a=0.0
-    @test Δ == r^2 - 2.0*r
-    @test Σ == r^2 
-
-    K = RelativisticDynamics.Kretschmann_scalar(r,θ,a)
-    @test isapprox(K,48.0/r^6,atol=eps(Float64))
-
-end
-
-
 @testset "Raise and lower vector indices" begin
     
-    for n in 1:1
+    for n in 1:5
         r = rand(Uniform(3.0,1e5))      # Radial coordinate. 3.0 as rough lower limit of an event horizon
         θ = rand(Uniform(0.0, 2.0*π))
         a = rand(Uniform(0.0, 1.0))
@@ -39,6 +19,27 @@ end
     end 
     
 end
+
+
+@testset "Levi civita is antisymmetric" begin
+    
+    for n in 1:5
+        r = rand(Uniform(3.0,1e5))      # Radial coordinate. 3.0 as rough lower limit of an event horizon
+        θ = rand(Uniform(0.0, 2.0*π))
+        a = rand(Uniform(0.0, 1.0))
+
+
+        xvector=[0.0,r,θ,0.0] 
+        g  = RelativisticDynamics.covariant_metric(xvector,a)
+
+        levi = RelativisticDynamics.levi_civita_tensor(g)  #This is the fully contravariant Levi Civita tensor 
+        @test isapprox(permutedims(levi, (2,1,3,4)),-levi) #exchange of just 1 and 2
+
+    end 
+    
+end
+
+
 
 
 

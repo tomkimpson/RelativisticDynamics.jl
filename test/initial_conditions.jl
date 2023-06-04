@@ -1,13 +1,3 @@
-
-using RelativisticDynamics
-using Test
-using Zygote
-using TensorOperations
-using LinearAlgebra
-using Distributions
-using Tullio
-
-
 @testset "Initial conditions runs OK for default initialization" begin
     
     NF = Float64
@@ -124,7 +114,7 @@ end
         g  = RelativisticDynamics.covariant_metric(initialization.xvector,a)
 
 
-        levi = RelativisticDynamics.permutation_tensor(g)  #This is the fully contravariant Levi Civita tensor 
+        levi = RelativisticDynamics.levi_civita_tensor(g)  #This is the fully contravariant Levi Civita tensor 
         
         spin_tensor = RelativisticDynamics.spintensor(levi,initialization.pvector,initialization.svector,C.m0) #the fully contravariant spin tensor s^{ab}
 

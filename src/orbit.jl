@@ -3,11 +3,13 @@
     solution,model = orbit(NF,kwargs...)
     
 Runs RelativisticDynamics.jl with number format `NF` and any additional parameters in the keyword arguments
-`kwargs...`. Any unspecified parameters will use the default values as defined in `src/parameters.jl`."""
+`kwargs...`. Any unspecified parameters will use the default values as defined in `src/system_parameters.jl`."""
 function orbit(::Type{NF}=Float64;              # number format, use Float64 as default
                kwargs...                        # all additional non-default parameters
                ) where {NF<:AbstractFloat}
 
+
+    
     # Setup all system parameters, universal constants etc.
     P = SystemParameters(NF=NF;kwargs...) # Parameters
     bounds_checks(P)                      # Check all parameters are reasonable
@@ -16,9 +18,10 @@ function orbit(::Type{NF}=Float64;              # number format, use Float64 as 
 
     #Initial conditions 
     initialization = initial_conditions(M)
-
+    
     #Evolve in time
     solution = timestepping(initialization, M)
+    
     return solution, M
 
 end
@@ -39,4 +42,12 @@ function bounds_checks(P::SystemParameters)
 end 
 
 
+"""
+    M = Model(P,C) 
+The model struct which holds all the parameters (P) and constants (C)
+"""
+struct Model{NF<:AbstractFloat} #<: ModelSetup
+    parameters::SystemParameters
+    constants::Constants{NF}
+end
 

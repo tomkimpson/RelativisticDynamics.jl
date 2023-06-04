@@ -13,7 +13,7 @@ end
 """
     initialization = initial_conditions(M)
 Setup the initial conditions for the MPD orbital dynamics"""
-function initial_conditions(M::Model)
+function initial_conditions(M)
 
 
     @unpack NF = M.parameters
@@ -27,21 +27,7 @@ function initial_conditions(M::Model)
     r,θ= xvector[2],xvector[3] 
     Δ = delta(r,a)
     Σ = sigma(r,θ,a)
-
-
-    #To allow mutation of elements.
-    #This is not needed in the actual covariant_metric() function
-    #Why is this? Perhaps down to how SciMLSensitivity/DifferentialEquations.jl handles things?
-    #Cleaner to just all g = covariant_metric(coords,a)
-    xs = zeros(typeof(a),4,4)
-    metric_covar = Zygote.Buffer(xs) # https://fluxml.ai/Zygote.jl/latest/utils/#Zygote.Buffer
-    metric_covar[1,1] =  metric_g11(xvector,a) 
-    metric_covar[2,2] =  metric_g22(xvector,a) 
-    metric_covar[3,3] =  metric_g33(xvector,a) 
-    metric_covar[4,4] =  metric_g44(xvector,a) 
-    metric_covar[1,4] =  metric_g14(xvector,a) 
-    metric_covar[4,1] =  metric_covar[1,4]
-    g = copy(metric_covar)
+    g = covariant_metric(xvector,a)
 
    
     # 2. Four - momentum 
@@ -66,7 +52,6 @@ function initial_conditions(M::Model)
 
     #Turn 4 velocity into 4 momentum
     pvector = m0*[tdot,rdot,θdot,ϕdot]
-    
     pvector_covar = convert_to_covariant(g,pvector)
 
     
