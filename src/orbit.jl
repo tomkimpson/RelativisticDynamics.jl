@@ -1,4 +1,19 @@
 
+
+
+
+@with_kw struct ResultsWrapper
+    results 
+end
+
+
+
+
+
+
+
+
+
 """
     solution,model = orbit(NF,kwargs...)
     
@@ -9,20 +24,25 @@ function orbit(::Type{NF}=Float64;              # number format, use Float64 as 
                ) where {NF<:AbstractFloat}
 
 
-    
+
     # Setup all system parameters, universal constants etc.
     P = SystemParameters(NF=NF;kwargs...) # Parameters
     bounds_checks(P)                      # Check all parameters are reasonable
     C = Constants(P)                      # Constants
     M = Model(P,C)                        # Pack all of the above into a single *Model struct 
 
-    #Initial conditions 
+    #Initial conditions
     initialization = initial_conditions(M)
     
     #Evolve in time
     solution = timestepping(initialization, M)
-    
-    return solution, M
+
+
+    #Also return a struct of time + Cartesian coordinates
+    #This is useful for plotting 
+    cartesian_results = boyer_lindquist_to_cartesian(solution,M.constants.a)
+
+    return solution, M,cartesian_results #ResultsWrapper(solution)
 
 end
 

@@ -63,5 +63,44 @@ end
 
 
 
+"""
+    CartesianCoordinates()
+A struct to hold...
+"""
+@with_kw struct CartesianTrajectory           
+    x  
+    y  
+    z  
+end
+
+
+"""
+Given Boyer-Lindquist coordinates, return an struct of the Cartesian coordinates
+"""
+function boyer_lindquist_to_cartesian(solution,a)
+
+    interpolation_factor = 10 #By default upsample/interpolate by a factor of 10 for smooth plotting 
+
+    T = range(first(solution.t),last(solution.t),length=length(solution.t)*interpolation_factor)
+    p = solution(T)
+
+    # Extract relevant data from the interpolated solution 
+    r = p[2,:]
+    θ = p[3,:] 
+    ϕ = p[4,:]
+
+    # Boyer lindquist to Cartesian 
+    w = sqrt.(r.^2 .+ a^2) 
+    x = w .* sin.(θ) .* cos.(ϕ)
+    y = w .* sin.(θ) .* sin.(ϕ)
+    z = r .* cos.(θ)
+
+   return CartesianTrajectory(x,y,z)
+
+end 
+
+
+
+
 
 

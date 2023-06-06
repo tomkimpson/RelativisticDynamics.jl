@@ -1,143 +1,54 @@
-
-
-
-using Plots 
 using LaTeXStrings
+using RecipesBase
 
 """
-    PlotTrajectory(solution,model,dimensions=[1,2,3],savepath="")
-Plot trajectory of a body. Assumes coordinates are Boyer Lindquist. 
-Plots in either 2D or 3D depending on specification of dimensions.
-Saves a low resolution PNG figure to disk in example_media/
+Plotting recipe for use with Plots.jl
+
 """
-function PlotTrajectory(solution,model,dimensions=[1,2,3],savepath="")
+@recipe function f(r::CartesianTrajectory,dimensions=[1,2])
 
-    @unpack a = model.parameters    #Get the BH spin parameter 
-    
-    println("Plotting the solution generated with the below user-defined parameters")
-    println(model.parameters)
-    println("-------------------------------")
+    #Default plotting settings
 
-    #Interpolate to higher resolution for smooth plotting   
-    interpolation_factor = 10 
-    T = range(first(solution.t),last(solution.t),length=length(solution.t)*interpolation_factor)
-    p = solution(T)
+    size      -->  (600, 600)
+    linecolor --> 1
+    legend    --> :none
 
-    # Extract relevant data from the interpolated solution 
-    r = p[2,:]
-    θ = p[3,:] 
-    ϕ = p[4,:]
 
-    # Boyer lindquist to Cartesian 
-    w = sqrt.(r.^2 .+ a^2) 
-    x = w .* sin.(θ) .* cos.(ϕ)
-    y = w .* sin.(θ) .* sin.(ϕ)
-    z = r .* cos.(θ)
-    position = [x,y,z]
+    #User can specify which dimensions to plot [1,2,3] --> [x,y,z]
     position_labels = [L"x (r_h)",L"y (r_h)",L"z (r_h)"]
+    xlabel    --> position_labels[dimensions[1]]
+    ylabel    --> position_labels[dimensions[2]]
 
+    # return data
+    data = [r.x,r.y,r.z]
+    data[dimensions[1]], data[dimensions[2]]
 
-    #Setup plotting env
-    if length(dimensions) == 3
-        
-        plot(x,y,z,
-            legend=false,
-            xlabel=position_labels[1],
-            ylabel=position_labels[2],
-            zlabel=position_labels[3],
-            camera = (25, 30),
-            size = (1000, 600))
-
-
-        xBH = 0:0; yBH = 0:0; zBH = 0:0
-        scatter!(xBH, yBH,zBH,markercolor="red",markersize=5) 
-
-    elseif length(dimensions) == 2
-        idx1,idx2 = dimensions 
-        plt = plot(position[idx1],position[idx2],
-             xlabel=position_labels[idx1],
-             ylabel=position_labels[idx2],
-             legend=false,
-             size = (600, 600)
-             )
-
-        xBH = 0:0; yBH = 0:0
-        plt = scatter!(xBH, yBH,markercolor="red",markersize=5)
-
-    else
-        println("Those dimensions are not defined")
-        return
-
-    end
-
-    display(plt)
-    if ~isempty(savepath)
-        println("Saving figure to: ", savepath)
-        savefig(savepath)
-    end
-
-
+    r.x, r.y
 
 end 
 
 
-"""
-    StackedPlot(solution,model,savepath="")
-Plot the x-y and x-z trajectory of a body on two separate subplots
-"""
-function StackedPlot(solution,model,savepath="")
+# """
+# Plotting recipe for use with Plots.jl
+# """
+# @recipe function f(r::CartesianResults)
 
+#     seriestype --> :scatter
+#     #markershape --> :auto        # if markershape is unset, make it :auto
+#     markercolor :=  :blue  # force markercolor to be customcolor
+#     #xrotation   --> 45           # if xrotation is unset, make it 45
+#     #zrotation   --> 90           # if zrotation is unset, make it 90
 
-    #Interpolate to higher resolution for smooth plotting   
-    @unpack a = model.parameters    #Get the BH spin parameter 
+#     # get the seriescolor passed by the user
+#     #c = get(plotattributes, :seriescolor, :auto)
 
-    interpolation_factor = 10 
-    T = range(first(solution.t),last(solution.t),length=length(solution.t)*interpolation_factor)
-    p = solution(T)
+#     # return data
+#     r.x, r.y
 
-    # Extract relevant data from the interpolated solution 
-    r = p[2,:]
-    θ = p[3,:] 
-    ϕ = p[4,:]
-
-    # Boyer lindquist to Cartesian 
-    w = sqrt.(r.^2 .+ a^2) 
-    x = w .* sin.(θ) .* cos.(ϕ)
-    y = w .* sin.(θ) .* sin.(ϕ)
-    z = r .* cos.(θ)
-    
-
-    #Convert to km in the z-direction
-    mBH = model.parameters.mBH
-    c   = model.constant.light_c
-    μ   = model.constant.μ
-   
-    factor = mBH*μ/c^2
-    z_km = z * factor/1e3
-
-
-    #x-y 
-    plot(x,y,layout=grid(2,1, heights=(0.8,0.2)), size=(450,600),legend=false,link = :x)
-    plot!(ylabel=L"y (r_h)",subplot=1)
+# end 
 
 
 
-    xBH = 0:0; yBH = 0:0
-    plt = scatter!(xBH, yBH,markercolor="red",markersize=5,subplot=1)
-
-    #x-z
-    plot!(x,z_km,subplot=2,legend=false)
-    plot!(xlabel=L"x \rm (r_h)",subplot=2)
-    plot!(ylabel=L"z (km)",subplot=2)
 
 
-    display(plt)
-    if ~isempty(savepath)
-        println("Saving figure to: ", savepath)
-        savefig(savepath)
-    end
-
-
-
-end 
 
