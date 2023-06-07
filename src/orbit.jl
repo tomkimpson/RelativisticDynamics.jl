@@ -38,11 +38,8 @@ function orbit(::Type{NF}=Float64;              # number format, use Float64 as 
     solution = timestepping(initialization, M)
 
 
-    #Also return a struct of time + Cartesian coordinates
-    #This is useful for plotting 
-    cartesian_results = boyer_lindquist_to_cartesian(solution,M.constants.a)
 
-    return solution, M,cartesian_results #ResultsWrapper(solution)
+    return solution, M
 
 end
 
