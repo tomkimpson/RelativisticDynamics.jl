@@ -7,7 +7,7 @@ module RelativisticDynamics
 import Parameters: @with_kw, @unpack
 import DifferentialEquations
 using Tullio,Combinatorics,LinearAlgebra
-
+using Zygote
 # Exports
 export  orbit, PlotTrajectory, StackedPlot
 

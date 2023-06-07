@@ -19,6 +19,8 @@ function initial_conditions(M)
     @unpack NF = M.parameters
    
     # 1. Four- position
+
+
     @unpack r_initial,θ_initial, ϕ_initial = M.constants
     xvector = [0.0,r_initial,θ_initial, ϕ_initial] # Starting coordinates
 
@@ -27,8 +29,7 @@ function initial_conditions(M)
     r,θ= xvector[2],xvector[3] 
     Δ = delta(r,a)
     Σ = sigma(r,θ,a)
-    g = covariant_metric(xvector,a)
-
+    g= covariant_metric_zygote(xvector,a) #Zygote Buffer version of the covariant metric function which allows mutation
    
     # 2. Four - momentum 
     @unpack E,L,Q,m0 = M.constants 

@@ -40,6 +40,7 @@ function orbit(::Type{NF}=Float64;              # number format, use Float64 as 
 
 
     return solution, M
+    #return 1.0
 
 end
 

@@ -5,7 +5,7 @@ using RecipesBase
 """
 Plotting recipe for use with Plots.jl
 """
-@recipe function f(sol::ODESolution,a::Float64; upsample=10,vars_to_plot=[:x,:y])
+@recipe function f(sol::ODESolution,a::AbstractFloat; upsample=10,vars_to_plot=[:x,:y])
 
     #Default plotting settings
     size      -->  (600, 600)

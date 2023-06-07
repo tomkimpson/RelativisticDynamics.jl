@@ -31,7 +31,6 @@ function MPD!(du,u,p,τ)
     #Extract the coordinates/constants 
     t,r,θ,ϕ,pᵗ,pʳ,pᶿ,pᵠ,sᵗ,sʳ,sᶿ,sᵠ = u # coordinate variables
     a,m0 = p                            # constants
-
     #Define vectors from the coordinate variables. 
     xvector = [t,r,θ,ϕ]
     pvector = [pᵗ,pʳ,pᶿ,pᵠ]
@@ -40,9 +39,7 @@ function MPD!(du,u,p,τ)
     
     # # #Define some useful quantities for this timestep 
     g = covariant_metric(xvector,a)        # the metric 
-    
     Γ = christoffel(xvector,a)            # the Christoffel symbols
-   
     Riemann = riemann(xvector,a)          #the mixed contra/covar Riemann term R^{a}_{bcd}
     
     @tullio Riemann_covar[μ,ν,ρ,σ] := g[μ,λ]*Riemann[λ,ν,ρ,σ] #This is the fully covariant form R_{abcd}
@@ -76,8 +73,6 @@ function MPD!(du,u,p,τ)
     du[1:4] = uvector
     du[5:8] = dp
     du[9:12]= ds
-
-  
 
     nothing #function returns nothing
 
