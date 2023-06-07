@@ -11,22 +11,12 @@ function timestepping(X::PrognosticVariables, M)
 
 @unpack a,m0, Tint = M.constants
 
-tspan = (zero(M.parameters.NF),M.constants.Tint) 
-#tspan = (zero(M.parameters.NF),Float64(1000)) 
-
+tspan = (zero(M.parameters.NF),Float64(M.constants.Tint)) #Float64 is temporary patch while we wait for https://github.com/SciML/OrdinaryDiffEq.jl/pull/1955
 
 u = vcat(X.xvector,X.pvector,X.svector)
 params = [a,m0]
-
-
 ode_prob = ODEProblem(MPD!,u,tspan,params)
-
-
-#alg_hints=[:stiff]
-
 ode_solution = solve(ode_prob,DifferentialEquations.RK4())
-#ode_solution = solve(ode_prob,alg_hints=[:stiff])
-
 
 return ode_solution
 
@@ -37,7 +27,6 @@ end
 
 
 function MPD!(du,u,p,τ)
-
 
     #Extract the coordinates/constants 
     t,r,θ,ϕ,pᵗ,pʳ,pᶿ,pᵠ,sᵗ,sʳ,sᶿ,sᵠ = u # coordinate variables
@@ -106,7 +95,6 @@ function calculate_four_velocity(pvector,Stensor,Riemann,g,m0)
 
     @tullio  Vsq := g[μ,ν]*dx[μ]*dx[ν] 
 
-    #println("Vsq = ", " ", Vsq)
     PV = -sqrt(-1/Vsq)
     dx = dx * PV
 
