@@ -30,6 +30,7 @@ function initial_conditions(M)
     Δ = delta(r,a)
     Σ = sigma(r,θ,a)
     g= covariant_metric_zygote(xvector,a) #Zygote Buffer version of the covariant metric function which allows mutation
+    #g= covariant_metric(xvector,a) #Zygote Buffer version of the covariant metric function which allows mutation
    
     # 2. Four - momentum 
     @unpack E,L,Q,m0 = M.constants 

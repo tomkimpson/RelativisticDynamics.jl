@@ -38,7 +38,9 @@ function MPD!(du,u,p,τ)
 
     
     # # #Define some useful quantities for this timestep 
-    g = covariant_metric(xvector,a)        # the metric 
+    #g1 = covariant_metric(xvector,a)
+    g = covariant_metric_zygote(xvector,a)        # the metric 
+
     Γ = christoffel(xvector,a)            # the Christoffel symbols
     Riemann = riemann(xvector,a)          #the mixed contra/covar Riemann term R^{a}_{bcd}
     

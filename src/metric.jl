@@ -217,6 +217,9 @@ function covariant_metric(coords,a)
     g[1,4] =   -2.0*a*r*sin(θ)^2/Σ 
     g[4,1] =   g[1,4] 
 
+   # println("Normal metric")
+   # display(g)
+
     #return copy(g)
     return g
 
@@ -227,14 +230,11 @@ end
 function covariant_metric_zygote(coords,a)
 
     xs = zeros(typeof(a),4,4)
-    g = Zygote.Buffer(xs) #zeros(typeof(a),4,4)
-    
-    #g = zeros(typeof(a),4,4)
+    g = Zygote.bufferfrom(xs) 
 
     t,r,θ,ϕ =  coords[1],coords[2],coords[3],coords[4]
     Σ = sigma(r,θ,a)
     Δ = delta(r,a)
-
 
     g[1,1] =   -(1.0 - 2.0*r / Σ)
     g[2,2] =   Σ / Δ
@@ -244,15 +244,8 @@ function covariant_metric_zygote(coords,a)
     g[4,1] =   g[1,4] 
 
     return copy(g)
-    #return g
 
 end 
-
-
-
-
-
-
 
 
 
@@ -263,7 +256,10 @@ Metric components are defined via indvidual functions to allow for auto diff in 
 """
 function contravariant_metric(coords,a)
 
-    metric_contra = zeros(typeof(a),4,4)
+
+
+    xs = zeros(typeof(a),4,4)
+    metric_contra = Zygote.bufferfrom(xs)
     t,r,θ,ϕ =  coords[1],coords[2],coords[3],coords[4]
     Σ = sigma(r,θ,a)
     Δ = delta(r,a)
@@ -277,8 +273,36 @@ function contravariant_metric(coords,a)
     metric_contra[4,4] = -(-(1.0 - 2.0*r / Σ))/denom
     metric_contra[1,4] = (-2.0*a*r*sin(θ)^2/Σ)/denom
     metric_contra[4,1] = metric_contra[1,4]
-    return metric_contra
+    return copy(metric_contra)
 end 
+
+
+
+
+
+# """
+#     g=contravariant_metric(coords,a)
+# Construct the NxN matrix of the contravariant metric.
+# Metric components are defined via indvidual functions to allow for auto diff in unit tests
+# """
+# function contravariant_metric(coords,a)
+
+#     metric_contra = zeros(typeof(a),4,4)
+#     t,r,θ,ϕ =  coords[1],coords[2],coords[3],coords[4]
+#     Σ = sigma(r,θ,a)
+#     Δ = delta(r,a)
+
+    
+#     denom = Δ*sin(θ)^2
+
+#     metric_contra[1,1] = -(sin(θ)^2 * ((r^2 +a^2)^2 - Δ*a^2*sin(θ)^2) / Σ)/denom 
+#     metric_contra[2,2] = Δ/Σ
+#     metric_contra[3,3] = 1.0/Σ 
+#     metric_contra[4,4] = -(-(1.0 - 2.0*r / Σ))/denom
+#     metric_contra[1,4] = (-2.0*a*r*sin(θ)^2/Σ)/denom
+#     metric_contra[4,1] = metric_contra[1,4]
+#     return metric_contra
+# end 
 
 
 """
