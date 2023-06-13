@@ -211,12 +211,9 @@ end
 
 
 
+#Riemann tensor components test TBD
+#Passes when using separate pure functions, but need a method to do this for hessians applied to buffered arrays
 
-
-
-
-
-#EVERYTHING ABOVE THIS LINE WORKS--------------------------------
 
 
 # @testset "Riemann tensor components" begin
