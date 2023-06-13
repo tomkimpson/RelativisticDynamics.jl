@@ -1,9 +1,12 @@
 using RelativisticDynamics
-using Test
+using Test,Documenter
 using LinearAlgebra
 using Distributions
 using Tullio
-using Enzyme
+
+
+
+doctest(RelativisticDynamics)
 
 # GENERAL
 include("metric.jl")

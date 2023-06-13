@@ -25,3 +25,12 @@ Please see `notebooks/demo.ipynb` for some worked examples using `RelativisticDy
 
 
 
+```jldoctest
+a = 1
+b = 2
+a + b
+
+# output
+
+3
+```
