@@ -205,15 +205,10 @@ end
 
 
 
-
-
-
-
-
-
-#Riemann tensor components test TBD
-#Passes when using separate pure functions, but need a method to do this for hessians applied to buffered arrays
-
+#Riemann tensor components test: TBD
+#Passes when using separate pure functions for each non-zero metric component, but need a method to do this for hessians applied to general buffered arrays.
+#Currently exploring the best way to do this. For Kerr not a problem since the Riemann function is well-tested, but for general metrics 
+#it will be nice to get this working properly.
 
 
 # @testset "Riemann tensor components" begin

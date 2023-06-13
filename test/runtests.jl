@@ -5,7 +5,6 @@ using Distributions
 using Tullio
 
 
-
 doctest(RelativisticDynamics)
 
 # GENERAL
