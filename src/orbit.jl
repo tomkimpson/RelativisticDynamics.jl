@@ -1,19 +1,3 @@
-
-
-
-
-@with_kw struct ResultsWrapper
-    results 
-end
-
-
-
-
-
-
-
-
-
 """
     solution,model = orbit(NF,kwargs...)
     
@@ -22,9 +6,6 @@ Runs RelativisticDynamics.jl with number format `NF` and any additional paramete
 function orbit(::Type{NF}=Float64;              # number format, use Float64 as default
                kwargs...                        # all additional non-default parameters
                ) where {NF<:AbstractFloat}
-
-
-
     # Setup all system parameters, universal constants etc.
     P = SystemParameters(NF=NF;kwargs...) # Parameters
     bounds_checks(P)                      # Check all parameters are reasonable
@@ -37,10 +18,7 @@ function orbit(::Type{NF}=Float64;              # number format, use Float64 as 
     #Evolve in time
     solution = timestepping(initialization, M)
 
-
-
     return solution, M
-    #return 1.0
 
 end
 

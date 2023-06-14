@@ -1,130 +1,3 @@
-
-# Define the metric in terms of pure functions 
-# This is more verbose and explicit than the "normal" way of defining a metric 
-# but enables AD avoiding mutation by using Zygote https://fluxml.ai/Zygote.jl/stable/limitations/
-
-
-# """
-#     g = metric_g11(coords,a)
-# The covariant tt component of the Kerr metric in Boyer Lindquist coordinates
-# """
-# function metric_g11(x,a)
-#     t,r,θ,ϕ =  x[1],x[2],x[3],x[4]
-#     Σ = RelativisticDynamics.sigma(r,θ,a)
-#     return -(1.0 - 2.0*r / Σ)
-# end 
-
-
-# """
-#     g = metric_g22(coords,a)
-# The covariant rr component of the Kerr metric in Boyer Lindquist coordinates
-# """
-# function metric_g22(x,a)
-#     t,r,θ,ϕ =  x[1],x[2],x[3],x[4]
-#     Σ = RelativisticDynamics.sigma(r,θ,a)
-#     Δ = RelativisticDynamics.delta(r,a)
-#     return Σ / Δ
-# end 
-
-# """
-#     g = metric_g33(coords,a)
-# The covariant θθ component of the Kerr metric in Boyer Lindquist coordinates
-# """
-# function metric_g33(x,a)
-#     t,r,θ,ϕ =  x[1],x[2],x[3],x[4]
-#     Σ = RelativisticDynamics.sigma(r,θ,a)
-#     return Σ 
-# end 
-
-# """
-#     g = metric_g44(coords,a)
-# The covariant ϕϕ component of the Kerr metric in Boyer Lindquist coordinates
-# """
-# function metric_g44(x,a)
-#     t,r,θ,ϕ =  x[1],x[2],x[3],x[4]
-#     Σ = RelativisticDynamics.sigma(r,θ,a)
-#     Δ = RelativisticDynamics.delta(r,a)
-#     return sin(θ)^2 * ((r^2 +a^2)^2 - Δ*a^2*sin(θ)^2) / Σ
-# end 
-
-# """
-#     g = metric_g14(coords,a)
-# The covariant tϕ component of the Kerr metric in Boyer Lindquist coordinates
-# """
-# function metric_g14(x,a)
-#     t,r,θ,ϕ =  x[1],x[2],x[3],x[4]
-#     Σ = RelativisticDynamics.sigma(r,θ,a)
-#     return -2.0*a*r*sin(θ)^2/Σ
-# end 
-
-
-# """
-#     g = metric_g11(coords,a)
-# The covariant tt component of the Kerr metric in Boyer Lindquist coordinates
-# """
-# function metric_contra_g11(x,a)
-#     t,r,θ,ϕ =  x[1],x[2],x[3],x[4]
-#     Σ = RelativisticDynamics.sigma(r,θ,a)
-#     Δ = RelativisticDynamics.delta(r,a)
-#     covar = sin(θ)^2 * ((r^2 +a^2)^2 - Δ*a^2*sin(θ)^2) / Σ
-#     denom = Δ*sin(θ)^2
-#     return -covar/denom 
-# end 
-
-
-# """
-#     g = metric_g22(coords,a)
-# The covariant rr component of the Kerr metric in Boyer Lindquist coordinates
-# """
-# function metric_contra_g22(x,a)
-#     t,r,θ,ϕ =  x[1],x[2],x[3],x[4]
-#     Σ = RelativisticDynamics.sigma(r,θ,a)
-#     Δ = RelativisticDynamics.delta(r,a)
-#     return  Δ/Σ 
-# end 
-
-# """
-#     g = metric_g33(coords,a)
-# The covariant θθ component of the Kerr metric in Boyer Lindquist coordinates
-# """
-# function metric_contra_g33(x,a)
-#     t,r,θ,ϕ =  x[1],x[2],x[3],x[4]
-#     Σ = RelativisticDynamics.sigma(r,θ,a)
-#     return 1.0/Σ 
-# end 
-
-# """
-#     g = metric_g44(coords,a)
-# The covariant ϕϕ component of the Kerr metric in Boyer Lindquist coordinates
-# """
-# function metric_contra_g44(x,a)
-#     t,r,θ,ϕ =  x[1],x[2],x[3],x[4]
-#     Σ = RelativisticDynamics.sigma(r,θ,a)
-#     Δ = RelativisticDynamics.delta(r,a)
-#     covar = -(1.0 - 2.0*r / Σ)
-#     denom = Δ*sin(θ)^2
-
-#     return -covar/denom
-# end 
-
-# """
-#     g = metric_g14(coords,a)
-# The covariant tϕ component of the Kerr metric in Boyer Lindquist coordinates
-# """
-# function metric_contra_g14(x,a)
-#     t,r,θ,ϕ =  x[1],x[2],x[3],x[4]
-#     Σ = RelativisticDynamics.sigma(r,θ,a)
-#     Δ = RelativisticDynamics.delta(r,a)
-#     covar = -2.0*a*r*sin(θ)^2/Σ
-#     denom = Δ*sin(θ)^2
-#     return covar/denom
-# end 
-
-
-
-
-
-
 """
     Δ = delta(r,a)
 The well-known delta function of the Kerr metric
@@ -142,92 +15,40 @@ return r^2 + a^2 * cos(θ)^2
 end 
 
 
-
 # """
 #     g=covariant_metric(coords,a)
 # Construct the NxN matrix of the covariant metric.
 # """
 # function covariant_metric(coords,a)
 
-#     println("correct function")
-#     xs = zeros(typeof(a),4,4)
+#     #xs = zeros(typeof(a),4,4)
+#     #g = Zygote.Buffer(xs) #zeros(typeof(a),4,4)
+    
+#     g = zeros(typeof(a),4,4)
 
-#     g = Zygote.Buffer(zeros(typeof(a),4,4))
+#     t,r,θ,ϕ =  coords[1],coords[2],coords[3],coords[4]
+#     Σ = sigma(r,θ,a)
+#     Δ = delta(r,a)
 
-#     g[1,1] =   metric_g11(coords,a) 
-#     g[2,2] =   metric_g22(coords,a) 
-#     g[3,3] =   metric_g33(coords,a) 
-#     g[4,4] =   metric_g44(coords,a) 
-#     g[1,4] =   metric_g14(coords,a) 
+
+#     g[1,1] =   -(1.0 - 2.0*r / Σ)
+#     g[2,2] =   Σ / Δ
+#     g[3,3] =   Σ 
+#     g[4,4] =   sin(θ)^2 * ((r^2 +a^2)^2 - Δ*a^2*sin(θ)^2) / Σ
+#     g[1,4] =   -2.0*a*r*sin(θ)^2/Σ 
 #     g[4,1] =   g[1,4] 
 
-#     return copy(g)
+#    # println("Normal metric")
+#    # display(g)
 
-    
+#     #return copy(g)
+#     return g
 
 # end 
 
 
-# """
-#     g=contravariant_metric(coords,a)
-# Construct the NxN matrix of the contravariant metric.
-# Metric components are defined via indvidual functions to allow for auto diff in unit tests
-# """
-# function contravariant_metric(coords,a)
 
-#     metric_contra = zeros(typeof(a),4,4)
-
-#     metric_contra[1,1] = metric_contra_g11(coords,a)
-#     metric_contra[2,2] = metric_contra_g22(coords,a)
-#     metric_contra[3,3] = metric_contra_g33(coords,a)
-#     metric_contra[4,4] = metric_contra_g44(coords,a)
-#     metric_contra[1,4] = metric_contra_g14(coords,a)
-#     metric_contra[4,1] = metric_contra[1,4]
-#     return metric_contra
-# end 
-
-
-
-
-
-
-
-
-
-"""
-    g=covariant_metric(coords,a)
-Construct the NxN matrix of the covariant metric.
-"""
 function covariant_metric(coords,a)
-
-    #xs = zeros(typeof(a),4,4)
-    #g = Zygote.Buffer(xs) #zeros(typeof(a),4,4)
-    
-    g = zeros(typeof(a),4,4)
-
-    t,r,θ,ϕ =  coords[1],coords[2],coords[3],coords[4]
-    Σ = sigma(r,θ,a)
-    Δ = delta(r,a)
-
-
-    g[1,1] =   -(1.0 - 2.0*r / Σ)
-    g[2,2] =   Σ / Δ
-    g[3,3] =   Σ 
-    g[4,4] =   sin(θ)^2 * ((r^2 +a^2)^2 - Δ*a^2*sin(θ)^2) / Σ
-    g[1,4] =   -2.0*a*r*sin(θ)^2/Σ 
-    g[4,1] =   g[1,4] 
-
-   # println("Normal metric")
-   # display(g)
-
-    #return copy(g)
-    return g
-
-end 
-
-
-
-function covariant_metric_zygote(coords,a)
 
     xs = zeros(typeof(a),4,4)
     g = Zygote.bufferfrom(xs) 
@@ -277,32 +98,6 @@ function contravariant_metric(coords,a)
 end 
 
 
-
-
-
-# """
-#     g=contravariant_metric(coords,a)
-# Construct the NxN matrix of the contravariant metric.
-# Metric components are defined via indvidual functions to allow for auto diff in unit tests
-# """
-# function contravariant_metric(coords,a)
-
-#     metric_contra = zeros(typeof(a),4,4)
-#     t,r,θ,ϕ =  coords[1],coords[2],coords[3],coords[4]
-#     Σ = sigma(r,θ,a)
-#     Δ = delta(r,a)
-
-    
-#     denom = Δ*sin(θ)^2
-
-#     metric_contra[1,1] = -(sin(θ)^2 * ((r^2 +a^2)^2 - Δ*a^2*sin(θ)^2) / Σ)/denom 
-#     metric_contra[2,2] = Δ/Σ
-#     metric_contra[3,3] = 1.0/Σ 
-#     metric_contra[4,4] = -(-(1.0 - 2.0*r / Σ))/denom
-#     metric_contra[1,4] = (-2.0*a*r*sin(θ)^2/Σ)/denom
-#     metric_contra[4,1] = metric_contra[1,4]
-#     return metric_contra
-# end 
 
 
 """

@@ -38,40 +38,29 @@ function MPD!(du,u,p,τ)
 
     
     # # #Define some useful quantities for this timestep 
-    #g1 = covariant_metric(xvector,a)
-    g = covariant_metric_zygote(xvector,a)        # the metric 
-
+    g = covariant_metric(xvector,a)        # the metric 
     Γ = christoffel(xvector,a)            # the Christoffel symbols
     Riemann = riemann(xvector,a)          #the mixed contra/covar Riemann term R^{a}_{bcd}
     
     @tullio Riemann_covar[μ,ν,ρ,σ] := g[μ,λ]*Riemann[λ,ν,ρ,σ] #This is the fully covariant form R_{abcd}
     
-
-  
     levi = levi_civita_tensor(g)  #This is the fully contravariant Levi Civita tensor 
-   
     @tullio levi_mixed[ρ,σ,μ,ν] := g[μ,x]*g[ν,y] * levi[ρ,σ,x,y]
     
    
     stensor = spintensor(levi,pvector,svector,m0) #the fully contravariant spin tensor s^{ab}
 
 
-    # #Get the derivative objects
-    # #4-velocity
+    # Get the derivative objects
+    # 4-velocity
     uvector = calculate_four_velocity(pvector,stensor,Riemann_covar,g,m0)
 
-    # #4-momentum
-
-   
+    # 4-momentum
     dp = calculate_four_momentum(pvector,uvector,svector,Γ,Riemann,levi_mixed,m0)
 
-    # #4-spin
-
-   
+    # 4-spin
     ds = calculate_four_spin(pvector,uvector,svector,Γ,Riemann_covar,levi_mixed,m0)
     
-
-
     du[1:4] = uvector
     du[5:8] = dp
     du[9:12]= ds

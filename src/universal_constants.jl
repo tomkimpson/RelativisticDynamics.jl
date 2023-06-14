@@ -4,12 +4,9 @@ A struct to hold all variables which are constant over the course of the integra
 These are derived from the user-defined parameters 
 """
 @with_kw struct Constants{NF<:AbstractFloat}
-
-     
     # 1. Fundamental constants
     light_c  :: NF            # Speed of light in a vacuum, m/s
     μ        :: NF            # Standard gravitational parameter GM, m^3⋅s−2
-
 
     # 2. Initial spacetime coordinates 
     r_initial :: NF
@@ -43,19 +40,14 @@ function Constants(P::SystemParameters)
     light_c  = 299792458.0 #speed of light in m/s
     μ        = 1.32712440018e20 #standard gravitational parameter GM, m^3⋅s−2
     
-
-
     #Initial coordinates
     @unpack α = P
     r_initial = α
     θ_initial = π/2.0 # starts in the plane by default
     ϕ_initial = 0.0
 
-
-
     # Energy/Angular Momentum/Carter Constant 
     E,L,Q = ELQ(P.a,P.α,P.e,P.ι,P.orbit_dir)
-
 
     #Pulsar 
     @unpack rPSR,mPSR,mBH,p0 = P
@@ -64,7 +56,6 @@ function Constants(P::SystemParameters)
     s0 = convert_spin*2.0*pi*inertia/p0
     m0 = mPSR/mBH
 
-    
     #Estimate the orbital period from Kepler's 3rd. 
     #This is obviously inaccurate in relativity, but sufficient to get an approximate timescale over which to integrate 
     @unpack Norbits = P
