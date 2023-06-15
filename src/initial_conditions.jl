@@ -9,15 +9,13 @@ struct PrognosticVariables{NF<:AbstractFloat}
     svector         ::AbstractVector{NF}       
 end
 
-
 """
     initialization = initial_conditions(M)
 Setup the initial conditions for the MPD orbital dynamics"""
 function initial_conditions(M)
 
-
     @unpack NF = M.parameters
-   
+
     # 1. Four- position
     @unpack r_initial,θ_initial, ϕ_initial = M.constants
     xvector = [0.0,r_initial,θ_initial, ϕ_initial] # Starting coordinates
@@ -27,12 +25,10 @@ function initial_conditions(M)
     r,θ= xvector[2],xvector[3] 
     Δ = delta(r,a)
     Σ = sigma(r,θ,a)
-    g = covariant_metric(xvector,a)
-
+    g= covariant_metric(xvector,a) 
    
     # 2. Four - momentum 
     @unpack E,L,Q,m0 = M.constants 
-
 
     #These are 4 velocities from Schmidt 2002.
     #Initial Rdot is +ve as standard
@@ -42,19 +38,14 @@ function initial_conditions(M)
     θbar = Q - ((1-E^2)*a^2 + L^2/sin(θ)^2)*cos(θ)^2
     ϕbar = a*Pbar/Δ -a*E + L/sin(θ)^2
 
-    
     tdot = Tbar/Σ
     rdot = sqrt(Rbar)/Σ
     θdot = sqrt(θbar)/Σ
     ϕdot = ϕbar/Σ
 
-   
-
     #Turn 4 velocity into 4 momentum
     pvector = m0*[tdot,rdot,θdot,ϕdot]
     pvector_covar = convert_to_covariant(g,pvector)
-
-    
 
     # #3. Four - spin
     @unpack Sθ,Sϕ = M.parameters

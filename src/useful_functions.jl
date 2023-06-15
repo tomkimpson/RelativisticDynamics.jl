@@ -38,11 +38,8 @@ end
 Calcualte the Levi-civita tensor in an arbitrary basis.
 """
 function levi_civita_tensor(metric)
-
     ϵ = levi_civita_symbol()
-
     det_g = det(metric)
-
     return ϵ/sqrt(abs(det_g))
 
 end 
@@ -59,6 +56,7 @@ function spintensor(levi,pvector,svector,m0)
     return Stensor 
 
 end 
+
 
 
 

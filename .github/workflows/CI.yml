@@ -18,7 +18,8 @@ jobs:
       fail-fast: false
       matrix:
         version:
-          - '1.7'
+          - '1.9' #Latest
+          - '1.6' #LTS
         os:
           - ubuntu-latest
         arch:

@@ -20,7 +20,6 @@ end
     
     NF = Float64
 
-
     for n in 1:5
         α    = rand(Uniform(10.0,500)) 
         e    = rand(Uniform(0.01, 0.90))
@@ -45,7 +44,6 @@ end
 @testset "4-velocities are reasonable / not complex" begin
     
     NF = Float64
-
 
     for n in 1:5
         α    = rand(Uniform(3.0,900)) 
@@ -72,7 +70,6 @@ end
     
     NF = Float64
 
-
     for n in 1:5
         α    = rand(Uniform(3.0,900)) 
         ι    = π/2.0
@@ -95,7 +92,6 @@ end
     
     NF = Float64
 
-
     for n in 1:5
         α    = rand(Uniform(3.0,900)) 
         ι    = rand(Uniform(0.0,π/2.0))
@@ -110,9 +106,7 @@ end
 
         initialization = RelativisticDynamics.initial_conditions(M)
 
-
         g  = RelativisticDynamics.covariant_metric(initialization.xvector,a)
-
 
         levi = RelativisticDynamics.levi_civita_tensor(g)  #This is the fully contravariant Levi Civita tensor 
         
@@ -121,9 +115,8 @@ end
         pvector_covar = RelativisticDynamics.convert_to_covariant(g,initialization.pvector)
 
         @tullio val[μ] := spin_tensor[μ,ν]*pvector_covar[ν]
-   
-        
-       @test isapprox(val,[0.0,0.0,0.0,0.0],atol=eps(NF))
+           
+        @test isapprox(val,[0.0,0.0,0.0,0.0],atol=eps(NF))
 
     end
 

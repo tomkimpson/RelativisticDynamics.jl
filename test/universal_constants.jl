@@ -23,8 +23,6 @@ end
     
     E0,L0,Q0 = RelativisticDynamics.ELQ(P.a,P.α,P.e,P.ι,P.orbit_dir)
 
-
-
     for i in 1:5
         α = rand(Uniform(3.0,900)) 
         P = RelativisticDynamics.SystemParameters(NF=NF,α=α) # Parameters
@@ -34,18 +32,11 @@ end
 
     end 
 
-
-  
-
 end
-
-
-
 
 @testset "Check basic call of constants" begin
     
     NF = Float64
-
 
     for n in 1:5
 
@@ -68,31 +59,6 @@ end
     end 
     
 
- 
-
-
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

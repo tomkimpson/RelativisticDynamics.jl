@@ -1,6 +1,3 @@
-using SciMLSensitivity
-using Zygote
-
 """
     Δ = delta(r,a)
 The well-known delta function of the Kerr metric
@@ -18,18 +15,47 @@ return r^2 + a^2 * cos(θ)^2
 end 
 
 
-"""
-    g=covariant_metric(coords,a)
-Construct the NxN matrix of the covariant metric.
-"""
+# """
+#     g=covariant_metric(coords,a)
+# Construct the NxN matrix of the covariant metric.
+# """
+# function covariant_metric(coords,a)
+
+#     #xs = zeros(typeof(a),4,4)
+#     #g = Zygote.Buffer(xs) #zeros(typeof(a),4,4)
+    
+#     g = zeros(typeof(a),4,4)
+
+#     t,r,θ,ϕ =  coords[1],coords[2],coords[3],coords[4]
+#     Σ = sigma(r,θ,a)
+#     Δ = delta(r,a)
+
+
+#     g[1,1] =   -(1.0 - 2.0*r / Σ)
+#     g[2,2] =   Σ / Δ
+#     g[3,3] =   Σ 
+#     g[4,4] =   sin(θ)^2 * ((r^2 +a^2)^2 - Δ*a^2*sin(θ)^2) / Σ
+#     g[1,4] =   -2.0*a*r*sin(θ)^2/Σ 
+#     g[4,1] =   g[1,4] 
+
+#    # println("Normal metric")
+#    # display(g)
+
+#     #return copy(g)
+#     return g
+
+# end 
+
+
+
 function covariant_metric(coords,a)
 
-    g = zeros(typeof(a),4,4)
+    xs = zeros(typeof(a),4,4)
+    g = Zygote.bufferfrom(xs) 
 
     t,r,θ,ϕ =  coords[1],coords[2],coords[3],coords[4]
     Σ = sigma(r,θ,a)
     Δ = delta(r,a)
-
 
     g[1,1] =   -(1.0 - 2.0*r / Σ)
     g[2,2] =   Σ / Δ
@@ -38,9 +64,10 @@ function covariant_metric(coords,a)
     g[1,4] =   -2.0*a*r*sin(θ)^2/Σ 
     g[4,1] =   g[1,4] 
 
-    return g
+    return copy(g)
 
 end 
+
 
 
 """
@@ -50,7 +77,10 @@ Metric components are defined via indvidual functions to allow for auto diff in 
 """
 function contravariant_metric(coords,a)
 
-    metric_contra = zeros(typeof(a),4,4)
+
+
+    xs = zeros(typeof(a),4,4)
+    metric_contra = Zygote.bufferfrom(xs)
     t,r,θ,ϕ =  coords[1],coords[2],coords[3],coords[4]
     Σ = sigma(r,θ,a)
     Δ = delta(r,a)
@@ -64,8 +94,10 @@ function contravariant_metric(coords,a)
     metric_contra[4,4] = -(-(1.0 - 2.0*r / Σ))/denom
     metric_contra[1,4] = (-2.0*a*r*sin(θ)^2/Σ)/denom
     metric_contra[4,1] = metric_contra[1,4]
-    return metric_contra
+    return copy(metric_contra)
 end 
+
+
 
 
 """

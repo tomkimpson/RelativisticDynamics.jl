@@ -1,15 +1,13 @@
 module RelativisticDynamics
 
-
-
-
 # Imports
 import Parameters: @with_kw, @unpack
 import DifferentialEquations
 using Tullio,Combinatorics,LinearAlgebra
+using Zygote
 
 # Exports
-export  orbit, PlotTrajectory, StackedPlot
+export  orbit
 
 #Includes
 include("system_parameters.jl")

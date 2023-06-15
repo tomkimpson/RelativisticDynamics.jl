@@ -5,19 +5,15 @@ It is often desireable, as a sanity check, to plot the orbital solution. Once th
 using Plots
 using RelativisticDynamics
 
-solution,model = orbit()  
-plot(solution,idxs=[1,2]) # to plot the time evolution of the first and second variables, in this case t and r 
+solution,model = orbit()
+plot(solution,model.constants.a) 
 ```
-
-Alternatively the user can use the inbuilt `PlotTrajectory()` function to plot the spatial path in usual Cartesian `x,y,z` coords, in either 3D or 2D. Here the indexes 1,2,3 refer to the `x`,`y`,`z` coordinates respectively. 
+By default the plotting recipe plots the $x-y$ orbital trajectory and up-samples the numerical solution by a factor of $10$. The user can define their own up-sampling factor, and pass any two of the integration variables as arguments, as well as the Cartesian coordinates ($x,y,z$). For example:
 
 ```julia
-PlotTrajectory(solution,model,[1,2],"example_media/2D_example.png")   # Plot a 2D example, save to example_media/2D_example.png
-PlotTrajectory(solution,model,[1,2,3],"example_media/3D_example.png") # Plot a 3D example, save to example_media/2D_example.png
+plot(solution,model.constants.a,upsample=2, vars_to_plot = [:t,:r])     # Plot a timeseries of the r-coordinate, upsampled by a factor of 2
+plot(solution,model.constants.a,upsample=100, vars_to_plot = [:sθ,:sϕ]) # Plot the θ-ϕ components of the spin vector against each other, upsampled by a factor of 100
+plot(solution,model.constants.a,vars_to_plot = [:x,:z]) # Plot the x-z orbital trajectory
+
 ```
 
-
-One can also create a stacked plot of the trajectory in the $x-y$ and $x-z$ planes:
-```julia
-StackedPlot(solution,model,"../example_media/e08_stacked.pdf")
-```
