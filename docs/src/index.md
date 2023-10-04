@@ -47,6 +47,8 @@ For any questions or problems, please feel free to [open an issue](https://githu
 
 Contributions are always welcome - just [open a pull request](https://github.com/tomkimpson/RelativisticDynamics.jl/pulls).
 
+Some recommended areas to start contributing can be found on the [Contributing](contributing.md) page
+
 
 ## Acknowledgements 
 This work solving the MPD equations was originally motivated through interesting discussions with [Kinwah Wu](https://www.ucl.ac.uk/mssl/people/prof-kinwah-wu). The port to a modern, precision-flexible model in Julia was heavily inspired by [Milan Klöwer](https://github.com/milankl). Huge thanks to both.
