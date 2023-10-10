@@ -72,7 +72,7 @@ Future potential extensions of this code include taking the dynamics beyond seco
 ![](../example_media/e01_stacked.pdf){width=50%}
 ![](../example_media/e08_stacked.pdf){width=50%}
 \begin{figure}[!h]
-\caption{Example orbital trajectories for a ms-pulsar with eccentricity $e=0.1$ (left panels), $e=0.8$ (right panels), orbiting a massive BH with extremal spin, $a=0.998$. The orbital motion is presented in the $x-y$ plane (top panels) and $x-z$ plane (bottom panels). The pulsar is initialised in the orbital plane with zero inclination. In the absence of spin-curvature coupling the particle would remain in the plane ($z=0$). Note the $z$-motion is on the scale of km, not gravitational radii. \label{fig:example}}
+\caption{Example orbital trajectories for a ms-pulsar with eccentricity $e=0.1$ (left panels), $e=0.8$ (right panels), orbiting a massive BH with extremal spin, $a=0.998$. The orbital motion is presented in the $x-y$ plane (top panels) and $x-z$ plane (bottom panels). The pulsar is initialised in the orbital plane with zero inclination. In the absence of spin-curvature coupling the particle would remain in the plane ($z=0$). Note the $z$-motion is on the scale of km, not gravitational radii.}
 \end{figure}
 
 
