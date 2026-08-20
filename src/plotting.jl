@@ -1,16 +1,18 @@
 using LaTeXStrings
 using RecipesBase
 
-
+using Plots 
 """
 Plotting recipe for use with Plots.jl
 """
-@recipe function f(sol::ODESolution,a::AbstractFloat; upsample=10,vars_to_plot=[:x,:y])
+@recipe function f(sol::ODESolution,a::AbstractFloat; upsample=10,vars_to_plot=[:x,:y],add_marker=false)
 
     #Default plotting settings
     size      -->  (600, 600)
     linecolor --> 1
     legend    --> :none
+    markershape --> (add_marker ? :circle : :none)
+
 
     #Up-sample the solution according to the upsample factor 
     T = range(first(sol.t),last(sol.t),length=length(sol.t)*upsample)
@@ -52,18 +54,27 @@ Plotting recipe for use with Plots.jl
     
     )
 
+    # Add scatter points for start and end positions. Just currently for x and y 
+    @series begin
+        seriestype := :scatter
+        label --> ["Start" "End"]
+        markershape --> [:circle :star5]
+        markersize --> [6 8]
+        markercolor --> [:green :red]  # Changed start point color from blue to green
+        [x[1], x[end]], [y[1], y[end]]
+    end
+
+
+
+
     #Axis labels
     xlabel    --> vars_dict[vars_to_plot[1]][2]
     ylabel    --> vars_dict[vars_to_plot[2]][2]
 
     #data to plot
     vars_dict[vars_to_plot[1]][1],vars_dict[vars_to_plot[2]][1]
+
 end 
-
-
-
-
-
 
 
 
